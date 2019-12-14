@@ -40,7 +40,7 @@ export default {
             this.search = "";
         },
         async doSearch() {
-            let response = await this.axios.get("https://drippy-music.herokuapp.com", {
+            let response = await this.axios.get("https://drippy-music.herokuapp.com/audio", {
                 params: { query: this.search }
             });
             this.search_results = response.data;
