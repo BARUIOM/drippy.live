@@ -11,25 +11,23 @@
             </md-field>
         </form>
 
-        <md-card v-if="width < 700 && search_results.length">
-            <md-list class="md-triple-line" md-dense>
-                <div v-for="item in search_results" v-bind:key="item[0].data">
-                    <md-list-item @click="play(item[0])">
-                        <md-avatar class="md-large">
-                            <img :src="item[0].artwork_url" />
-                        </md-avatar>
+        <md-list class="md-triple-line" v-if="width < 700" md-dense>
+            <div v-for="item in search_results" v-bind:key="item[0].data">
+                <md-list-item @click="play(item[0])">
+                    <md-avatar class="md-large">
+                        <img :src="item[0].artwork_url" />
+                    </md-avatar>
 
-                        <div class="md-list-item-text">
-                            <span>{{ item[0].title }}</span>
-                            <span>{{ item[0].album }}</span>
-                            <p>{{ item[0].artists.join(', ') }}</p>
-                        </div>
-                    </md-list-item>
+                    <div class="md-list-item-text">
+                        <span>{{ item[0].title }}</span>
+                        <span>{{ item[0].album }}</span>
+                        <p>{{ item[0].artists.join(', ') }}</p>
+                    </div>
+                </md-list-item>
 
-                    <md-divider class="md-inset"></md-divider>
-                </div>
-            </md-list>
-        </md-card>
+                <md-divider class="md-inset"></md-divider>
+            </div>
+        </md-list>
 
         <md-table v-model="search_results" v-else md-card>
             <md-table-row slot="md-table-row" slot-scope="{ item }" @click="play(item[0])">
