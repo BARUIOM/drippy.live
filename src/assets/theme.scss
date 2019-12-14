@@ -1,0 +1,8 @@
+@import "~vue-material/dist/theme/engine";
+
+@include md-register-theme("default", (
+  primary: md-get-palette-color(indigo, 800),
+  accent:  md-get-palette-color(indigo, 500)
+));
+
+@import "~vue-material/dist/theme/all";
