@@ -11,7 +11,27 @@
             </md-field>
         </form>
 
-        <md-table v-model="search_results" md-card>
+        <md-card v-if="width < 700 && search_results.length">
+            <md-list class="md-triple-line" md-dense>
+                <div v-for="item in search_results" v-bind:key="item[0].data">
+                    <md-list-item @click="play(item[0])">
+                        <md-avatar class="md-large">
+                            <img :src="item[0].artwork_url" />
+                        </md-avatar>
+
+                        <div class="md-list-item-text">
+                            <span>{{ item[0].title }}</span>
+                            <span>{{ item[0].album }}</span>
+                            <p>{{ item[0].artists.join(', ') }}</p>
+                        </div>
+                    </md-list-item>
+
+                    <md-divider class="md-inset"></md-divider>
+                </div>
+            </md-list>
+        </md-card>
+
+        <md-table v-model="search_results" v-else md-card>
             <md-table-row slot="md-table-row" slot-scope="{ item }" @click="play(item[0])">
                 <md-table-cell md-label="Title" md-sort-by="title">
                     <img :src="item[0].artwork_url" width="32px" />
@@ -33,8 +53,12 @@ export default {
     data: () => ({
         search: "",
         focused: false,
-        search_results: []
+        search_results: [],
+        width: window.innerWidth
     }),
+    mounted() {
+        window.onresize = () => this.width = window.innerWidth;
+    },
     methods: {
         clear() {
             this.search = "";
@@ -63,5 +87,9 @@ export default {
     -moz-user-select: none;
     -khtml-user-select: none;
     -ms-user-select: none;
+}
+
+.md-avatar.md-large {
+    border-radius: 0px;
 }
 </style>
