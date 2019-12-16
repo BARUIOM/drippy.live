@@ -44,9 +44,8 @@
                 <router-view />
             </md-app-content>
         </md-app>
-        
-        <div class="player md-elevation-12 md-layout md-gutter md-alignment-center-center">
-            
+
+        <div class="player md-elevation-12 md-layout md-gutter md-alignment-center-space-between">
             <div class="md-layout-item md-layout md-gutter md-alignment-center-left">
                 <div class="md-layout-item artwork">
                     <img :src="current_song.artwork_url" width="78px" />
@@ -157,6 +156,10 @@ div.player.md-layout.md-gutter {
     .md-alignment-center-center > .md-layout-item {
         padding-left: 14px !important;
         padding-right: 14px !important;
+    }
+
+    .md-alignment-center-space-between {
+        justify-content: center !important;
     }
 }
 </style>
