@@ -11,7 +11,7 @@
             </md-field>
         </form>
 
-        <md-list class="md-triple-line" v-if="width < 700" md-dense>
+        <md-list class="md-triple-line" md-dense>
             <div v-for="item in search_results" v-bind:key="item[0].data">
                 <md-list-item @click="play(item[0])">
                     <md-avatar class="md-large">
@@ -29,7 +29,7 @@
             </div>
         </md-list>
 
-        <md-table v-model="search_results" v-else md-card>
+        <md-table v-model="search_results" md-card>
             <md-table-row slot="md-table-row" slot-scope="{ item }" @click="play(item[0])">
                 <md-table-cell md-label="Title" md-sort-by="title">
                     <img :src="item[0].artwork_url" width="32px" />
@@ -51,12 +51,8 @@ export default {
     data: () => ({
         search: "",
         focused: false,
-        search_results: [],
-        width: window.innerWidth
+        search_results: []
     }),
-    mounted() {
-        window.onresize = () => this.width = window.innerWidth;
-    },
     methods: {
         clear() {
             this.search = "";
@@ -68,6 +64,7 @@ export default {
             this.search_results = response.data;
         },
         play(song) {
+            this.$root.$emit('playback_started', song);
             this.$socket.emit("stream", song.data);
         }
     }
@@ -75,6 +72,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 700px) {
+    .md-table {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 700px) {
+    .md-list {
+        display: none;
+    }
+}
+
 .songtitle {
     padding-left: 10px;
 }

@@ -31,5 +31,8 @@ export default {
             stream_data.audio.src = URL.createObjectURL(stream_data.mediaSource);
             stream_data.audio.play();
         }
-    }
+    },
+    play: () => stream_data.audio.play(),
+    pause: () => stream_data.audio.pause(),
+    isPlaying: () => !stream_data.audio.paused
 }
