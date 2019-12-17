@@ -136,6 +136,10 @@ export default {
     flex: none;
 }
 
+.md-layout .md-layout {
+    flex: 1 !important;
+}
+
 .player {
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
@@ -145,7 +149,6 @@ export default {
 
 .song-info {
     position: fixed;
-    flex: 1 1 !important;
     padding-left: 0px !important;
 }
 
