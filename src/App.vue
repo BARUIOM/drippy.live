@@ -45,23 +45,28 @@
             </md-app-content>
         </md-app>
 
-        <div class="player md-elevation-12 md-layout md-gutter md-alignment-center-space-between">
+        <div class="player md-elevation-12 md-layout md-alignment-center-space-between" v-if="loaded">
+            <img class="artwork" :src="current_song.artwork_url" width="80px" />
+
             <div class="md-layout-item md-layout md-gutter md-alignment-center-left">
-                <div class="md-layout-item artwork">
-                    <img :src="current_song.artwork_url" width="78px" />
+                <div class="song-info md-layout-item">
+                    <div><b>{{ current_song.title }}</b></div>
+                    <div>{{ current_song.artists.join(', ') }}</div>
                 </div>
             </div>
 
-            <div class="md-layout-item md-layout md-gutter md-alignment-center-center">
+            <div class="md-layout-item md-layout md-gutter md-alignment-center-center large-controls">
                 <div class="md-layout-item">
                     <md-icon>repeat</md-icon>
                 </div>
                 <div class="md-layout-item">
                     <md-icon>skip_previous</md-icon>
                 </div>
-                <div class="md-layout-item" @click="toggle">
-                    <md-icon class="md-size-2x" v-if="!playing">play_circle_filled</md-icon>
-                    <md-icon class="md-size-2x" v-else>pause_circle_filled</md-icon>
+                <div class="md-layout-item">
+                    <md-button class="md-icon-button" @click="toggle">
+                        <md-icon class="md-size-2x" v-if="!playing">play_circle_filled</md-icon>
+                        <md-icon class="md-size-2x" v-else>pause_circle_filled</md-icon>
+                    </md-button>
                 </div>
                 <div class="md-layout-item">
                     <md-icon>skip_next</md-icon>
@@ -71,7 +76,16 @@
                 </div>
             </div>
 
-            <div class="md-layout-item md-layout md-gutter md-alignment-center-right">
+            <div class="md-layout-item md-layout md-gutter md-alignment-center-right small-controls">
+                <div class="md-layout-item">
+                    <md-button class="md-icon-button" @click="toggle">
+                        <md-icon class="md-size-2x" v-if="!playing">play_arrow</md-icon>
+                        <md-icon class="md-size-2x" v-else>pause</md-icon>
+                    </md-button>
+                </div>
+            </div>
+
+            <div class="actions md-layout-item md-layout md-gutter md-alignment-center-right">
                 <div class="md-layout-item">
                     <md-icon>thumb_up</md-icon>
                 </div>
@@ -92,19 +106,20 @@ import engine from './socket-engine.js'
 export default {
     name: "App",
     data: () => ({
+        loaded: false,
         playing: false,
-        current_song: {},
+        current_song: { artists: [] },
         showNavigation: false
     }),
     mounted() {
         this.$root.$on('playback_started', (song) => {
-            this.playing = true;
             this.current_song = song;
+            this.playing = this.loaded = true;
         });
     },
     methods: {
         toggle() {
-            engine.isPlaying() ? engine.pause() : engine.play();
+            this.playing ? engine.pause() : engine.play();
             this.playing = engine.isPlaying();
         }
     },
@@ -117,12 +132,32 @@ export default {
     min-height: 100vh;
 }
 
+.md-layout-item {
+    flex: none;
+}
+
+.player {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -khtml-user-select: none !important;
+    -ms-user-select: none !important;
+}
+
+.song-info {
+    position: fixed;
+    flex: 1 1 !important;
+    padding-left: 0px !important;
+}
+
+.small-controls {
+    margin-right: 16px !important;
+}
+
 div.player {
     bottom: 0;
     width: 100%;
     position: fixed;
     min-height: 80px;
-    border: 1px solid #eaeaea;
     background-color: white;
 }
 
@@ -131,35 +166,37 @@ div.player.md-layout.md-gutter {
     margin-left: 0px;
 }
 
-.md-layout-item {
-    flex: none;
+img.artwork {
+    width: 80px;
+    position: fixed;
 }
 
-.md-layout-item.artwork {
-    padding-left: 0px !important;
-    margin-left: -20px !important;
-}
-
-.md-layout-item > .md-icon {
-    cursor: pointer;
-}
-
-@media screen and (max-width: 720px) {
-    .md-alignment-center-left {
+@media screen and (max-width: 700px) {
+    .large-controls {
         display: none;
     }
 
-    .md-alignment-center-right {
+    .actions {
         display: none;
     }
 
-    .md-alignment-center-center > .md-layout-item {
-        padding-left: 14px !important;
-        padding-right: 14px !important;
+    .song-info {
+        margin-left: 90px;
     }
 
-    .md-alignment-center-space-between {
-        justify-content: center !important;
+    img.artwork {
+       width: 72px;
+       margin-left: 4px;
+    }
+}
+
+@media screen and (min-width: 700px) {
+    .small-controls {
+        display: none;
+    }
+
+    .song-info {
+        margin-left: 100px;
     }
 }
 </style>
