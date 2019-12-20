@@ -116,11 +116,11 @@ export default {
             this.current_song = song;
             this.playing = this.loaded = true;
         });
+        engine.state((state) => this.playing = state);
     },
     methods: {
         toggle() {
             this.playing ? engine.pause() : engine.play();
-            this.playing = engine.isPlaying();
         }
     },
     sockets: engine.sockets
