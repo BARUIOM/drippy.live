@@ -46,7 +46,7 @@
         </md-app>
 
         <div class="player md-elevation-12 md-layout md-alignment-center-space-between" v-if="loaded">
-            <img class="artwork" :src="current_song.artwork_url" width="80px" />
+            <img class="artwork" :src="current_song.artwork_url" />
 
             <div class="md-layout-item md-layout md-gutter md-alignment-center-left">
                 <div class="song-info md-layout-item">
@@ -150,6 +150,7 @@ export default {
 .song-info {
     position: fixed;
     padding-left: 0px !important;
+    margin-left: 10vh !important;
 }
 
 .small-controls {
@@ -160,7 +161,7 @@ div.player {
     bottom: 0;
     width: 100%;
     position: fixed;
-    min-height: 80px;
+    min-height: 8vh;
     background-color: white;
 }
 
@@ -170,7 +171,7 @@ div.player.md-layout.md-gutter {
 }
 
 img.artwork {
-    width: 80px;
+    width: 8vh;
     position: fixed;
 }
 
@@ -182,24 +183,39 @@ img.artwork {
     .actions {
         display: none;
     }
-
-    .song-info {
-        margin-left: 90px;
-    }
-
-    img.artwork {
-       width: 72px;
-       margin-left: 4px;
-    }
 }
 
 @media screen and (min-width: 700px) {
     .small-controls {
         display: none;
     }
+}
+
+@media screen and (orientation: landscape) and (max-height: 420px) {
+    div.player {
+        min-height: 18vh;
+    }
+
+    img.artwork {
+        width: 18vh;
+    }
 
     .song-info {
-        margin-left: 100px;
+        margin-left: 22vh !important;
+    }
+}
+
+@media screen and (orientation: portrait) and (max-height: 800px) {
+    div.player {
+        min-height: 10vh;
+    }
+
+    img.artwork {
+        width: 10vh;
+    }
+
+    .song-info {
+        margin-left: 12vh !important;
     }
 }
 </style>
