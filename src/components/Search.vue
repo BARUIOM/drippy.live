@@ -4,10 +4,10 @@
             <md-field>
                 <md-icon>search</md-icon>
                 <label>Search</label>
-                <md-input v-model="search" @focus="focused = true" @blur="focused = false" required></md-input>
-                <a @click="clear" v-if="focused">
+                <md-input v-model="search" required></md-input>
+                <span class="clear-button" @mousedown="$event.preventDefault()" @click="search = ''">
                     <md-icon>close</md-icon>
-                </a>
+                </span>
             </md-field>
         </form>
 
@@ -50,13 +50,9 @@ export default {
     name: "Search",
     data: () => ({
         search: "",
-        focused: false,
         search_results: []
     }),
     methods: {
-        clear() {
-            this.search = "";
-        },
         async doSearch() {
             let response = await this.axios.get("https://drippy-music.herokuapp.com/audio", {
                 params: { query: this.search }
@@ -98,5 +94,9 @@ export default {
 
 .md-avatar.md-large {
     border-radius: 0px;
+}
+
+.md-field:not(.md-focused) .clear-button {
+    display: none;
 }
 </style>
