@@ -54,8 +54,11 @@ export default {
     }),
     methods: {
         async doSearch() {
-            let response = await this.axios.get("https://drippy-music.herokuapp.com/audio", {
-                params: { query: this.search }
+            let response = await this.axios({
+                url: '/audio',
+                baseURL: this.$root.api_url,
+                params: { query: this.search },
+                headers: { 'User-Token': this.$root.userdata['idToken'] }
             });
             this.search_results = response.data;
         },
