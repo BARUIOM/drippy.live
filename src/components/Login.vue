@@ -62,23 +62,30 @@ export default {
                 }
                 this.showSnackbar = true;
             } else {
-                const response = await this.axios({
-                    url: '/login',
-                    baseURL: this.$root.api_url,
-                    method: 'POST',
-                    data: { email: this.email, password: this.password }
-                });
+                try {
+                    const response = await this.axios({
+                        url: '/login',
+                        baseURL: this.$root.api_url,
+                        method: 'POST',
+                        data: { email: this.email, password: this.password }
+                    });
 
-                if (response.data['error']) {
-                    if (response.data['error']['message'] == "INVALID_PASSWORD") {
-                        this.message = 'Invalid password provided!';
-                    } else if (response.data['error']['message'] == "EMAIL_NOT_FOUND") {
-                        this.message = "This account wasn't registered yet!";
+                    if (response.data['error']) {
+                        if (response.data['error']['message'] == "INVALID_PASSWORD") {
+                            this.message = 'Invalid password provided!';
+                        } else if (response.data['error']['message'] == "EMAIL_NOT_FOUND") {
+                            this.message = "This account wasn't registered yet!";
+                        }
+
+                        this.showSnackbar = true;
+                    } else if (response.data['idToken']) {
+                        this.$emit('set-user', response.data);
                     }
-
-                    this.showSnackbar = true;
-                } else if (response.data['idToken']) {
-                    this.$emit('set-user', response.data);
+                } catch (error) {
+                    if (error.response && error.response.status == 403) {
+                        this.message = "Please verify your e-mail inbox!";
+                        this.showSnackbar = true;
+                    }
                 }
             }
 
