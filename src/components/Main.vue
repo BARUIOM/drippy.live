@@ -151,7 +151,7 @@ export default {
 .song-info {
     position: fixed;
     padding-left: 0px !important;
-    margin-left: 10vh !important;
+    margin-left: 90px !important;
 }
 
 .small-controls {
@@ -162,7 +162,7 @@ div.player {
     bottom: 0;
     width: 100%;
     position: fixed;
-    min-height: 8vh;
+    min-height: 72px;
     background-color: white;
 }
 
@@ -172,7 +172,7 @@ div.player.md-layout.md-gutter {
 }
 
 img.artwork {
-    width: 8vh;
+    max-width: 72px;
     position: fixed;
 }
 
@@ -189,34 +189,6 @@ img.artwork {
 @media screen and (min-width: 700px) {
     .small-controls {
         display: none;
-    }
-}
-
-@media screen and (orientation: landscape) and (max-height: 420px) {
-    div.player {
-        min-height: 18vh;
-    }
-
-    img.artwork {
-        width: 18vh;
-    }
-
-    .song-info {
-        margin-left: 22vh !important;
-    }
-}
-
-@media screen and (orientation: portrait) and (max-height: 800px) {
-    div.player {
-        min-height: 10vh;
-    }
-
-    img.artwork {
-        width: 10vh;
-    }
-
-    .song-info {
-        margin-left: 12vh !important;
     }
 }
 </style>
