@@ -64,7 +64,6 @@ export default {
         },
         play(song) {
             this.$root.$emit('playback_started', song);
-            this.$socket.emit("stream", song.data);
         }
     }
 };

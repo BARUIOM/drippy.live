@@ -101,29 +101,30 @@
 </template>
 
 <script>
-import engine from '../socket-engine.js'
-
 export default {
     name: "Main",
     data: () => ({
+        audio: new Audio(),
         loaded: false,
         playing: false,
         current_song: { artists: [] },
         showNavigation: false
     }),
     mounted() {
+        this.audio.autoplay = true;
         this.$root.$on('playback_started', (song) => {
             this.current_song = song;
             this.playing = this.loaded = true;
+            this.audio.src = `${this.$root.api_url}/stream/${this.$root.userdata['idToken']}/${song.data}`;
         });
-        engine.state((state) => this.playing = state);
+        this.audio.addEventListener('play', () => this.playing = !this.audio.paused);
+        this.audio.addEventListener('pause', () => this.playing = !this.audio.paused);
     },
     methods: {
         toggle() {
-            this.playing ? engine.pause() : engine.play();
+            this.playing ? this.audio.pause() : this.audio.play();
         }
-    },
-    sockets: engine.sockets
+    }
 };
 </script>
 
