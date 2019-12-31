@@ -1,7 +1,9 @@
 <template>
     <div class="page-container">
-        <Login @set-user="update" v-if="!hasToken()" />
-        <Main v-else />
+        <div class="md-layout md-gutter md-alignment-center-center" v-if="!component">
+            <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+        </div>
+        <component @set-user="update" v-bind:is="component" />
     </div>
 </template>
 
@@ -12,7 +14,8 @@ import Login from './components/Login.vue'
 export default {
     name: "App",
     data: () => ({
-        userdata: {}
+        userdata: {},
+        component: false
     }),
     mounted() {
         this.$root.api_url = 'https://drippy-music.herokuapp.com';
@@ -22,19 +25,18 @@ export default {
                 url: '/validate',
                 baseURL: this.$root.api_url,
                 headers: { 'User-Token': this.userdata['idToken'] }
-            }).catch(error => {
+            }).then(() => this.update(this.userdata)).catch(error => {
                 if (error.response && error.response.status == 403) this.userdata = {};
-            }).then(() => {
-                this.$root.userdata = this.userdata;
+                this.component = 'Login';
             });
+        } else {
+            this.component = 'Login';
         }
     },
     methods: {
         update(userdata) {
             this.$root.userdata = this.userdata = userdata;
-        },
-        hasToken() {
-            return this.userdata['idToken'] !== undefined;
+            this.component = 'Main';
         }
     },
     watch: {
@@ -46,3 +48,12 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+.page-container {
+    overflow: hidden;
+}
+
+.md-layout {
+    min-height: 100vh;
+}
+</style>
