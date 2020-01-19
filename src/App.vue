@@ -21,29 +21,27 @@ export default {
         this.$root.api_url = 'https://drippy-music.herokuapp.com';
         if (localStorage['USER_DATA']) {
             this.userdata = JSON.parse(localStorage['USER_DATA']);
-            this.axios({
-                url: '/validate',
-                baseURL: this.$root.api_url,
-                headers: { 'User-Token': this.userdata['idToken'] }
-            }).then(() => this.update(this.userdata)).catch(error => {
-                if (error.response && error.response.status == 403) {
-                    this.axios({
-                        method: 'POST',
-                        url: '/refresh',
-                        baseURL: this.$root.api_url,
-                        data: { 'refresh_token': this.userdata['refreshToken'] }
-                    }).then((response) => {
-                        Object.assign(this.userdata, response.data);
-                        this.update(this.userdata);
-                    }).catch(() => {
-                        this.userdata = {};
-                        this.component = 'Login';
-                    });
-                }
-            });
-        } else {
-            this.component = 'Login';
+            if (this.userdata['idToken'] || this.userdata['refreshToken']) {
+                return this.axios({
+                    url: '/validate',
+                    baseURL: this.$root.api_url,
+                    headers: { 'User-Token': this.userdata['idToken'] }
+                }).then(() => this.update(this.userdata)).catch(error => {
+                    if (error.response && error.response.status == 403) {
+                        this.axios({
+                            method: 'POST',
+                            url: '/refresh',
+                            baseURL: this.$root.api_url,
+                            data: { 'refresh_token': this.userdata['refreshToken'] }
+                        }).then((response) => Object.assign(this.userdata, response.data)).catch(() => {
+                            this.userdata = {};
+                            this.component = 'Login';
+                        }).finally(() => this.update(this.userdata));
+                    }
+                });
+            }
         }
+        this.component = 'Login';
     },
     methods: {
         update(userdata) {
