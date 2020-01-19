@@ -26,8 +26,20 @@ export default {
                 baseURL: this.$root.api_url,
                 headers: { 'User-Token': this.userdata['idToken'] }
             }).then(() => this.update(this.userdata)).catch(error => {
-                if (error.response && error.response.status == 403) this.userdata = {};
-                this.component = 'Login';
+                if (error.response && error.response.status == 403) {
+                    this.axios({
+                        method: 'POST',
+                        url: '/refresh',
+                        baseURL: this.$root.api_url,
+                        data: { 'refresh_token': this.userdata['refreshToken'] }
+                    }).then((response) => {
+                        Object.assign(this.userdata, response.data);
+                        this.update(this.userdata);
+                    }).catch(() => {
+                        this.userdata = {};
+                        this.component = 'Login';
+                    });
+                }
             });
         } else {
             this.component = 'Login';
@@ -35,13 +47,9 @@ export default {
     },
     methods: {
         update(userdata) {
+            localStorage['USER_DATA'] = JSON.stringify(userdata);
             this.$root.userdata = this.userdata = userdata;
             this.component = 'Main';
-        }
-    },
-    watch: {
-        userdata(data) {
-            localStorage['USER_DATA'] = JSON.stringify(data);
         }
     },
     components: { Main, Login }
