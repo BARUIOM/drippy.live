@@ -4,7 +4,7 @@
             <v-spacer></v-spacer>
         </v-app-bar>
 
-        <v-navigation-drawer permanent expand-on-hover app>
+        <v-navigation-drawer v-bind:class="{ 'player-drawer': current_song.data }" permanent expand-on-hover app>
             <v-list nav dense>
                 <v-list-item link to="/" exact>
                     <v-list-item-icon>
@@ -23,7 +23,7 @@
         </v-navigation-drawer>
 
         <v-content>
-            <v-container fluid>
+            <v-container v-bind:class="{ 'player-content': current_song.data, 'no-player-content': !current_song.data }" class="overflow-y-auto" fluid>
                 <router-view />
             </v-container>
         </v-content>
@@ -109,8 +109,16 @@ export default {
     }
 }
 
-.v-navigation-drawer {
-    height: calc(100vh - 72px) !important;
+.player-drawer {
+    max-height: calc(100vh - 72px) !important;
+}
+
+.player-content {
+    max-height: calc(100vh - 120px) !important;
+}
+
+.no-player-content {
+    max-height: calc(100vh - 50px) !important;
 }
 
 .player {
