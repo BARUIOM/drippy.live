@@ -1,69 +1,67 @@
 <template>
-    <div class="main">
-        <form class="md-layout md-gutter md-alignment-center-center" @submit.prevent="doLogin">
-            <md-card class="md-layout-item md-xlarge-size-20 md-large-size-25 md-medium-size-30 md-small-size-50 md-xsmall-size-70">
-                <md-card-header>
-                    <div class="md-title">Drippy Music</div>
-                </md-card-header>
-
-                <md-card-content>
-                    <md-field>
-                        <label>E-Mail</label>
-                        <md-input type="email" v-model="email" required />
-                    </md-field>
-                    <md-field>
-                        <label>Password</label>
-                        <md-input type="password" v-model="password" required />
-                    </md-field>
-                    <md-field v-if="newUser">
-                        <label>Username</label>
-                        <md-input type="text" v-model="username" required />
-                    </md-field>
-                    <md-checkbox v-model="newUser">I don't have an account</md-checkbox>
-                </md-card-content>
-
-                <md-card-actions>
-                    <md-button ref="submit" type="submit" class="md-primary">
-                        <span v-if="newUser">Register</span>
-                        <span v-else>Login</span>
-                    </md-button>
-                </md-card-actions>
-            </md-card>
-        </form>
-
-        <md-snackbar :md-position="'center'" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
-            <span>{{ message }}</span>
-        </md-snackbar>
-    </div>
+    <v-app>
+        <v-container fill-height fluid>
+            <v-row align="center" justify="center">
+                <v-col cols="3">
+                    <v-card>
+                        <v-card-title>Drippy Music</v-card-title>
+                        <v-card-subtitle>Unlimited music anywhere</v-card-subtitle>
+                        <v-card-text>
+                            <v-form v-model="valid" :lazy-validation="false" @submit.prevent="submit">
+                                <v-text-field label="E-mail" color="orange" v-model="email" :rules="emailRules" required></v-text-field>
+                                <v-text-field label="Password" color="orange" v-model="password" type="password" :rules="passwordRules" required></v-text-field>
+                                <v-checkbox label="I don't have an account" color="orange" v-model="new_user"></v-checkbox>
+                                <v-layout justify-space-between>
+                                    <v-spacer></v-spacer>
+                                    <v-btn text color="orange" type="submit" :disabled="!valid">{{ new_user ? "Register" : "Login" }}</v-btn>
+                                </v-layout>
+                            </v-form>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
+        <v-snackbar v-model="snackbar" :color="status" :bottom="true" :timeout="4000">{{ message }}</v-snackbar>
+    </v-app>
 </template>
 
 <script>
 export default {
-    name: "Login",
+    name: 'Login',
     data: () => ({
         email: '',
+        emailRules: [
+            v => !!v || 'E-mail is required',
+            v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        ],
         password: '',
-        username: '',
-        newUser: false,
+        passwordRules: [
+            v => !!v || 'Password is required',
+            v => (v && v.length >= 8) || 'Password must have at least 8 characters',
+        ],
+        new_user: false,
+        status: '',
         message: '',
-        showSnackbar: false,
+        snackbar: false,
+        valid: false
     }),
     methods: {
-        async doLogin() {
-            this.showSnackbar = false;
-            this.$refs.submit.$el.setAttribute('disabled', 'true');
+        async submit() {
+            this.valid = false;
+            this.snackbar = false;
             try {
-                if (this.newUser) {
-                    await this.axios({
+                if (this.new_user) {
+                    const response = await this.axios({
                         url: '/register',
                         baseURL: this.$root.api_url,
                         method: 'POST',
-                        data: { email: this.email, password: this.password, username: this.username }
+                        data: { email: this.email, password: this.password }
                     });
 
-                    this.newUser = false;
-                    this.message = 'User successfully registered, now please verify your e-mail!';
-                    this.showSnackbar = true;
+                    this.new_user = false;
+                    this.status = 'success';
+                    this.message = response.data['message'];
+                    this.snackbar = true;
                 } else {
                     const response = await this.axios({
                         url: '/login',
@@ -71,15 +69,16 @@ export default {
                         method: 'POST',
                         data: { email: this.email, password: this.password }
                     });
-                    this.$emit('set-user', response.data);
+                    this.$emit('set-user', 'Main', response.data);
                 }
             } catch (error) {
                 if (error.response && error.response.status == 401) {
+                    this.status = 'error';
                     this.message = error.response.data['message'];
-                    this.showSnackbar = true;
+                    this.snackbar = true;
                 }
             } finally {
-                this.$refs.submit.$el.removeAttribute('disabled');
+                this.valid = true;
             }
         }
     }
@@ -87,11 +86,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div.main {
-    overflow: hidden;
-}
-
-form.md-layout {
+.main {
     min-height: 100vh;
 }
 </style>

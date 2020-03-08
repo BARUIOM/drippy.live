@@ -1,104 +1,72 @@
 <template>
-    <div>
-        <form class="md-layout" @submit.prevent="doSearch">
-            <md-field>
-                <md-icon>search</md-icon>
-                <label>Search</label>
-                <md-input v-model="search" required></md-input>
-                <span class="clear-button" @mousedown="$event.preventDefault()" @click="search = ''">
-                    <md-icon>close</md-icon>
-                </span>
-            </md-field>
-        </form>
+    <v-container>
+        <v-form @submit.prevent="doSearch">
+            <v-text-field v-model="search_input" label="Search" color="orange" prepend-inner-icon="mdi-magnify" solo clearable required></v-text-field>
+        </v-form>
 
-        <md-list class="md-triple-line" md-dense>
-            <div v-for="item in search_results" v-bind:key="item[0].data">
-                <md-list-item @click="play(item[0])">
-                    <md-avatar class="md-large">
-                        <img :src="item[0].artwork_url" />
-                    </md-avatar>
-
-                    <div class="md-list-item-text">
-                        <span>{{ item[0].title }}</span>
-                        <span>{{ item[0].album }}</span>
-                        <p>{{ item[0].artists.join(', ') }}</p>
-                    </div>
-                </md-list-item>
-
-                <md-divider class="md-inset"></md-divider>
-            </div>
-        </md-list>
-
-        <md-table v-model="search_results" md-card>
-            <md-table-row slot="md-table-row" slot-scope="{ item }" @click="play(item[0])">
-                <md-table-cell md-label="Title" md-sort-by="title">
-                    <img :src="item[0].artwork_url" width="32px" />
-                    <span class="songtitle">{{ item[0].title }}</span>
-                </md-table-cell>
-                <md-table-cell
-                    md-label="Artist"
-                    md-sort-by="artists[0]"
-                >{{ item[0].artists.join(', ') }}</md-table-cell>
-                <md-table-cell md-label="Album" md-sort-by="album">{{ item[0].album }}</md-table-cell>
-            </md-table-row>
-        </md-table>
-    </div>
+        <v-simple-table v-if="search_results.length">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-left">Title</th>
+                    <th class="text-left">Artist</th>
+                    <th class="text-left">Album</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in search_results" :key="item[0].data" @click="play(item[0])" class="table-item">
+                    <td class="song-artwork">
+                        <v-img :src="item[0].artwork_url" class="song-artwork" />
+                    </td>
+                    <td>{{ item[0].title }}</td>
+                    <td>{{ item[0].artists.join(', ') }}</td>
+                    <td>{{ item[0].album }}</td>
+                </tr>
+            </tbody>
+        </v-simple-table>
+    </v-container>
 </template>
 
 <script>
 export default {
-    name: "Search",
+    name: 'Search',
     data: () => ({
-        search: "",
+        search_input: '',
         search_results: []
     }),
+    mounted() {
+        if (sessionStorage['search_results']) {
+            this.search_results = [].concat(JSON.parse(sessionStorage['search_results']));
+        }
+    },
     methods: {
         async doSearch() {
             let response = await this.axios({
                 url: '/audio',
                 baseURL: this.$root.api_url,
-                params: { query: this.search },
+                params: { query: this.search_input },
                 headers: { 'User-Token': this.$root.userdata['idToken'] }
             });
-            this.search_results = response.data;
+            sessionStorage['search_results'] = JSON.stringify(response.data);
+            this.search_results = [].concat(response.data);
         },
         play(song) {
             this.$root.$emit('playback_started', song);
         }
     }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@media screen and (max-width: 700px) {
-    .md-table {
-        display: none;
-    }
+.song-artwork {
+    width: 32px;
 }
 
-@media screen and (min-width: 700px) {
-    .md-list {
-        display: none;
-    }
-}
-
-.songtitle {
-    padding-left: 10px;
-}
-
-.md-table-cell {
+.table-item {
     cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     -khtml-user-select: none;
     -ms-user-select: none;
-}
-
-.md-avatar.md-large {
-    border-radius: 0px;
-}
-
-.md-field:not(.md-focused) .clear-button {
-    display: none;
 }
 </style>

@@ -1,120 +1,94 @@
 <template>
-    <div>
-        <md-app>
-            <md-app-toolbar class="md-primary" md-elevation="0">
-                <div class="md-toolbar-row">
-                    <div class="md-toolbar-section-start">
-                        <md-button class="md-icon-button" @click="showNavigation = true">
-                            <md-icon>menu</md-icon>
-                        </md-button>
-                        <span class="md-title">Drippy Music</span>
-                    </div>
+    <v-app>
+        <v-app-bar app color="primary">
+            <v-spacer></v-spacer>
+        </v-app-bar>
 
-                    <div class="md-toolbar-section-end">
-                        <md-button class="md-icon-button">
-                            <md-icon>refresh</md-icon>
-                        </md-button>
+        <v-navigation-drawer permanent expand-on-hover app>
+            <v-list nav dense>
+                <v-list-item link to="/" exact>
+                    <v-list-item-icon>
+                        <v-icon>mdi-home</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Home</v-list-item-title>
+                </v-list-item>
 
-                        <md-button class="md-icon-button">
-                            <md-icon>more_vert</md-icon>
-                        </md-button>
-                    </div>
-                </div>
-            </md-app-toolbar>
+                <v-list-item link to="/search" exact>
+                    <v-list-item-icon>
+                        <v-icon>mdi-magnify</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Search</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
 
-            <md-app-drawer :md-active.sync="showNavigation" md-swipeable>
-                <md-toolbar class="md-transparent" md-elevation="0">
-                    <span class="md-title">Drippy Music</span>
-                </md-toolbar>
-
-                <md-list>
-                    <md-list-item to="/" exact>
-                        <md-icon>home</md-icon>
-                        <span class="md-list-item-text">Home</span>
-                    </md-list-item>
-
-                    <md-list-item to="/search" exact>
-                        <md-icon>search</md-icon>
-                        <span class="md-list-item-text">Search</span>
-                    </md-list-item>
-                </md-list>
-            </md-app-drawer>
-
-            <md-app-content>
+        <v-content>
+            <v-container fluid>
                 <router-view />
-            </md-app-content>
-        </md-app>
+            </v-container>
+        </v-content>
 
-        <div class="player md-elevation-12 md-layout md-alignment-center-space-between" v-if="loaded">
-            <img class="artwork" :src="current_song.artwork_url" />
+        <v-container class="player primary" fluid v-if="current_song.data">
+            <v-row align="center" justify="center" no-gutters>
+                <v-col align="left" class="player-data">
+                    <div>
+                        <v-img width="72px" :src="current_song.artwork_url"></v-img>
+                    </div>
 
-            <div class="md-layout-item md-layout md-gutter md-alignment-center-left">
-                <div class="song-info md-layout-item">
-                    <div><b>{{ current_song.title }}</b></div>
-                    <div>{{ current_song.artists.join(', ') }}</div>
-                </div>
-            </div>
+                    <v-container class="player-info" fill-height fluid>
+                        <div>
+                            <div v-text="current_song.title" class="body-2 font-weight-bold"></div>
+                            <div v-text="current_song.artists.join(', ')" class="body-2 grey--text"></div>
+                        </div>
+                    </v-container>
+                </v-col>
 
-            <div class="md-layout-item md-layout md-gutter md-alignment-center-center large-controls">
-                <div class="md-layout-item">
-                    <md-icon>repeat</md-icon>
-                </div>
-                <div class="md-layout-item">
-                    <md-icon>skip_previous</md-icon>
-                </div>
-                <div class="md-layout-item">
-                    <md-button class="md-icon-button" @click="toggle">
-                        <md-icon class="md-size-2x" v-if="!playing">play_circle_filled</md-icon>
-                        <md-icon class="md-size-2x" v-else>pause_circle_filled</md-icon>
-                    </md-button>
-                </div>
-                <div class="md-layout-item">
-                    <md-icon>skip_next</md-icon>
-                </div>
-                <div class="md-layout-item">
-                    <md-icon>shuffle</md-icon>
-                </div>
-            </div>
+                <v-col align="center">
+                    <v-btn class="player-control" icon>
+                        <v-icon>mdi-repeat</v-icon>
+                    </v-btn>
+                    <v-btn class="player-control" icon>
+                        <v-icon>mdi-skip-previous</v-icon>
+                    </v-btn>
+                    <v-btn class="player-control" icon @click="toggle">
+                        <v-icon x-large v-if="!playing">mdi-play-circle-outline</v-icon>
+                        <v-icon x-large v-if="playing">mdi-pause-circle-outline</v-icon>
+                    </v-btn>
+                    <v-btn class="player-control" icon>
+                        <v-icon>mdi-skip-next</v-icon>
+                    </v-btn>
+                    <v-btn class="player-control" icon>
+                        <v-icon>mdi-shuffle</v-icon>
+                    </v-btn>
+                </v-col>
 
-            <div class="md-layout-item md-layout md-gutter md-alignment-center-right small-controls">
-                <div class="md-layout-item">
-                    <md-button class="md-icon-button" @click="toggle">
-                        <md-icon class="md-size-2x" v-if="!playing">play_arrow</md-icon>
-                        <md-icon class="md-size-2x" v-else>pause</md-icon>
-                    </md-button>
-                </div>
-            </div>
+                <v-col align="right">
+                    <v-btn class="player-option" icon color="pink">
+                        <v-icon>mdi-heart-outline</v-icon>
+                    </v-btn>
 
-            <div class="actions md-layout-item md-layout md-gutter md-alignment-center-right">
-                <div class="md-layout-item">
-                    <md-icon>thumb_up</md-icon>
-                </div>
-                <div class="md-layout-item">
-                    <md-icon>thumb_down</md-icon>
-                </div>
-                <div class="md-layout-item">
-                    <md-icon>more_vert</md-icon>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <v-btn class="player-option" icon>
+                        <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-app>
 </template>
 
 <script>
 export default {
-    name: "Main",
+    name: 'Main',
     data: () => ({
-        audio: new Audio(),
-        loaded: false,
         playing: false,
-        current_song: { artists: [] },
-        showNavigation: false
+        audio: new Audio(),
+        current_song: { artists: [] }
     }),
     mounted() {
         this.audio.autoplay = true;
         this.$root.$on('playback_started', (song) => {
+            this.playing = true;
             this.current_song = song;
-            this.playing = this.loaded = true;
             this.audio.src = `${this.$root.api_url}/stream/${this.$root.userdata['idToken']}/${song.data}`;
         });
         this.audio.addEventListener('play', () => this.playing = !this.audio.paused);
@@ -125,70 +99,37 @@ export default {
             this.playing ? this.audio.pause() : this.audio.play();
         }
     }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-.md-app {
-    min-height: 100vh;
-}
-
-.md-layout-item {
-    flex: none;
-}
-
-.md-layout .md-layout {
-    flex: 1 !important;
+.v-navigation-drawer {
+    height: calc(100vh - 72px) !important;
 }
 
 .player {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -khtml-user-select: none !important;
-    -ms-user-select: none !important;
-}
-
-.song-info {
-    position: fixed;
-    padding-left: 0px !important;
-    margin-left: 90px !important;
-}
-
-.small-controls {
-    margin-right: 16px !important;
-}
-
-div.player {
     bottom: 0;
-    width: 100%;
+    z-index: 10;
+    padding: 0px;
     position: fixed;
     min-height: 72px;
-    background-color: white;
 }
 
-div.player.md-layout.md-gutter {
-    margin-right: 0px;
-    margin-left: 0px;
+.player-control {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
-img.artwork {
-    max-width: 72px;
-    position: fixed;
+.player-data {
+    display: inline-flex;
 }
 
-@media screen and (max-width: 700px) {
-    .large-controls {
-        display: none;
-    }
-
-    .actions {
-        display: none;
-    }
+.player-info {
+    min-height: 72px;
+    padding-left: 24px;
 }
 
-@media screen and (min-width: 700px) {
-    .small-controls {
-        display: none;
-    }
+.player-option {
+    margin-right: 16px;
 }
 </style>

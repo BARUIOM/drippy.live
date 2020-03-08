@@ -1,9 +1,10 @@
 <template>
-    <div></div>
+    <v-container></v-container>
 </template>
 
 <script>
 export default {
-    name: "Home"
-};
+    name: 'Home',
+    data: () => ({})
+}
 </script>

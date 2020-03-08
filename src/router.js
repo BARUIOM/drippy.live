@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Home from '../components/Home.vue'
-import Search from '../components/Search.vue'
+import Home from './components/Home'
+import Search from './components/Search'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
     {
@@ -17,7 +17,6 @@ const routes = [
         name: 'search',
         component: Search
     }
-]
+];
 
-const router = new VueRouter({ routes })
-export default router
+export default new VueRouter({ routes });
