@@ -2,7 +2,7 @@
     <v-app>
         <v-container fill-height fluid>
             <v-row align="center" justify="center">
-                <v-col cols="3">
+                <v-col sm="6" lg="4" xl="3">
                     <v-card>
                         <v-card-title>Drippy Music</v-card-title>
                         <v-card-subtitle>Unlimited music anywhere</v-card-subtitle>
@@ -88,5 +88,9 @@ export default {
 <style lang="scss" scoped>
 .main {
     min-height: 100vh;
+}
+
+.row {
+    margin: 0px;
 }
 </style>
