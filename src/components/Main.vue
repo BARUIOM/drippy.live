@@ -37,7 +37,7 @@
 
                     <v-container class="player-info" fill-height fluid>
                         <div>
-                            <div v-text="current_song.title" class="body-2 font-weight-bold"></div>
+                            <div v-text="current_song.title" class="body-2 font-weight-bold text-no-wrap"></div>
                             <div v-text="current_song.artists.join(', ')" class="body-2 grey--text"></div>
                         </div>
                     </v-container>
@@ -69,6 +69,13 @@
 
                     <v-btn class="player-option" icon>
                         <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
+                </v-col>
+
+                <v-col align="right" class="player-small">
+                    <v-btn class="player-option" icon @click="toggle">
+                        <v-icon x-large v-if="!playing">mdi-play</v-icon>
+                        <v-icon x-large v-if="playing">mdi-pause</v-icon>
                     </v-btn>
                 </v-col>
             </v-row>
@@ -105,6 +112,12 @@ export default {
 <style lang="scss" scoped>
 @media screen and (max-width: 840px) {
     .player-large {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 840px) {
+    .player-small {
         display: none;
     }
 }
