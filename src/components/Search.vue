@@ -4,7 +4,7 @@
             <v-text-field v-model="search_input" label="Search" color="orange" prepend-inner-icon="mdi-magnify" solo clearable required></v-text-field>
         </v-form>
 
-        <v-simple-table v-if="search_results.length">
+        <v-simple-table v-if="search_results.length" class="results-large">
             <thead>
                 <tr>
                     <th></th>
@@ -16,7 +16,9 @@
             <tbody>
                 <tr v-for="item in search_results" :key="item[0].data" @click="play(item[0])" class="table-item">
                     <td class="song-artwork">
-                        <v-img :src="item[0].artwork_url" class="song-artwork" />
+                        <v-avatar size="32" tile>
+                            <v-img :src="item[0].artwork_url" />
+                        </v-avatar>
                     </td>
                     <td>{{ item[0].title }}</td>
                     <td>{{ item[0].artists.join(', ') }}</td>
@@ -24,6 +26,23 @@
                 </tr>
             </tbody>
         </v-simple-table>
+
+        <v-list v-if="search_results.length" class="results-small" three-line>
+            <template v-for="(item, index) in search_results">
+                <v-list-item :key="item[0].data" @click="play(item[0])">
+                    <v-list-item-avatar tile size="64">
+                        <v-img :src="item[0].artwork_url" />
+                    </v-list-item-avatar>
+
+                    <v-list-item-content>
+                        <v-list-item-title v-text="item[0].title"></v-list-item-title>
+                        <v-list-item-subtitle v-text="item[0].album"></v-list-item-subtitle>
+                        <v-list-item-subtitle v-text="item[0].artists.join(', ')"></v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-divider :key="index"></v-divider>
+            </template>
+        </v-list>
     </v-container>
 </template>
 
@@ -58,6 +77,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 840px) {
+    .results-large {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 840px) {
+    .results-small {
+        display: none;
+    }
+}
+
 .song-artwork {
     width: 32px;
 }

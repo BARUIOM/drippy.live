@@ -43,7 +43,7 @@
                     </v-container>
                 </v-col>
 
-                <v-col align="center">
+                <v-col align="center" class="player-large">
                     <v-btn class="player-control" icon>
                         <v-icon>mdi-repeat</v-icon>
                     </v-btn>
@@ -62,7 +62,7 @@
                     </v-btn>
                 </v-col>
 
-                <v-col align="right">
+                <v-col align="right" class="player-large">
                     <v-btn class="player-option" icon color="pink">
                         <v-icon>mdi-heart-outline</v-icon>
                     </v-btn>
@@ -103,6 +103,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 840px) {
+    .player-large {
+        display: none;
+    }
+}
+
 .v-navigation-drawer {
     height: calc(100vh - 72px) !important;
 }
