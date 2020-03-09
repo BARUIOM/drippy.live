@@ -1,34 +1,29 @@
 <template>
     <v-app>
         <v-app-bar app color="primary">
+            <v-btn icon @click.stop="drawer = !drawer">
+                <v-icon>mdi-menu</v-icon>
+            </v-btn>
             <v-spacer></v-spacer>
         </v-app-bar>
 
-        <v-navigation-drawer v-bind:class="{ 'player-drawer': current_song.data }" permanent expand-on-hover app>
-            <v-list nav dense>
-                <v-list-item link to="/" exact>
-                    <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>Home</v-list-item-title>
-                </v-list-item>
+        <div v-bind:class="{ 'player-drawer': player }">
+            <v-navigation-drawer class="drawer-large" permanent expand-on-hover app>
+                <Drawer />
+            </v-navigation-drawer>
 
-                <v-list-item link to="/search" exact>
-                    <v-list-item-icon>
-                        <v-icon>mdi-magnify</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>Search</v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-navigation-drawer>
+            <v-navigation-drawer class="drawer-small" v-model="drawer" absolute temporary>
+                <Drawer />
+            </v-navigation-drawer>
+        </div>
 
         <v-content>
-            <v-container v-bind:class="{ 'player-content': current_song.data, 'no-player-content': !current_song.data }" class="overflow-y-auto" fluid>
+            <v-container v-bind:class="{ 'player-content': player, 'no-player-content': !player }" class="overflow-y-auto" fluid>
                 <router-view />
             </v-container>
         </v-content>
 
-        <v-container class="player primary" fluid v-if="current_song.data">
+        <v-container class="player primary" fluid v-if="player">
             <v-row align="center" justify="center" no-gutters>
                 <v-col align="left" class="player-data">
                     <div>
@@ -84,13 +79,24 @@
 </template>
 
 <script>
+import Drawer from './Drawer'
+
 export default {
     name: 'Main',
+    components: { Drawer },
     data: () => ({
+        drawer: false,
         playing: false,
         audio: new Audio(),
         current_song: { artists: [] }
     }),
+    computed: {
+        player: {
+            get: function() {
+                return this.current_song.data !== undefined;
+            }
+        }
+    },
     mounted() {
         this.audio.autoplay = true;
         this.$root.$on('playback_started', (song) => {
@@ -114,12 +120,32 @@ export default {
     .player-large {
         display: none;
     }
+
+    .drawer-large {
+        display: none;
+    }
+
+    .v-content {
+        padding-left: 0px !important;
+    }
 }
 
 @media screen and (min-width: 840px) {
     .player-small {
         display: none;
     }
+
+    .drawer-small {
+        display: none;
+    }
+}
+
+.v-app-bar {
+    left: 0px !important;
+}
+
+.v-navigation-drawer {
+    max-height: inherit !important;
 }
 
 .player-drawer {
