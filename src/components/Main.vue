@@ -5,9 +5,18 @@
                 <v-icon>mdi-menu</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
+            <div class="d-flex align-center">
+                <v-img
+                    class="shrink mr-2"
+                    src="../assets/logo.svg"
+                    transition="scale-transition"
+                    width="48"
+                    contain
+                />
+            </div>
         </v-app-bar>
 
-        <div v-bind:class="{ 'player-drawer': player }">
+        <div v-bind:class="{ 'player-drawer': isLoaded }">
             <v-navigation-drawer class="drawer-large" permanent expand-on-hover app>
                 <Drawer />
             </v-navigation-drawer>
@@ -18,12 +27,12 @@
         </div>
 
         <v-content>
-            <v-container v-bind:class="{ 'player-content': player, 'no-player-content': !player }" class="overflow-y-auto" fluid>
+            <v-container v-bind:class="{ 'player-content': isLoaded, 'no-player-content': !isLoaded }" class="overflow-y-auto" fluid>
                 <router-view />
             </v-container>
         </v-content>
 
-        <v-container class="player primary" fluid v-if="player">
+        <v-container class="player primary" fluid v-if="isLoaded">
             <v-row align="center" justify="center" no-gutters>
                 <v-col align="left" class="player-data">
                     <div>
@@ -32,8 +41,14 @@
 
                     <v-container class="player-info" fill-height fluid>
                         <div>
-                            <div v-text="current_song.title" class="body-2 font-weight-bold text-no-wrap"></div>
-                            <div v-text="current_song.artists.join(', ')" class="body-2 grey--text"></div>
+                            <div
+                                v-text="current_song.title"
+                                class="body-2 font-weight-bold text-no-wrap"
+                            ></div>
+                            <div
+                                v-text="current_song.artists.join(', ')"
+                                class="body-2 grey--text text-no-wrap"
+                            ></div>
                         </div>
                     </v-container>
                 </v-col>
@@ -46,8 +61,7 @@
                         <v-icon>mdi-skip-previous</v-icon>
                     </v-btn>
                     <v-btn class="player-control" icon @click="toggle">
-                        <v-icon x-large v-if="!playing">mdi-play-circle-outline</v-icon>
-                        <v-icon x-large v-if="playing">mdi-pause-circle-outline</v-icon>
+                        <v-icon x-large v-text="control_icon"></v-icon>
                     </v-btn>
                     <v-btn class="player-control" icon>
                         <v-icon>mdi-skip-next</v-icon>
@@ -59,18 +73,29 @@
 
                 <v-col align="right" class="player-large">
                     <v-btn class="player-option" icon color="pink">
-                        <v-icon>mdi-heart-outline</v-icon>
+                        <v-icon v-text="like_icon"></v-icon>
                     </v-btn>
 
-                    <v-btn class="player-option" icon>
-                        <v-icon>mdi-dots-vertical</v-icon>
-                    </v-btn>
+                    <v-dialog v-model="dialog">
+                        <template v-slot:activator="{ on }">
+                            <v-btn class="player-option" v-on="on" icon>
+                                <v-icon>mdi-playlist-plus</v-icon>
+                            </v-btn>
+                        </template>
+
+                        <v-card>
+                            <v-card-title class="headline" primary-title>Add song to playlist</v-card-title>
+
+                            <v-card-text>
+                                <PlaylistsDialog @selected="addToPlaylist" />
+                            </v-card-text>
+                        </v-card>
+                    </v-dialog>
                 </v-col>
 
                 <v-col align="right" class="player-small">
                     <v-btn class="player-option" icon @click="toggle">
-                        <v-icon x-large v-if="!playing">mdi-play</v-icon>
-                        <v-icon x-large v-if="playing">mdi-pause</v-icon>
+                        <v-icon x-large v-text="control_icon_small"></v-icon>
                     </v-btn>
                 </v-col>
             </v-row>
@@ -79,40 +104,54 @@
 </template>
 
 <script>
-import Drawer from './Drawer'
+import drippy from "../plugins/drippy.js";
+import player from "../plugins/media-player.js";
+
+import Drawer from "./Drawer";
+import PlaylistsDialog from "./PlaylistsDialog";
 
 export default {
-    name: 'Main',
-    components: { Drawer },
+    name: "Main",
+    components: { Drawer, PlaylistsDialog },
     data: () => ({
         drawer: false,
-        playing: false,
-        audio: new Audio(),
-        current_song: { artists: [] }
+        dialog: false,
+        like_icon: "mdi-heart-outline",
+        control_icon: "mdi-pause-circle-outline",
+        control_icon_small: 'mdi-pause',
+        current_song: { artists: [], liked: false }
     }),
     computed: {
-        player: {
-            get: function() {
+        isLoaded: {
+            get: function () {
                 return this.current_song.data !== undefined;
             }
         }
     },
     mounted() {
-        this.audio.autoplay = true;
-        this.$root.$on('playback_started', (song) => {
-            this.playing = true;
-            this.current_song = song;
-            this.audio.src = `${this.$root.api_url}/stream/${this.$root.userdata['idToken']}/${song.data}`;
+        this.$root.$on("playback_started", track => {
+            this.current_song = Object.assign({}, track);
+            player.play(track, this.$root.userdata["idToken"]);
         });
-        this.audio.addEventListener('play', () => this.playing = !this.audio.paused);
-        this.audio.addEventListener('pause', () => this.playing = !this.audio.paused);
     },
     methods: {
         toggle() {
-            this.playing ? this.audio.pause() : this.audio.play();
+            if (player.playing) {
+                player.pause();
+                this.control_icon = "mdi-play-circle-outline";
+                this.control_icon_small = "mdi-play";
+            } else {
+                player.resume();
+                this.control_icon = "mdi-pause-circle-outline";
+                this.control_icon_small = "mdi-pause";
+            }
+        },
+        async addToPlaylist(playlist_id) {
+            this.dialog = false;
+            await drippy.addTrackToPlaylist(playlist_id, this.current_song.data);
         }
     }
-}
+};
 </script>
 
 <style lang="scss" scoped>

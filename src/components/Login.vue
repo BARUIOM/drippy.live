@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import drippy from '../plugins/drippy.js'
+
 export default {
     name: 'Login',
     data: () => ({
@@ -51,25 +53,15 @@ export default {
             this.snackbar = false;
             try {
                 if (this.new_user) {
-                    const response = await this.axios({
-                        url: '/register',
-                        baseURL: this.$root.api_url,
-                        method: 'POST',
-                        data: { email: this.email, password: this.password }
-                    });
+                    const response = await drippy.register(this.email, this.password);
 
                     this.new_user = false;
                     this.status = 'success';
-                    this.message = response.data['message'];
+                    this.message = response['message'];
                     this.snackbar = true;
                 } else {
-                    const response = await this.axios({
-                        url: '/login',
-                        baseURL: this.$root.api_url,
-                        method: 'POST',
-                        data: { email: this.email, password: this.password }
-                    });
-                    this.$emit('set-user', 'Main', response.data);
+                    const response = await drippy.login(this.email, this.password)
+                    this.$emit('set-user', 'Main', response);
                 }
             } catch (error) {
                 if (error.response && error.response.status == 401) {
