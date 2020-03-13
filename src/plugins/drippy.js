@@ -62,38 +62,71 @@ export default {
         return [...JSON.parse(window.sessionStorage["playlists"])];
     },
     async getPlaylist(playlist_id) {
-        const response = await axios({
-            url: `/playlist/${playlist_id}`,
-            baseURL: api_url,
-            headers: { "User-Token": data.token }
-        });
-        return response.data;
+        if (!window.sessionStorage[playlist_id]) {
+            const response = await axios({
+                url: `/playlist/${playlist_id}`,
+                baseURL: api_url,
+                headers: { "User-Token": data.token }
+            });
+    
+            window.sessionStorage[playlist_id] = JSON.stringify(response.data);
+            return response.data;
+        }
+        return JSON.parse(window.sessionStorage[playlist_id]);
     },
-    async addTrackToPlaylist(playlist, track) {
+    async addTrackToPlaylist(playlist_id, track) {
         const response = await axios({
             method: "POST",
             url: "/save",
             baseURL: api_url,
             data: {
                 data: track,
-                playlist: playlist
+                playlist: playlist_id
             },
             headers: { "User-Token": data.token }
         });
-        return response.data;
+
+        if (window.sessionStorage[playlist_id]) {
+            let playlist = JSON.parse(window.sessionStorage[playlist_id]);
+            playlist['songs'].push(response.data);
+            window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+        }
     },
-    async removeTrackFromPlaylist(playlist, track) {
-        const response = await axios({
+    async removeTrackFromPlaylist(playlist_id, track_id) {
+        await axios({
             method: "POST",
             url: "/remove",
             baseURL: api_url,
             data: {
-                data: track,
-                playlist: playlist
+                id: track_id,
+                playlist: playlist_id
             },
             headers: { "User-Token": data.token }
         });
-        return response.data;
+
+        if (window.sessionStorage[playlist_id]) {
+            let playlist = JSON.parse(window.sessionStorage[playlist_id]);
+            let song = playlist['songs'].find(e => e['id'] == track_id);
+            playlist['songs'].splice(playlist['songs'].indexOf(song), 1);
+            window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+        }
+    },
+    async createPlaylist(name) {
+        const response = await axios({
+            method: "POST",
+            url: "/create_playlist",
+            baseURL: api_url,
+            data: {
+                name: name,
+            },
+            headers: { "User-Token": data.token }
+        });
+
+        if (window.sessionStorage['playlists']) {
+            let playlists = [...JSON.parse(window.sessionStorage['playlists'])];
+            playlists.unshift(response.data);
+            window.sessionStorage['playlists'] = JSON.stringify(playlists);
+        }
     },
     async search(query) {
         const response = await axios({

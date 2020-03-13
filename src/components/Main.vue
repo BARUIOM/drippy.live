@@ -10,7 +10,7 @@
                     class="shrink mr-2"
                     src="../assets/logo.svg"
                     transition="scale-transition"
-                    width="48"
+                    width="40"
                     contain
                 />
             </div>
@@ -28,7 +28,7 @@
 
         <v-content>
             <v-container v-bind:class="{ 'player-content': isLoaded, 'no-player-content': !isLoaded }" class="overflow-y-auto" fluid>
-                <router-view />
+                <router-view @playlist-action="openPlaylist" />
             </v-container>
         </v-content>
 
@@ -83,13 +83,7 @@
                             </v-btn>
                         </template>
 
-                        <v-card>
-                            <v-card-title class="headline" primary-title>Add song to playlist</v-card-title>
-
-                            <v-card-text>
-                                <PlaylistsDialog @selected="addToPlaylist" />
-                            </v-card-text>
-                        </v-card>
+                        <Dialog v-bind:track="current_song" @playlist-action="addToPlaylist" />
                     </v-dialog>
                 </v-col>
 
@@ -108,11 +102,11 @@ import drippy from "../plugins/drippy.js";
 import player from "../plugins/media-player.js";
 
 import Drawer from "./Drawer";
-import PlaylistsDialog from "./PlaylistsDialog";
+import Dialog from "./PlaylistsDialog";
 
 export default {
     name: "Main",
-    components: { Drawer, PlaylistsDialog },
+    components: { Drawer, Dialog },
     data: () => ({
         drawer: false,
         dialog: false,
@@ -146,9 +140,12 @@ export default {
                 this.control_icon_small = "mdi-pause";
             }
         },
-        async addToPlaylist(playlist_id) {
+        async addToPlaylist(playlist, track) {
             this.dialog = false;
-            await drippy.addTrackToPlaylist(playlist_id, this.current_song.data);
+            await drippy.addTrackToPlaylist(playlist.id, track.data);
+        },
+        async openPlaylist(playlist) {
+            await this.$router.push({ name: 'playlist', params: { id: playlist.id }});
         }
     }
 };
