@@ -28,7 +28,7 @@ export default {
     },
     sockets: {
         async ready() {
-            if (drippy.userdata && (drippy.userdata["idToken"] || drippy.userdata["refreshToken"])) {
+            if (drippy.userdata["idToken"] || drippy.userdata["refreshToken"]) {
                 drippy.validate().then(() => this.update("Main")).catch(() => {
                     drippy.refresh().then(() => {
                         if (drippy.userdata['idToken']) {

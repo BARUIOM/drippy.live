@@ -3,7 +3,10 @@ import { api_url } from "../main.js";
 
 const data = {
     get userdata() {
-        return JSON.parse(window.localStorage["USER_DATA"]);
+        if (window.localStorage["USER_DATA"]) {
+            return JSON.parse(window.localStorage["USER_DATA"]);
+        }
+        return {};
     },
     get token() {
         return this.userdata['idToken'];
@@ -94,14 +97,14 @@ export default {
             throw error;
         }
     },
-    async addTrackToPlaylist(playlist_id, track) {
+    async addTrackToPlaylist(playlist_id, track_id) {
         try {
             const response = await axios({
                 method: "POST",
                 url: "/save",
                 baseURL: api_url,
                 data: {
-                    data: track,
+                    id: track_id,
                     playlist: playlist_id
                 },
                 headers: { "User-Token": data.token }
@@ -115,7 +118,7 @@ export default {
         } catch (error) {
             if (error.response && error.response.status == 403) {
                 await this.refresh();
-                return await this.addTrackToPlaylist(playlist_id, track);
+                return await this.addTrackToPlaylist(playlist_id, track_id);
             }
             throw error;
         }
