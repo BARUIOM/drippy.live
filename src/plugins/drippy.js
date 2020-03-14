@@ -179,9 +179,10 @@ export default {
     async search(query) {
         try {
             const response = await axios({
-                url: '/audio',
+                method: "POST",
+                url: '/search',
                 baseURL: api_url,
-                params: { query: query },
+                data: { query: query },
                 headers: { 'User-Token': data.token }
             });
             window.sessionStorage['search_results'] = JSON.stringify(response.data);
