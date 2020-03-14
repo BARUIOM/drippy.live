@@ -10,7 +10,7 @@
                                     <v-icon size="64">mdi-plus</v-icon>
                                 </v-row>
                                 <v-row justify="center">
-                                    <v-card-title class="text-no-wrap">Create a new playlist</v-card-title>
+                                    <v-card-title class="text-no-wrap">New playlist</v-card-title>
                                 </v-row>
                             </v-container>
                         </v-card>

@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Home from './components/Home'
 import Search from './components/Search'
 import Playlist from './components/Playlist'
 import Playlists from './components/Playlists'
@@ -12,11 +11,6 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: Home
-    },
-    {
-        path: '/search',
-        name: 'search',
         component: Search
     },
     {

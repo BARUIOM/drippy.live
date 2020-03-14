@@ -34,26 +34,28 @@
 
         <v-container class="player primary" fluid v-if="isLoaded">
             <v-row align="center" justify="center" no-gutters>
-                <v-col align="left" class="player-data">
+                <v-col align="left" class="player-data" cols="6" md="4">
                     <div>
                         <v-img width="72px" :src="current_song.artwork_url"></v-img>
                     </div>
 
                     <v-container class="player-info" fill-height fluid>
-                        <div>
+                        <v-row>
                             <div
                                 v-text="current_song.title"
-                                class="body-2 font-weight-bold text-no-wrap"
+                                class="body-2 font-weight-bold text-truncate"
                             ></div>
+                        </v-row>
+                        <v-row>
                             <div
                                 v-text="current_song.artists.join(', ')"
-                                class="body-2 grey--text text-no-wrap"
+                                class="body-2 grey--text text-truncate"
                             ></div>
-                        </div>
+                        </v-row>
                     </v-container>
                 </v-col>
 
-                <v-col align="center" class="player-large">
+                <v-col align="center" class="player-large" cols="4">
                     <v-btn class="player-control" icon>
                         <v-icon>mdi-repeat</v-icon>
                     </v-btn>
@@ -71,7 +73,7 @@
                     </v-btn>
                 </v-col>
 
-                <v-col align="right" class="player-large">
+                <v-col align="right" class="player-large" cols="4">
                     <v-btn class="player-option" icon color="pink">
                         <v-icon v-text="like_icon"></v-icon>
                     </v-btn>
@@ -87,7 +89,7 @@
                     </v-dialog>
                 </v-col>
 
-                <v-col align="right" class="player-small">
+                <v-col align="right" class="player-small" cols="6">
                     <v-btn class="player-option" icon @click="toggle">
                         <v-icon x-large v-text="control_icon_small"></v-icon>
                     </v-btn>
@@ -145,14 +147,14 @@ export default {
             await drippy.addTrackToPlaylist(playlist.id, track.data);
         },
         async openPlaylist(playlist) {
-            await this.$router.push({ name: 'playlist', params: { id: playlist.id }});
+            await this.$router.push({ name: 'playlist', params: { id: playlist.id } });
         }
     }
 };
 </script>
 
 <style lang="scss" scoped>
-@media screen and (max-width: 840px) {
+@media screen and (max-width: 960px) {
     .player-large {
         display: none;
     }
@@ -166,7 +168,7 @@ export default {
     }
 }
 
-@media screen and (min-width: 840px) {
+@media screen and (min-width: 960px) {
     .player-small {
         display: none;
     }
@@ -215,7 +217,10 @@ export default {
 
 .player-info {
     min-height: 72px;
-    padding-left: 24px;
+
+    .row {
+        margin: 0px;
+    }
 }
 
 .player-option {
