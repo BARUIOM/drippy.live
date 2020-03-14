@@ -59,13 +59,13 @@
                     <v-btn class="player-control" icon>
                         <v-icon>mdi-repeat</v-icon>
                     </v-btn>
-                    <v-btn class="player-control" icon>
+                    <v-btn class="player-control" icon @click="previous">
                         <v-icon>mdi-skip-previous</v-icon>
                     </v-btn>
                     <v-btn class="player-control" icon @click="toggle">
                         <v-icon x-large v-text="control_icon"></v-icon>
                     </v-btn>
-                    <v-btn class="player-control" icon>
+                    <v-btn class="player-control" icon @click="next">
                         <v-icon>mdi-skip-next</v-icon>
                     </v-btn>
                     <v-btn class="player-control" icon>
@@ -101,7 +101,6 @@
 
 <script>
 import drippy from "../plugins/drippy.js";
-import player from "../plugins/media-player.js";
 
 import Drawer from "./Drawer";
 import Dialog from "./PlaylistsDialog";
@@ -115,32 +114,32 @@ export default {
         like_icon: "mdi-heart-outline",
         control_icon: "mdi-pause-circle-outline",
         control_icon_small: 'mdi-pause',
-        current_song: { artists: [], liked: false }
+        isLoaded: false,
+        current_song: {}
     }),
-    computed: {
-        isLoaded: {
-            get: function () {
-                return this.current_song.data !== undefined;
-            }
-        }
-    },
     mounted() {
-        this.$root.$on("playback_started", track => {
-            this.current_song = Object.assign({}, track);
-            player.play(track, this.$root.userdata["idToken"]);
+        this.$player.on('playback-started', track => {
+            this.isLoaded = true;
+            this.current_song = track;
+        });
+        this.$player.on('resume', () => {
+            this.control_icon = "mdi-pause-circle-outline";
+            this.control_icon_small = "mdi-pause";
+        });
+        this.$player.on('pause', () => {
+            this.control_icon = "mdi-play-circle-outline";
+            this.control_icon_small = "mdi-play";
         });
     },
     methods: {
         toggle() {
-            if (player.playing) {
-                player.pause();
-                this.control_icon = "mdi-play-circle-outline";
-                this.control_icon_small = "mdi-play";
-            } else {
-                player.resume();
-                this.control_icon = "mdi-pause-circle-outline";
-                this.control_icon_small = "mdi-pause";
-            }
+            this.$player.toggle();
+        },
+        next() {
+            this.$player.next();
+        },
+        previous() {
+            this.$player.previous();
         },
         async addToPlaylist(playlist, track) {
             this.dialog = false;

@@ -4,8 +4,8 @@
             <v-text-field v-model="search_input" label="Search" color="orange" prepend-inner-icon="mdi-magnify" solo clearable required></v-text-field>
         </v-form>
 
-        <SongTable v-bind:song_list="song_list" class="results-large" />
-        <SongList v-bind:song_list="song_list" class="results-small" />
+        <SongTable v-bind:song_list="song_list" class="results-large" @selected-track="play" />
+        <SongList v-bind:song_list="song_list" class="results-small" @selected-track="play" />
     </v-container>
 </template>
 
@@ -31,6 +31,10 @@ export default {
     methods: {
         async doSearch() {
             this.search_results = await drippy.search(this.search_input);
+        },
+        play(track) {
+            this.$player.tracks = [];
+            this.$player.play(track);
         }
     },
     watch: {
@@ -44,13 +48,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media screen and (max-width: 840px) {
+@media screen and (max-width: 960px) {
     .results-large {
         display: none;
     }
 }
 
-@media screen and (min-width: 840px) {
+@media screen and (min-width: 960px) {
     .results-small {
         display: none;
     }

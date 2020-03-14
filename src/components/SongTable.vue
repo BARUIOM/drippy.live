@@ -13,7 +13,7 @@
             <tr
                 v-for="(item, index) in song_list"
                 :key="index + '-' + String(item.data)"
-                @click="play(item)"
+                @click="$emit('selected-track', item)"
                 class="table-item"
             >
                 <td class="song-artwork">
@@ -64,9 +64,6 @@ export default {
         dialog: false
     }),
     methods: {
-        play(song) {
-            this.$root.$emit('playback_started', song);
-        },
         async addToPlaylist(playlist, track) {
             this.dialog = false;
             await drippy.addTrackToPlaylist(playlist.id, track.data);

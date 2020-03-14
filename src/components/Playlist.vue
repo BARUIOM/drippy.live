@@ -17,7 +17,7 @@
                 </v-card>
             </v-col>
             <v-col>
-                <SongList v-bind:song_list="song_list" />
+                <SongList v-bind:song_list="song_list" @selected-track="play" />
             </v-col>
         </v-row>
     </v-container>
@@ -43,6 +43,10 @@ export default {
             this.name = playlist.name;
             this.song_list = [...playlist.songs];
             this.artworks = this.song_list.slice(0, 4).map(e => e['artwork_url']);
+            this.$player.tracks = this.song_list;
+        },
+        play(track) {
+            this.$player.play(track);
         }
     },
     mounted() {

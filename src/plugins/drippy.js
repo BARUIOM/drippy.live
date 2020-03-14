@@ -137,5 +137,8 @@ export default {
         });
         window.sessionStorage['search_results'] = JSON.stringify(response.data);
         return [...response.data];
+    },
+    getTrackUrl(track) {
+        return `${api_url}/stream/${data.token}/${track['data']}`;
     }
 }
