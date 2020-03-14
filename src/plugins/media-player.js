@@ -20,9 +20,8 @@ class Player extends EventEmitter {
         this._tracks = [...value];
     }
 
-    set playing(value) {
-        this._playing = value;
-        this.emit('state', this._playing);
+    set position(value) {
+        audio.currentTime = value;
     }
 
     next() {
@@ -71,8 +70,9 @@ class Player extends EventEmitter {
 }
 
 const player = new Player();
-audio.addEventListener('play', () => player.playing = !audio.paused);
-audio.addEventListener('pause', () => player.playing = !audio.paused);
+audio.addEventListener('timeupdate', () => player.emit('update', audio.currentTime));
+audio.addEventListener('play', () => player.emit('state', !audio.paused));
+audio.addEventListener('pause', () => player.emit('state', !audio.paused));
 audio.addEventListener('ended', () => {
     player.now_playing++;
     if (player.now_playing < player._tracks.length) {

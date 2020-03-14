@@ -27,12 +27,25 @@
         </div>
 
         <v-content>
-            <v-container v-bind:class="{ 'player-content': isLoaded, 'no-player-content': !isLoaded }" class="overflow-y-auto" fluid>
+            <v-container
+                v-bind:class="{ 'player-content': isLoaded, 'no-player-content': !isLoaded }"
+                class="overflow-y-auto"
+                fluid
+            >
                 <router-view @playlist-action="openPlaylist" />
             </v-container>
         </v-content>
 
-        <v-container class="player primary" fluid v-if="isLoaded">
+        <v-container class="player primary elevation-10" v-if="isLoaded" fluid>
+            <v-slider
+                step="0.01"
+                height="2"
+                color="orange"
+                :max="total"
+                v-model="position"
+                @change="setPosition"
+                hide-details
+            ></v-slider>
             <v-row align="center" justify="center" no-gutters>
                 <v-col align="left" class="player-data" cols="6" md="4">
                     <div>
@@ -115,12 +128,16 @@ export default {
         control_icon: "mdi-pause-circle-outline",
         control_icon_small: 'mdi-pause',
         isLoaded: false,
-        current_song: {}
+        current_song: {},
+        position: 0,
+        total: 100
     }),
     mounted() {
+        this.$player.on('update', value => this.position = value);
         this.$player.on('playback-started', track => {
             this.isLoaded = true;
             this.current_song = track;
+            this.total = this.current_song['duration'];
         });
         this.$player.on('state', (playing) => {
             if (playing) {
@@ -142,6 +159,9 @@ export default {
         previous() {
             this.$player.previous();
         },
+        setPosition(value) {
+            this.$player.position = value;
+        },
         async addToPlaylist(playlist, track) {
             this.dialog = false;
             await drippy.addTrackToPlaylist(playlist.id, track.data);
@@ -152,6 +172,16 @@ export default {
     }
 };
 </script>
+
+<style lang="scss">
+.player {
+    .v-slider {
+        z-index: 1;
+        margin: 0px;
+        cursor: pointer;
+    }
+}
+</style>
 
 <style lang="scss" scoped>
 @media screen and (max-width: 960px) {
