@@ -3,7 +3,7 @@
         <v-row dense>
             <v-dialog v-model="dialog" persistent max-width="600px">
                 <template v-slot:activator="{ on }">
-                    <v-col align="center" cols="6" sm="4" md="3" lg="2" xl="2">
+                    <v-col align="center" cols="6" sm="4" lg="2">
                         <v-card elevation="5" class="playlist" v-on="on">
                             <v-container fluid fill-height>
                                 <v-row justify="center">
@@ -24,7 +24,12 @@
                         <v-container>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field v-model="playlist_name" label="Name" color="orange" required></v-text-field>
+                                    <v-text-field
+                                        v-model="playlist_name"
+                                        label="Name"
+                                        color="orange"
+                                        required
+                                    ></v-text-field>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -37,16 +42,7 @@
                 </v-card>
             </v-dialog>
 
-            <v-col
-                v-for="item in playlists"
-                :key="item.name"
-                align="center"
-                cols="6"
-                sm="4"
-                md="3"
-                lg="2"
-                xl="2"
-            >
+            <v-col v-for="item in playlists" :key="item.name" align="center" cols="6" sm="4" lg="2">
                 <v-hover v-slot:default="{ hover }">
                     <v-card
                         elevation="5"
@@ -87,6 +83,7 @@ export default {
     }),
     async mounted() {
         this.playlists = await drippy.getPlaylists();
+        this.playlists.forEach(e => drippy.getPlaylist(e['id']));
     },
     methods: {
         async createPlaylist() {
