@@ -54,6 +54,7 @@ export default {
             method: 'POST',
             data: { email: email, password: password }
         });
+        window.localStorage["USER_DATA"] = JSON.stringify(response.data);
         return response.data;
     },
     async getPlaylists() {

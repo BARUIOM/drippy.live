@@ -3,7 +3,7 @@
         <v-overlay :value="overlay">
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
-        <component @set-user="update" v-bind:is="component" />
+        <component @update="update" v-bind:is="component" />
     </div>
 </template>
 

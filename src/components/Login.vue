@@ -60,8 +60,8 @@ export default {
                     this.message = response['message'];
                     this.snackbar = true;
                 } else {
-                    const response = await drippy.login(this.email, this.password)
-                    this.$emit('set-user', 'Main', response);
+                    await drippy.login(this.email, this.password);
+                    this.$emit('update', 'Main');
                 }
             } catch (error) {
                 if (error.response && error.response.status == 401) {
