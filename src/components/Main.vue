@@ -122,13 +122,14 @@ export default {
             this.isLoaded = true;
             this.current_song = track;
         });
-        this.$player.on('resume', () => {
-            this.control_icon = "mdi-pause-circle-outline";
-            this.control_icon_small = "mdi-pause";
-        });
-        this.$player.on('pause', () => {
-            this.control_icon = "mdi-play-circle-outline";
-            this.control_icon_small = "mdi-play";
+        this.$player.on('state', (playing) => {
+            if (playing) {
+                this.control_icon = "mdi-pause-circle-outline";
+                this.control_icon_small = "mdi-pause";
+            } else {
+                this.control_icon = "mdi-play-circle-outline";
+                this.control_icon_small = "mdi-play";
+            }
         });
     },
     methods: {

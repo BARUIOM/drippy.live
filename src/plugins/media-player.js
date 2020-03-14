@@ -8,7 +8,7 @@ class Player extends EventEmitter {
     constructor() {
         super();
         this._tracks = [];
-        this.playing = false;
+        this._playing = false;
         this.now_playing = 0;
     }
 
@@ -18,6 +18,11 @@ class Player extends EventEmitter {
 
     set tracks(value) {
         this._tracks = [...value];
+    }
+
+    set playing(value) {
+        this._playing = value;
+        this.emit('state', this._playing);
     }
 
     next() {
@@ -32,12 +37,10 @@ class Player extends EventEmitter {
 
     resume() {
         audio.play();
-        this.emit('resume');
     }
 
     pause() {
         audio.pause();
-        this.emit('pause');
     }
 
     play(track) {
@@ -51,10 +54,9 @@ class Player extends EventEmitter {
         }
 
         if (this.current) {
+            this.emit('playback-started', this.current);
             audio.src = drippy.getTrackUrl(this.current);
             audio.play();
-            this.emit('playback-started', this.current);
-            this.emit('resume');
         }
     }
 
@@ -73,7 +75,9 @@ audio.addEventListener('play', () => player.playing = !audio.paused);
 audio.addEventListener('pause', () => player.playing = !audio.paused);
 audio.addEventListener('ended', () => {
     player.now_playing++;
-    if (player.now_playing < player._tracks.length) player.play();
+    if (player.now_playing < player._tracks.length) {
+        player.play();
+    } else player.pause();
 });
 
 export default player;
