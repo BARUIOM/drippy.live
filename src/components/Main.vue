@@ -7,7 +7,7 @@
             <v-spacer></v-spacer>
             <div class="d-flex align-center">
                 <v-img
-                    class="shrink mr-2"
+                    class="shrink"
                     src="../assets/logo.svg"
                     transition="scale-transition"
                     width="40"

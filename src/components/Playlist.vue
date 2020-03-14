@@ -1,12 +1,14 @@
 <template>
     <v-container>
-        <v-row dense>
-            <v-col cols="12" md="6">
-                <v-card class="mx-auto" max-width="400" max-height="400">
-                    <div class="artworks">
-                        <v-img v-for="(item, i) in artworks" :src="item" :key="i"></v-img>
-                    </div>
-                </v-card>
+        <v-row>
+            <v-col class="pb-0" cols="12" md="6">
+                <v-container class="artworks">
+                    <v-row align="center" justify="center" no-gutters dense>
+                        <v-col v-for="(item, i) in artworks" :key="i" cols="6" md="5">
+                            <v-img :src="item"></v-img>
+                        </v-col>
+                    </v-row>
+                </v-container>
                 <v-container fluid>
                     <v-row align="center" justify="center">
                         <span class="headline font-weight-bold text-no-wrap" v-text="name"></span>
@@ -21,7 +23,7 @@
                     </v-row>
                 </v-container>
             </v-col>
-            <v-col cols="12" md="6">
+            <v-col class="pt-0" cols="12" md="6">
                 <SongList v-bind:song_list="song_list" @selected-track="play" />
             </v-col>
         </v-row>
@@ -70,34 +72,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.col {
-    padding: 12px;
-}
-
-div.artworks {
-    max-height: 400px;
-
-    .v-image:not(:only-child) {
-        max-width: 200px;
-    }
-
-    .v-image:nth-child(1) {
-        top: 0px;
-        left: 0px;
-    }
-
-    .v-image:nth-child(2) {
-        top: -200px;
-        left: 200px;
-    }
-
-    .v-image:nth-child(3) {
-        top: -200px;
-    }
-
-    .v-image:nth-child(4) {
-        top: -400px;
-        left: 200px;
-    }
+.artworks {
+    padding: 0px;
+    max-width: 400px;
 }
 </style>
