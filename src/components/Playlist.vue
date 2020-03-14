@@ -43,9 +43,9 @@ export default {
             this.name = playlist.name;
             this.song_list = [...playlist.songs];
             this.artworks = this.song_list.slice(0, 4).map(e => e['artwork_url']);
-            this.$player.tracks = this.song_list;
         },
         play(track) {
+            this.$player.tracks = this.song_list;
             this.$player.play(track);
         }
     },
