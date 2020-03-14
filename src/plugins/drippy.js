@@ -2,17 +2,21 @@ import axios from 'axios'
 import { api_url } from "../main.js";
 
 const data = {
+    get userdata() {
+        return JSON.parse(window.localStorage["USER_DATA"]);
+    },
     get token() {
-        let user = JSON.parse(window.localStorage["USER_DATA"]);
-        return user['idToken'];
+        return this.userdata['idToken'];
     },
     get refresh_token() {
-        let user = JSON.parse(window.localStorage["USER_DATA"]);
-        return user['refreshToken'];
+        return this.userdata['refreshToken'];
     }
 }
 
 export default {
+    get userdata() {
+        return data.userdata;
+    },
     async validate() {
         await axios({
             url: '/validate',
@@ -29,7 +33,7 @@ export default {
                 refresh_token: data.refresh_token
             }
         });
-        return response.data;
+        window.localStorage["USER_DATA"] = JSON.stringify(response.data);
     },
     async register(email, password) {
         const response = await axios({
@@ -50,93 +54,141 @@ export default {
         return response.data;
     },
     async getPlaylists() {
-        if (!window.sessionStorage['playlists']) {
-            const response = await axios({
-                url: "/playlists",
-                baseURL: api_url,
-                headers: { "User-Token": data.token }
-            });
-            window.sessionStorage["playlists"] = JSON.stringify(response.data);
-            return [...response.data];
+        try {
+            if (!window.sessionStorage['playlists']) {
+                const response = await axios({
+                    url: "/playlists",
+                    baseURL: api_url,
+                    headers: { "User-Token": data.token }
+                });
+                window.sessionStorage["playlists"] = JSON.stringify(response.data);
+                return [...response.data];
+            }
+            return [...JSON.parse(window.sessionStorage["playlists"])];
+        } catch (error) {
+            if (error.response && error.response.status == 403) {
+                await this.refresh();
+                return await this.getPlaylists();
+            }
+            throw error;
         }
-        return [...JSON.parse(window.sessionStorage["playlists"])];
     },
     async getPlaylist(playlist_id) {
-        if (!window.sessionStorage[playlist_id]) {
-            const response = await axios({
-                url: `/playlist/${playlist_id}`,
-                baseURL: api_url,
-                headers: { "User-Token": data.token }
-            });
-    
-            window.sessionStorage[playlist_id] = JSON.stringify(response.data);
-            return response.data;
+        try {
+            if (!window.sessionStorage[playlist_id]) {
+                const response = await axios({
+                    url: `/playlist/${playlist_id}`,
+                    baseURL: api_url,
+                    headers: { "User-Token": data.token }
+                });
+
+                window.sessionStorage[playlist_id] = JSON.stringify(response.data);
+                return response.data;
+            }
+            return JSON.parse(window.sessionStorage[playlist_id]);
+        } catch (error) {
+            if (error.response && error.response.status == 403) {
+                await this.refresh();
+                return await this.getPlaylist(playlist_id);
+            }
+            throw error;
         }
-        return JSON.parse(window.sessionStorage[playlist_id]);
     },
     async addTrackToPlaylist(playlist_id, track) {
-        const response = await axios({
-            method: "POST",
-            url: "/save",
-            baseURL: api_url,
-            data: {
-                data: track,
-                playlist: playlist_id
-            },
-            headers: { "User-Token": data.token }
-        });
+        try {
+            const response = await axios({
+                method: "POST",
+                url: "/save",
+                baseURL: api_url,
+                data: {
+                    data: track,
+                    playlist: playlist_id
+                },
+                headers: { "User-Token": data.token }
+            });
 
-        if (window.sessionStorage[playlist_id]) {
-            let playlist = JSON.parse(window.sessionStorage[playlist_id]);
-            playlist['songs'].push(response.data);
-            window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+            if (window.sessionStorage[playlist_id]) {
+                let playlist = JSON.parse(window.sessionStorage[playlist_id]);
+                playlist['songs'].push(response.data);
+                window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+            }
+        } catch (error) {
+            if (error.response && error.response.status == 403) {
+                await this.refresh();
+                return await this.addTrackToPlaylist(playlist_id, track);
+            }
+            throw error;
         }
     },
     async removeTrackFromPlaylist(playlist_id, track_id) {
-        await axios({
-            method: "POST",
-            url: "/remove",
-            baseURL: api_url,
-            data: {
-                id: track_id,
-                playlist: playlist_id
-            },
-            headers: { "User-Token": data.token }
-        });
+        try {
+            await axios({
+                method: "POST",
+                url: "/remove",
+                baseURL: api_url,
+                data: {
+                    id: track_id,
+                    playlist: playlist_id
+                },
+                headers: { "User-Token": data.token }
+            });
 
-        if (window.sessionStorage[playlist_id]) {
-            let playlist = JSON.parse(window.sessionStorage[playlist_id]);
-            let song = playlist['songs'].find(e => e['id'] == track_id);
-            playlist['songs'].splice(playlist['songs'].indexOf(song), 1);
-            window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+            if (window.sessionStorage[playlist_id]) {
+                let playlist = JSON.parse(window.sessionStorage[playlist_id]);
+                let song = playlist['songs'].find(e => e['id'] == track_id);
+                playlist['songs'].splice(playlist['songs'].indexOf(song), 1);
+                window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+            }
+        } catch (error) {
+            if (error.response && error.response.status == 403) {
+                await this.refresh();
+                return await this.removeTrackFromPlaylist(playlist_id, track_id);
+            }
+            throw error;
         }
     },
     async createPlaylist(name) {
-        const response = await axios({
-            method: "POST",
-            url: "/create_playlist",
-            baseURL: api_url,
-            data: {
-                name: name,
-            },
-            headers: { "User-Token": data.token }
-        });
+        try {
+            const response = await axios({
+                method: "POST",
+                url: "/create_playlist",
+                baseURL: api_url,
+                data: {
+                    name: name,
+                },
+                headers: { "User-Token": data.token }
+            });
 
-        if (window.sessionStorage['playlists']) {
-            let playlists = [...JSON.parse(window.sessionStorage['playlists'])];
-            playlists.unshift(response.data);
-            window.sessionStorage['playlists'] = JSON.stringify(playlists);
+            if (window.sessionStorage['playlists']) {
+                let playlists = [...JSON.parse(window.sessionStorage['playlists'])];
+                playlists.unshift(response.data);
+                window.sessionStorage['playlists'] = JSON.stringify(playlists);
+            }
+        } catch (error) {
+            if (error.response && error.response.status == 403) {
+                await this.refresh();
+                return await this.createPlaylist(name);
+            }
+            throw error;
         }
     },
     async search(query) {
-        const response = await axios({
-            url: '/audio',
-            baseURL: api_url,
-            params: { query: query },
-            headers: { 'User-Token': data.token }
-        });
-        window.sessionStorage['search_results'] = JSON.stringify(response.data);
-        return [...response.data];
+        try {
+            const response = await axios({
+                url: '/audio',
+                baseURL: api_url,
+                params: { query: query },
+                headers: { 'User-Token': data.token }
+            });
+            window.sessionStorage['search_results'] = JSON.stringify(response.data);
+            return [...response.data];
+        } catch (error) {
+            if (error.response && error.response.status == 403) {
+                await this.refresh();
+                return await this.search(query);
+            }
+            throw error;
+        }
     },
     getTrackUrl(track) {
         return `${api_url}/stream/${data.token}/${track['data']}`;
