@@ -18,6 +18,9 @@
                     </v-row>
                     <v-row align="center" justify="center">
                         <v-btn icon>
+                            <v-icon>mdi-heart-outline</v-icon>
+                        </v-btn>
+                        <v-btn icon>
                             <v-icon>mdi-dots-horizontal</v-icon>
                         </v-btn>
                     </v-row>

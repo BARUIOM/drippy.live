@@ -138,6 +138,10 @@ export default {
             this.isLoaded = true;
             this.current_song = track;
             this.total = this.current_song['duration'];
+            
+            if (window.native) {
+                window.native.setPlayerBar(JSON.stringify(this.current_song));
+            }
         });
         this.$player.on('state', (playing) => {
             if (playing) {
