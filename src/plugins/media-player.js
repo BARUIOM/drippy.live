@@ -60,10 +60,12 @@ class Player extends EventEmitter {
     }
 
     toggle() {
-        if (audio.paused) {
-            this.resume();
-        } else {
-            this.pause();
+        if (this.current) {
+            if (audio.paused) {
+                this.resume();
+            } else {
+                this.pause();
+            }
         }
     }
 
