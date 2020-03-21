@@ -42,7 +42,7 @@
                 </v-card>
             </v-dialog>
 
-            <v-col v-for="item in playlists" :key="item.name" align="center" cols="6" sm="4" lg="2">
+            <v-col v-for="item in playlists" :key="item.id" align="center" cols="6" sm="4" lg="2">
                 <v-hover v-slot:default="{ hover }">
                     <v-card
                         elevation="5"
