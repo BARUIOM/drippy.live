@@ -45,11 +45,8 @@ class Player extends EventEmitter {
     play(track) {
         audio.pause();
         if (track) {
-            if (!this._tracks.includes(track)) {
-                this._tracks.push(track);
-            }
-
-            this.now_playing = this._tracks.indexOf(track);
+            let found = this._tracks.find(e => e['data'] === track['data']);
+            this.now_playing = this._tracks.indexOf(found);
         }
 
         if (this.current) {

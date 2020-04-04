@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Search from './components/Search'
+import Artist from './components/Artist'
 import Playlist from './components/Playlist'
 import Playlists from './components/Playlists'
 
@@ -12,6 +13,16 @@ const routes = [
         path: '/',
         name: 'home',
         component: Search
+    },
+    {
+        path: '/artist/:id',
+        name: 'artist',
+        component: Artist
+    },
+    {
+        path: '/album/:id',
+        name: 'album',
+        component: Playlist
     },
     {
         path: '/playlists/:id',

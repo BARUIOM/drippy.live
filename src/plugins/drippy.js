@@ -113,7 +113,7 @@ export default {
 
             if (window.sessionStorage[playlist_id]) {
                 let playlist = JSON.parse(window.sessionStorage[playlist_id]);
-                playlist['songs'].push(response.data);
+                playlist['tracks'].push(response.data);
                 window.sessionStorage[playlist_id] = JSON.stringify(playlist);
             }
         } catch (error) {
@@ -139,9 +139,10 @@ export default {
 
             if (window.sessionStorage[playlist_id]) {
                 let playlist = JSON.parse(window.sessionStorage[playlist_id]);
-                let song = playlist['songs'].find(e => e['id'] == track_id);
-                playlist['songs'].splice(playlist['songs'].indexOf(song), 1);
+                let song = playlist['tracks'].find(e => e['data'] == track_id);
+                playlist['tracks'].splice(playlist['tracks'].indexOf(song), 1);
                 window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+                return playlist['tracks'];
             }
         } catch (error) {
             if (error.response && error.response.status == 403) {
@@ -176,21 +177,70 @@ export default {
             throw error;
         }
     },
-    async search(query) {
+    async search(query, type) {
         try {
             const response = await axios({
                 method: "POST",
-                url: '/search',
+                url: `/search/${type}`,
                 baseURL: api_url,
                 data: { query: query },
                 headers: { 'User-Token': data.token }
             });
-            window.sessionStorage['search_results'] = JSON.stringify(response.data);
-            return [...response.data];
+
+            let object = {};
+            if (window.sessionStorage['search_results']) {
+                object = JSON.parse(window.sessionStorage['search_results']);
+            }
+
+            object[type] = response.data;
+            window.sessionStorage['search_results'] = JSON.stringify(object);
+            return [...object[type]];
         } catch (error) {
             if (error.response && error.response.status == 403) {
                 await this.refresh();
                 return await this.search(query);
+            }
+            throw error;
+        }
+    },
+    async getArtist(artist_id) {
+        try {
+            if (!window.sessionStorage[artist_id]) {
+                const response = await axios({
+                    baseURL: api_url,
+                    url: `/artist/${artist_id}`,
+                    headers: { "User-Token": data.token }
+                });
+
+                window.sessionStorage[artist_id] = JSON.stringify(response.data);
+                return response.data;
+            }
+            return JSON.parse(window.sessionStorage[artist_id]);
+        } catch (error) {
+            if (error.response && error.response.status == 403) {
+                await this.refresh();
+                return await this.getArtist(artist_id);
+            }
+            throw error;
+        }
+    },
+    async getAlbum(album_id) {
+        try {
+            if (!window.sessionStorage[album_id]) {
+                const response = await axios({
+                    baseURL: api_url,
+                    url: `/album/${album_id}`,
+                    headers: { "User-Token": data.token }
+                });
+
+                window.sessionStorage[album_id] = JSON.stringify(response.data);
+                return response.data;
+            }
+            return JSON.parse(window.sessionStorage[album_id]);
+        } catch (error) {
+            if (error.response && error.response.status == 403) {
+                await this.refresh();
+                return await this.getAlbum(album_id);
             }
             throw error;
         }

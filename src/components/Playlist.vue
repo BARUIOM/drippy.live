@@ -4,9 +4,7 @@
             <v-col class="pb-0" cols="12" md="6">
                 <v-container class="artworks">
                     <v-row align="center" justify="center" no-gutters dense>
-                        <v-col v-for="(item, i) in artworks" :key="i" cols="6" md="5">
-                            <v-img :src="item"></v-img>
-                        </v-col>
+                        <v-img v-for="(item, i) in artworks" :key="i" :src="item"></v-img>
                     </v-row>
                 </v-container>
                 <v-container fluid>
@@ -14,7 +12,7 @@
                         <span class="headline font-weight-bold text-no-wrap" v-text="name"></span>
                     </v-row>
                     <v-row align="center" justify="center">
-                        <span class="subtitle-1 grey--text text-no-wrap" v-text="owner"></span>
+                        <span class="subtitle-1 grey--text text-no-wrap" v-text="creator"></span>
                     </v-row>
                     <v-row align="center" justify="center">
                         <v-btn icon>
@@ -44,32 +42,41 @@ export default {
     },
     data: () => ({
         name: "",
-        owner: "",
+        creator: "",
         artworks: [],
-        song_list: []
+        song_list: [],
+        playlist: true
     }),
     methods: {
-        async loadPlaylist() {
-            const playlist = await drippy.getPlaylist(this.$route.params["id"]);
-            this.name = playlist.name;
-            this.owner = playlist.owner.name;
-            this.song_list = [...playlist.songs];
+        async update() {
+            this.playlist = this.$route.name === 'playlist';
+            if (this.playlist) {
+                const playlist = await drippy.getPlaylist(this.$route.params["id"]);
+                this.name = playlist.name;
+                this.creator = playlist.owner.display_name;
+                this.song_list = [...playlist.tracks];
 
-            this.artworks = this.song_list.slice(0, 4).map(e => e['artwork_url']);
-            if (this.artworks.length < 4) this.artworks = [].concat(this.artworks.shift());
+                this.artworks = this.song_list.slice(0, 4).map(e => e['artwork_url']);
+                if (this.artworks.length < 4) this.artworks = [].concat(this.artworks.shift());
+            } else {
+                const album = await drippy.getAlbum(this.$route.params["id"]);
+                this.name = album.name;
+                this.creator = album.artist;
+                this.song_list = [...album.tracks];
+                this.artworks = [album.artwork_url];
+            }
+        },
+        async removeTrack(track) {
+            this.song_list = await drippy.removeTrackFromPlaylist(this.$route.params["id"], track['id']);
         },
         play(track) {
             this.$player.tracks = this.song_list;
             this.$player.play(track);
         }
     },
-    mounted() {
-        this.loadPlaylist();
-    },
+    mounted() { this.update() },
     watch: {
-        $route() {
-            this.loadPlaylist();
-        }
+        $route() { this.update() }
     }
 };
 </script>
@@ -78,5 +85,9 @@ export default {
 .artworks {
     padding: 0px;
     max-width: 400px;
+}
+
+.v-image:not(:only-child) {
+    max-width: 200px;
 }
 </style>
