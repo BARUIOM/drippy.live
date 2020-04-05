@@ -4,15 +4,10 @@
             <v-dialog v-model="dialog" persistent max-width="600px">
                 <template v-slot:activator="{ on }">
                     <v-col align="center" cols="6" sm="4" lg="2">
-                        <v-card elevation="5" class="playlist" v-on="on">
-                            <v-container fluid fill-height>
-                                <v-row justify="center">
-                                    <v-icon size="64">mdi-plus</v-icon>
-                                </v-row>
-                                <v-row justify="center">
-                                    <v-card-title class="text-no-wrap">New playlist</v-card-title>
-                                </v-row>
-                            </v-container>
+                        <v-card elevation="5" v-on="on">
+                            <v-img src="../assets/playlist-plus@4x.png">
+                                <v-card-title>New playlist</v-card-title>
+                            </v-img>
                         </v-card>
                     </v-col>
                 </template>
@@ -43,22 +38,15 @@
             </v-dialog>
 
             <v-col v-for="item in playlists" :key="item.id" align="center" cols="6" sm="4" lg="2">
-                <v-hover v-slot:default="{ hover }">
-                    <v-card
-                        elevation="5"
-                        class="playlist"
-                        @click="$emit('playlist-action', item, track)"
-                    >
-                        <v-img src="https://img.icons8.com/nolan/192/music.png">
-                            <v-container v-if="hover" fill-height>
-                                <v-row justify="center">
-                                    <v-icon size="64" v-html="action_icon"></v-icon>
-                                </v-row>
-                            </v-container>
-                            <v-card-title class="text-no-wrap" v-text="item.name"></v-card-title>
-                        </v-img>
-                    </v-card>
-                </v-hover>
+                <v-card
+                    elevation="5"
+                    class="playlist"
+                    @click="$emit('playlist-action', item, track)"
+                >
+                    <v-img src="../assets/music-box-multiple-outline@4x.png">
+                        <v-card-title class="text-no-wrap" v-text="item.name"></v-card-title>
+                    </v-img>
+                </v-card>
             </v-col>
         </v-row>
     </v-container>
@@ -97,8 +85,6 @@ export default {
 
 <style lang="scss" scoped>
 .playlist {
-    min-height: 100%;
-
     .row {
         margin: 0px;
     }
