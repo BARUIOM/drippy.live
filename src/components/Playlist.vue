@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col class="pb-0" cols="12" md="6">
-                <v-container class="artworks">
+                <v-container class="artworks pa-0">
                     <v-row align="center" justify="center" no-gutters dense>
                         <v-img v-for="(item, i) in artworks" :key="i" :src="item"></v-img>
                     </v-row>
@@ -82,12 +82,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.artworks {
-    padding: 0px;
-    max-width: 400px;
+@media screen and (max-width: 600px) {
+    .artworks {
+        max-width: 100%;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    .artworks {
+        max-width: 50%;
+    }
 }
 
 .v-image:not(:only-child) {
-    max-width: 200px;
+    max-width: 50%;
 }
 </style>

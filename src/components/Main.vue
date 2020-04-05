@@ -4,16 +4,6 @@
             <v-btn icon @click.stop="drawer = !drawer">
                 <v-icon>mdi-menu</v-icon>
             </v-btn>
-            <v-spacer></v-spacer>
-            <div class="d-flex align-center">
-                <v-img
-                    class="shrink"
-                    src="../assets/logo.svg"
-                    transition="scale-transition"
-                    width="40"
-                    contain
-                />
-            </div>
         </v-app-bar>
 
         <div class="player-drawer">
@@ -106,15 +96,31 @@ export default {
     .v-content {
         padding-left: 0px !important;
     }
+
+    .player-content {
+        max-height: calc(100vh - 128px) !important;
+    }
 }
 
 @media screen and (min-width: 960px) {
+    .v-app-bar {
+        display: none;
+    }
+
     .drawer-small {
         display: none;
     }
 
     .mini-player {
         display: none;
+    }
+
+    .v-content {
+        padding-top: 0px !important;
+    }
+
+    .player-content {
+        max-height: calc(100vh - 72px) !important;
     }
 }
 
@@ -128,9 +134,5 @@ export default {
 
 .player-drawer {
     max-height: calc(100vh - 72px) !important;
-}
-
-.player-content {
-    max-height: calc(100vh - 120px) !important;
 }
 </style>
