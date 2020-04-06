@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import drippy from "../plugins/drippy.js"
+
 import Drawer from "./Drawer";
 import Player from "./Player";
 import MiniPlayer from "./MiniPlayer";
@@ -46,6 +48,9 @@ export default {
         async openPlaylist(playlist) {
             await this.$router.push({ name: 'playlist', params: { id: playlist.id } });
         }
+    },
+    mounted() {
+        drippy.getPlaylists().then(playlists => playlists.forEach(e => drippy.getPlaylist(e['id'])));
     }
 };
 </script>

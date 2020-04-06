@@ -71,7 +71,6 @@ export default {
     }),
     async mounted() {
         this.playlists = await drippy.getPlaylists();
-        this.playlists.forEach(e => drippy.getPlaylist(e['id']));
     },
     methods: {
         async createPlaylist() {
