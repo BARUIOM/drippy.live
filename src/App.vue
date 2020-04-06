@@ -45,6 +45,23 @@ export default {
 </script>
 
 <style lang="scss">
+* {
+    scrollbar-width: thin !important;
+    scrollbar-color: #6e6e6e transparent !important;
+}
+
+::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6e6e6e !important;
+}
+
+::-webkit-scrollbar-track-piece {
+    background: transparent !important;
+}
+
 html {
     overflow: hidden !important;
 }
