@@ -44,16 +44,23 @@ class Player extends EventEmitter {
 
     play(track) {
         audio.pause();
-        if (track) {
-            let found = this._tracks.find(e => e['data'] === track['data']);
-            this.now_playing = this._tracks.indexOf(found);
-        }
+        drippy.validate().then(() => {
+            if (track) {
+                let found = this._tracks.find(e => e['data'] === track['data']);
+                this.now_playing = this._tracks.indexOf(found);
+            }
 
-        if (this.current) {
-            this.emit('playback-started', this.current);
-            audio.src = drippy.getTrackUrl(this.current);
-            audio.play();
-        }
+            if (this.current) {
+                this.emit('playback-started', this.current);
+                audio.src = drippy.getTrackUrl(this.current);
+                audio.play();
+            }
+        }).catch(async (error) => {
+            if (error.response && error.response.status == 403) {
+                await drippy.refresh();
+                this.play(track);
+            }
+        });
     }
 
     toggle() {
