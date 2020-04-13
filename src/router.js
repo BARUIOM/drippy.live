@@ -49,7 +49,7 @@ const routes = [
     },
     {
         name: 'auth',
-        path: '/auth/:code',
+        path: '/auth',
         component: Auth
     }
 ];

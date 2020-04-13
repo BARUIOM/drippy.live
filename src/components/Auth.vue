@@ -21,8 +21,8 @@ export default {
         info: 'Soon you will be able to use your account!'
     }),
     mounted() {
-        if (this.$route.params['code']) {
-            drippy.verifyEmail(this.$route.params['code']).then(response => {
+        if (this.$route.query['oobCode']) {
+            drippy.verifyEmail(this.$route.query['oobCode']).then(response => {
                 this.pending = false;
                 this.title = 'Verification done!';
                 this.info = response['message'];
