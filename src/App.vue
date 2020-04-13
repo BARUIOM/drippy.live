@@ -3,41 +3,43 @@
         <v-overlay :value="overlay">
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
-        <component @update="update" v-bind:is="component" />
+        <router-view />
+        <router-view @update="update" :name="route" />
     </div>
 </template>
 
 <script>
 import drippy from "./plugins/drippy.js";
 
-import Main from "./components/Main";
-import Login from "./components/Login";
-
 export default {
     name: "App",
-    components: { Main, Login },
     data: () => ({
-        overlay: true,
-        component: ""
+        route: "",
+        overlay: true
     }),
+    mounted() {
+        if (this.$route.name === 'auth') {
+            this.overlay = false;
+        }
+    },
     methods: {
-        update(component) {
-            this.component = component;
+        update(route) {
+            this.route = route;
             this.overlay = false;
         }
     },
     sockets: {
         async ready() {
-            if (drippy.userdata["idToken"] || drippy.userdata["refreshToken"]) {
-                drippy.validate().then(() => this.update("Main")).catch(() => {
-                    drippy.refresh().then(() => {
-                        if (drippy.userdata['idToken']) {
-                            this.update("Main");
-                        }
-                    }).catch(() => this.update("Login"));
-                });
-            } else {
-                this.update("Login");
+            if (this.$route.name === 'app') {
+                if (drippy.userdata["idToken"] || drippy.userdata["refreshToken"]) {
+                    drippy.validate().then(() => this.update("main")).catch(() => {
+                        drippy.refresh().then(() => {
+                            if (drippy.userdata['idToken']) {
+                                this.update("main");
+                            }
+                        }).catch(() => this.update("login"));
+                    });
+                } else this.update("login");
             }
         }
     }

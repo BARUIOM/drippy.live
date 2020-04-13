@@ -61,7 +61,7 @@ export default {
                     this.snackbar = true;
                 } else {
                     await drippy.login(this.email, this.password);
-                    this.$emit('update', 'Main');
+                    this.$emit('update', 'main');
                 }
             } catch (error) {
                 if (error.response && error.response.status == 401) {

@@ -20,6 +20,13 @@ export default {
     get userdata() {
         return data.userdata;
     },
+    async verifyEmail(code) {
+        const response = await axios({
+            url: `/auth/verifyEmail/${code}`,
+            baseURL: api_url
+        });
+        return response.data;
+    },
     async validate() {
         await axios({
             url: '/validate',

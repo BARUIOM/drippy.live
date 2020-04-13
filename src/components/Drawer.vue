@@ -1,6 +1,6 @@
 <template>
     <v-list nav dense>
-        <v-list-item link to="/" exact>
+        <v-list-item link to="/search" exact>
             <v-list-item-icon>
                 <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
