@@ -42,7 +42,7 @@
                 <v-btn class="mx-3" icon @click="$player.next()">
                     <v-icon>mdi-skip-next</v-icon>
                 </v-btn>
-                <v-btn class="mx-3" icon>
+                <v-btn class="mx-3" icon @click="$player.shuffle()">
                     <v-icon>mdi-shuffle</v-icon>
                 </v-btn>
             </v-col>

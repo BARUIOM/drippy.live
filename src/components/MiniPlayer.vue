@@ -66,7 +66,7 @@
                                 <v-icon>mdi-repeat</v-icon>
                             </v-btn>
                             <v-spacer></v-spacer>
-                            <v-btn icon>
+                            <v-btn icon @click="$player.shuffle()">
                                 <v-icon>mdi-shuffle</v-icon>
                             </v-btn>
                         </v-row>

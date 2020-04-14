@@ -42,6 +42,13 @@ class Player extends EventEmitter {
         audio.pause();
     }
 
+    shuffle() {
+        this.now_playing = 0;
+        this._tracks = this._tracks.map((a) => ({ sort: Math.random(), value: a }))
+            .sort((a, b) => a.sort - b.sort).map((a) => a.value);
+        this.play();
+    }
+
     play(track) {
         audio.pause();
         drippy.validate().then(() => {
