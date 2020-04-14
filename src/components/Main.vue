@@ -50,7 +50,7 @@ export default {
         }
     },
     mounted() {
-        this.$router.push({ name: 'search' });
+        if (this.$route.name === 'app') this.$router.push({ name: 'search' });
         drippy.getPlaylists().then(playlists => playlists.forEach(e => drippy.getPlaylist(e['id'])));
     }
 };

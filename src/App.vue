@@ -30,7 +30,7 @@ export default {
     },
     sockets: {
         async ready() {
-            if (this.$route.name === 'app') {
+            if (this.$route.name !== 'auth') {
                 if (drippy.userdata["idToken"] || drippy.userdata["refreshToken"]) {
                     drippy.validate().then(() => this.update("main")).catch(() => {
                         drippy.refresh().then(() => {
