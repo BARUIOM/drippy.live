@@ -1,34 +1,30 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col class="pb-0" cols="12" md="6">
-                <v-container class="artworks pa-0">
-                    <v-row align="center" justify="center" no-gutters dense>
-                        <v-img v-for="(item, i) in artworks" :key="i" :src="item"></v-img>
-                    </v-row>
-                </v-container>
-                <v-container fluid>
-                    <v-row align="center" justify="center">
-                        <span class="headline font-weight-bold text-no-wrap" v-text="name"></span>
-                    </v-row>
-                    <v-row align="center" justify="center">
-                        <span class="subtitle-1 grey--text text-no-wrap" v-text="creator"></span>
-                    </v-row>
-                    <v-row align="center" justify="center">
+    <v-card>
+        <v-container fluid>
+            <v-row no-gutters>
+                <v-col cols="12" sm="4" lg="2" class="d-flex flex-row flex-wrap elevation-10">
+                    <v-img v-for="(item, i) in artworks" :key="i" :src="item"></v-img>
+                </v-col>
+                <v-col cols="12" sm="8" lg="10">
+                    <v-card-title class="display-1 font-weight-bold" v-text="name"></v-card-title>
+                    <v-card-subtitle class="title" v-text="creator"></v-card-subtitle>
+                    <v-card-actions>
                         <v-btn icon>
                             <v-icon>mdi-heart-outline</v-icon>
                         </v-btn>
                         <v-btn icon>
                             <v-icon>mdi-dots-horizontal</v-icon>
                         </v-btn>
-                    </v-row>
-                </v-container>
-            </v-col>
-            <v-col class="pt-0" cols="12" md="6">
-                <SongList v-bind:song_list="song_list" @selected-track="play" />
-            </v-col>
-        </v-row>
-    </v-container>
+                    </v-card-actions>
+                </v-col>
+            </v-row>
+            <v-row no-gutters>
+                <v-col>
+                    <SongList v-bind:song_list="song_list" @selected-track="play" />
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-card>
 </template>
 
 <script>
@@ -82,18 +78,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media screen and (max-width: 600px) {
-    .artworks {
-        max-width: 100%;
-    }
-}
-
-@media screen and (min-width: 600px) {
-    .artworks {
-        max-width: 50%;
-    }
-}
-
 .v-image:not(:only-child) {
     max-width: 50%;
 }
