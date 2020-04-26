@@ -1,7 +1,7 @@
 <template>
     <v-container fill-height fluid>
         <v-row dense class="ma-0">
-            <v-col class="my-1" v-for="(album, i) in albums" :key="i" align="center" cols="6" md="4" lg="2">
+            <v-col v-for="(album, i) in albums" :key="i" align="center" cols="6" md="4" lg="2">
                 <v-card elevation="4" link :to="{ name: 'album', params: { id: album.id } }">
                     <v-img class="align-end" :src="album.artwork_url">
                         <v-card-title class="title text-truncate" v-text="album.name"></v-card-title>
