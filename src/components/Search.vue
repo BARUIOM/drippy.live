@@ -1,7 +1,15 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <v-form @submit.prevent="doSearch">
-            <v-text-field v-model="search_input" label="Search" color="orange" prepend-inner-icon="mdi-magnify" solo clearable required></v-text-field>
+            <v-text-field
+                v-model="search_input"
+                label="Search"
+                color="orange"
+                prepend-inner-icon="mdi-magnify"
+                solo
+                clearable
+                required
+            ></v-text-field>
         </v-form>
 
         <div class="mb-1">
