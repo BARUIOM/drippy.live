@@ -18,7 +18,17 @@ export default {
         overlay: true
     }),
     mounted() {
-        if (this.$route.name === 'auth') {
+        if (this.$route.name !== 'auth') {
+            if (drippy.userdata["idToken"] || drippy.userdata["refreshToken"]) {
+                drippy.validate().then(() => this.update("main")).catch(() => {
+                    drippy.refresh().then(() => {
+                        if (drippy.userdata['idToken']) {
+                            this.update("main");
+                        }
+                    }).catch(() => this.update("login"));
+                });
+            } else this.update("login");
+        } else if (this.$route.name === 'auth') {
             this.overlay = false;
         }
     },
@@ -26,21 +36,6 @@ export default {
         update(route) {
             this.route = route;
             this.overlay = false;
-        }
-    },
-    sockets: {
-        async ready() {
-            if (this.$route.name !== 'auth') {
-                if (drippy.userdata["idToken"] || drippy.userdata["refreshToken"]) {
-                    drippy.validate().then(() => this.update("main")).catch(() => {
-                        drippy.refresh().then(() => {
-                            if (drippy.userdata['idToken']) {
-                                this.update("main");
-                            }
-                        }).catch(() => this.update("login"));
-                    });
-                } else this.update("login");
-            }
         }
     }
 };
