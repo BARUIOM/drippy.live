@@ -1,5 +1,5 @@
 import axios from 'axios'
-const api_url = '' || 'https://drippy.live';
+const api_url = '' || 'https://api.drippy.live';
 
 const data = {
     get userdata() {
