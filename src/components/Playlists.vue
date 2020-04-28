@@ -1,43 +1,43 @@
 <template>
-    <v-container no-gutters fill-height>
+    <v-container no-gutters>
         <v-row dense>
-            <v-dialog v-model="dialog" persistent max-width="600px">
-                <template v-slot:activator="{ on }">
-                    <v-col align="center" cols="6" sm="4" lg="2">
+            <v-col cols="6" sm="4" lg="2">
+                <v-dialog v-model="dialog" persistent max-width="600px">
+                    <template v-slot:activator="{ on }">
                         <v-card elevation="5" v-on="on">
                             <v-img src="../assets/playlist-plus@4x.png">
                                 <v-card-title>New playlist</v-card-title>
                             </v-img>
                         </v-card>
-                    </v-col>
-                </template>
-                <v-card>
-                    <v-card-title>
-                        <span class="headline">Create a new playlist</span>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-container>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-text-field
-                                        v-model="playlist_name"
-                                        label="Name"
-                                        color="orange"
-                                        required
-                                    ></v-text-field>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="createPlaylist">Save</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+                    </template>
+                    <v-card>
+                        <v-card-title>
+                            <span class="headline">Create a new playlist</span>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container>
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field
+                                            v-model="playlist_name"
+                                            label="Name"
+                                            color="orange"
+                                            required
+                                        ></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
+                            <v-btn color="blue darken-1" text @click="createPlaylist">Save</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-col>
 
-            <v-col v-for="item in playlists" :key="item.id" align="center" cols="6" sm="4" lg="2">
+            <v-col v-for="item in playlists" :key="item.id" cols="6" sm="4" lg="2">
                 <v-card
                     elevation="5"
                     class="playlist"

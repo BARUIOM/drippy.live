@@ -1,22 +1,28 @@
 <template>
     <v-container fluid>
-        <v-row>
+        <v-row dense>
             <v-col cols="12">
                 <v-card>
-                    <v-container class="d-flex flex-no-wrap" fluid>
-                        <v-avatar size="128" tile>
-                            <v-img :src="artist_info.picture"></v-img>
-                        </v-avatar>
-
-                        <v-row align="end" class="mx-2">
-                            <v-card-title class="display-1 text-truncate" v-text="artist_info.name"></v-card-title>
-                            <v-spacer></v-spacer>
-                            <v-card-actions>
-                                <v-btn icon>
-                                    <v-icon>mdi-dots-horizontal</v-icon>
-                                </v-btn>
-                                <v-btn text>Follow</v-btn>
-                            </v-card-actions>
+                    <v-container fluid>
+                        <v-row no-gutters dense>
+                            <v-col cols="auto">
+                                <v-avatar size="128" tile>
+                                    <v-img :src="artist_info.picture"></v-img>
+                                </v-avatar>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-card-title
+                                    class="display-1 text-truncate"
+                                    v-text="artist_info.name"
+                                ></v-card-title>
+                                <v-spacer></v-spacer>
+                                <v-card-actions>
+                                    <v-btn icon>
+                                        <v-icon>mdi-dots-horizontal</v-icon>
+                                    </v-btn>
+                                    <v-btn text>Follow</v-btn>
+                                </v-card-actions>
+                            </v-col>
                         </v-row>
                     </v-container>
                 </v-card>

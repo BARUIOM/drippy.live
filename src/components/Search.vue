@@ -1,47 +1,48 @@
 <template>
     <v-container fluid>
-        <v-form @submit.prevent="doSearch">
-            <v-text-field
-                v-model="search_input"
-                label="Search"
-                color="orange"
-                prepend-inner-icon="mdi-magnify"
-                solo
-                clearable
-                required
-            ></v-text-field>
-        </v-form>
+        <v-row dense>
+            <v-col cols="12">
+                <v-form @submit.prevent="doSearch">
+                    <v-text-field
+                        v-model="search_input"
+                        label="Search"
+                        color="orange"
+                        prepend-inner-icon="mdi-magnify"
+                        hide-details
+                        clearable
+                        required
+                        solo
+                    ></v-text-field>
+                </v-form>
+            </v-col>
+            <v-col v-for="(artist, i) in artist_list" :key="i" cols="12">
+                <v-card link :to="{ name: 'artist', params: { id: artist.id } }">
+                    <v-container class="d-flex flex-no-wrap" fluid>
+                        <v-row align="center" justify="center" class="mx-2">
+                            <v-avatar size="80" tile>
+                                <v-img :src="artist.picture"></v-img>
+                            </v-avatar>
 
-        <div class="mb-1">
-            <v-row dense align="center" justify="start">
-                <v-col v-for="(artist, i) in artist_list" :key="i" cols="12">
-                    <v-card link :to="{ name: 'artist', params: { id: artist.id } }">
-                        <v-container class="d-flex flex-no-wrap" fluid>
-                            <v-row align="center" justify="center" class="mx-2">
-                                <v-avatar size="80" tile>
-                                    <v-img :src="artist.picture"></v-img>
-                                </v-avatar>
+                            <div>
+                                <v-card-title class="headline" v-text="artist.name"></v-card-title>
+                                <v-card-subtitle>Artist</v-card-subtitle>
+                            </div>
 
-                                <div>
-                                    <v-card-title class="headline" v-text="artist.name"></v-card-title>
-                                    <v-card-subtitle>Artist</v-card-subtitle>
-                                </div>
-
-                                <v-spacer></v-spacer>
-                                <v-icon size="40">mdi-chevron-right</v-icon>
-                            </v-row>
-                        </v-container>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </div>
-
-        <div class="results-large">
-            <SongTable v-bind:song_list="track_list" @selected-track="play" />
-        </div>
-        <div class="results-small">
-            <SongList v-bind:song_list="track_list" @selected-track="play" />
-        </div>
+                            <v-spacer></v-spacer>
+                            <v-icon size="40">mdi-chevron-right</v-icon>
+                        </v-row>
+                    </v-container>
+                </v-card>
+            </v-col>
+            <v-col>
+                <div class="results-large">
+                    <SongTable v-bind:song_list="track_list" @selected-track="play" />
+                </div>
+                <div class="results-small">
+                    <SongList v-bind:song_list="track_list" @selected-track="play" />
+                </div>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

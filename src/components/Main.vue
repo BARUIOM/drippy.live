@@ -16,10 +16,8 @@
             </v-navigation-drawer>
         </div>
 
-        <v-content>
-            <v-container class="player-content overflow-y-auto" fluid>
-                <router-view @playlist-action="openPlaylist" />
-            </v-container>
+        <v-content class="player-content overflow-y-auto">
+            <router-view @playlist-action="openPlaylist" />
         </v-content>
 
         <div class="large-player">
@@ -102,10 +100,6 @@ export default {
     .v-content {
         padding-left: 0px !important;
     }
-
-    .player-content {
-        max-height: calc(100vh - 128px) !important;
-    }
 }
 
 @media screen and (min-width: 960px) {
@@ -124,10 +118,6 @@ export default {
     .v-content {
         padding-top: 0px !important;
     }
-
-    .player-content {
-        max-height: calc(100vh - 72px) !important;
-    }
 }
 
 .v-app-bar {
@@ -139,6 +129,10 @@ export default {
 }
 
 .player-drawer {
+    max-height: calc(100vh - 72px) !important;
+}
+
+.player-content {
     max-height: calc(100vh - 72px) !important;
 }
 </style>

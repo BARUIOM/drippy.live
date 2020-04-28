@@ -1,5 +1,5 @@
 <template>
-    <v-container fill-height fluid>
+    <v-container fluid>
         <v-row dense class="ma-0">
             <v-col v-for="(album, i) in albums" :key="i" align="center" cols="6" md="4" lg="2">
                 <v-card elevation="4" link :to="{ name: 'album', params: { id: album.id } }">

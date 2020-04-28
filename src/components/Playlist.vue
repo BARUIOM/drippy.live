@@ -1,30 +1,32 @@
 <template>
-    <v-card>
-        <v-container fluid>
-            <v-row no-gutters>
-                <v-col cols="12" sm="4" lg="2" class="d-flex flex-row flex-wrap elevation-10">
-                    <v-img v-for="(item, i) in artworks" :key="i" :src="item"></v-img>
-                </v-col>
-                <v-col cols="12" sm="8" lg="10">
-                    <v-card-title class="display-1 font-weight-bold" v-text="name"></v-card-title>
-                    <v-card-subtitle class="title" v-text="creator"></v-card-subtitle>
-                    <v-card-actions>
-                        <v-btn icon>
-                            <v-icon>mdi-heart-outline</v-icon>
-                        </v-btn>
-                        <v-btn icon>
-                            <v-icon>mdi-dots-horizontal</v-icon>
-                        </v-btn>
-                    </v-card-actions>
-                </v-col>
-            </v-row>
-            <v-row no-gutters>
-                <v-col>
-                    <SongList v-bind:song_list="song_list" @selected-track="play" />
-                </v-col>
-            </v-row>
-        </v-container>
-    </v-card>
+    <v-container fluid>
+        <v-card>
+            <v-container fluid>
+                <v-row no-gutters>
+                    <v-col cols="12" sm="4" lg="2" class="d-flex flex-row flex-wrap elevation-10">
+                        <v-img v-for="(item, i) in artworks" :key="i" :src="item"></v-img>
+                    </v-col>
+                    <v-col cols="12" sm="8" lg="10">
+                        <v-card-title class="display-1 font-weight-bold" v-text="name"></v-card-title>
+                        <v-card-subtitle class="title" v-text="creator"></v-card-subtitle>
+                        <v-card-actions>
+                            <v-btn icon>
+                                <v-icon>mdi-heart-outline</v-icon>
+                            </v-btn>
+                            <v-btn icon>
+                                <v-icon>mdi-dots-horizontal</v-icon>
+                            </v-btn>
+                        </v-card-actions>
+                    </v-col>
+                </v-row>
+                <v-row no-gutters>
+                    <v-col>
+                        <SongList v-bind:song_list="song_list" @selected-track="play" />
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card>
+    </v-container>
 </template>
 
 <script>
