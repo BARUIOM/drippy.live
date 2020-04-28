@@ -1,12 +1,11 @@
 <template>
     <v-container fluid>
-        <v-row dense class="ma-0">
+        <v-row dense>
             <v-col v-for="(album, i) in albums" :key="i" align="center" cols="6" md="4" lg="2">
-                <v-card elevation="4" link :to="{ name: 'album', params: { id: album.id } }">
-                    <v-img class="align-end" :src="album.artwork_url">
-                        <v-card-title class="title text-truncate" v-text="album.name"></v-card-title>
-                    </v-img>
-                </v-card>
+                <div v-ripple class="album elevation-4" @click="open(album.id)">
+                    <v-img :src="album.artwork_url"></v-img>
+                </div>
+                <div class="py-3 subtitle-1 font-weight-bold" v-text="album.name"></div>
             </v-col>
         </v-row>
     </v-container>
@@ -17,12 +16,17 @@ export default {
     name: 'Albums',
     props: {
         albums: Array
+    },
+    methods: {
+        open(id) {
+            this.$router.push({ name: 'album', params: { id } });
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.title {
-    background-image: linear-gradient(to bottom, transparent, black);
+.album {
+    cursor: pointer;
 }
 </style>
