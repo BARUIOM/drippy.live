@@ -1,3 +1,4 @@
+![Hosting](https://github.com/Drippy-Music/drippy.live/workflows/Hosting/badge.svg)
 # drippy-music
 Drippy's Home
 
