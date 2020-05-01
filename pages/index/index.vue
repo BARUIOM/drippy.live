@@ -32,13 +32,16 @@
         </v-col>
         <v-col cols="12">
             <v-card>
-                <songlist v-bind:song_list="track_list.slice(0, 3)" />
+                <songlist
+                    v-bind:class="{ 'pb-0': track_list.length > 3 }"
+                    v-bind:song_list="track_list.slice(0, 3)"
+                />
                 <v-expansion-panels v-if="track_list.length > 3" accordion hover tile>
                     <v-expansion-panel>
-                        <v-expansion-panel-header></v-expansion-panel-header>
                         <v-expansion-panel-content>
-                            <songlist v-bind:song_list="track_list.slice(3)" />
+                            <songlist class="pa-0" v-bind:song_list="track_list.slice(3)" />
                         </v-expansion-panel-content>
+                        <v-expansion-panel-header></v-expansion-panel-header>
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-card>
