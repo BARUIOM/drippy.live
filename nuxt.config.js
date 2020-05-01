@@ -27,7 +27,10 @@ export default {
     /*
     ** Plugins to load before mounting the App
     */
-    plugins: ['~/plugins/prototypes.js'],
+    plugins: [
+        '~/plugins/prototypes.js',
+        '~/plugins/validation-rules.js'
+    ],
     /*
     ** Nuxt.js dev-modules
     */
