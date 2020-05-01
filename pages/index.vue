@@ -30,7 +30,6 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
-        <v-snackbar v-model="snackbar" color="success" :timeout="4000" top>{{ message }}</v-snackbar>
     </div>
 </template>
 
@@ -45,8 +44,7 @@ export default {
         track: {},
         message: '',
         drawer: false,
-        dialog: false,
-        snackbar: false
+        dialog: false
     }),
     mounted() {
         this.$root.$on('add', track => {
@@ -58,8 +56,7 @@ export default {
         add(playlist, track) {
             this.dialog = false;
             this.$drippy.addTrackToPlaylist(playlist.id, track.data).then(() => {
-                this.message = `'${track.title}' added to playlist ${playlist.name}`;
-                this.snackbar = true;
+                this.$root.$emit('snackbar', `'${track.title}' added to playlist ${playlist.name}`, 'success', true);
             });
         }
     }
