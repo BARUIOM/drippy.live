@@ -1,0 +1,138 @@
+import Axios from 'axios'
+const api_url = '' || 'https://api.drippy.live';
+
+const data = {
+    get userdata() {
+        if (window.localStorage["USER_DATA"]) {
+            return JSON.parse(window.localStorage["USER_DATA"]);
+        }
+        return {};
+    },
+    get token() {
+        return this.userdata['idToken'];
+    },
+    get refresh_token() {
+        return this.userdata['refreshToken'];
+    }
+}
+
+const exclude = ['/refresh', '/login', '/register'];
+const axios = Axios.create({ baseURL: api_url });
+axios.interceptors.request.use(config => {
+    if (!exclude.includes(config.url)) {
+        config.headers['User-Token'] = data.token;
+    }
+    return config;
+});
+
+axios.interceptors.response.use(null, error => {
+    if (error.config && error.response && error.response.status === 403) {
+        if (!exclude.includes(error.config.url)) {
+            return refresh().then(() => axios.request(error.config));
+        }
+    }
+    throw error;
+});
+
+const refresh = async () => {
+    const response = await axios.post('/refresh', { refresh_token: data.refresh_token });
+    window.localStorage["USER_DATA"] = JSON.stringify(response.data);
+}
+
+export default {
+    async verifyEmail(code) {
+        const response = await axios.get(`/auth/verifyEmail/${code}`);
+        return response.data;
+    },
+    async validate() {
+        await axios.get('/validate');
+    },
+    async refresh() {
+        await refresh();
+    },
+    async register(email, password) {
+        const response = await axios.post('/register', { email, password });
+        return response.data;
+    },
+    async login(email, password) {
+        const response = await axios.post('/login', { email, password });
+        window.localStorage["USER_DATA"] = JSON.stringify(response.data);
+        return response.data;
+    },
+    async getPlaylists() {
+        if (!window.sessionStorage['playlists']) {
+            const response = await axios.get('/playlists');
+            window.sessionStorage["playlists"] = JSON.stringify(response.data);
+            return [...response.data];
+        }
+        return [...JSON.parse(window.sessionStorage["playlists"])];
+    },
+    async getPlaylist(playlist_id) {
+        if (!window.sessionStorage[playlist_id]) {
+            const response = await axios.get(`/playlist/${playlist_id}`);
+            window.sessionStorage[playlist_id] = JSON.stringify(response.data);
+            return response.data;
+        }
+        return JSON.parse(window.sessionStorage[playlist_id]);
+    },
+    async addTrackToPlaylist(playlist_id, track_id) {
+        const response = await axios.post('/save', { id: track_id, playlist: playlist_id });
+        if (window.sessionStorage[playlist_id]) {
+            let playlist = JSON.parse(window.sessionStorage[playlist_id]);
+            playlist['tracks'].push(response.data);
+            window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+        }
+    },
+    async removeTrackFromPlaylist(playlist_id, track_id) {
+        await axios.post('/remove', { id: track_id, playlist: playlist_id });
+        if (window.sessionStorage[playlist_id]) {
+            let playlist = JSON.parse(window.sessionStorage[playlist_id]);
+            let song = playlist['tracks'].find(e => e['data'] == track_id);
+            playlist['tracks'].splice(playlist['tracks'].indexOf(song), 1);
+            window.sessionStorage[playlist_id] = JSON.stringify(playlist);
+            return playlist['tracks'];
+        }
+    },
+    async createPlaylist(name) {
+        const response = await axios.post('/create_playlist', { name });
+        if (window.sessionStorage['playlists']) {
+            let playlists = [...JSON.parse(window.sessionStorage['playlists'])];
+            playlists.unshift(response.data);
+            window.sessionStorage['playlists'] = JSON.stringify(playlists);
+        }
+    },
+    async search(query, type) {
+        const response = await axios.post(`/search/${type}`, { query });
+
+        let object = {};
+        if (window.sessionStorage['search_results']) {
+            object = JSON.parse(window.sessionStorage['search_results']);
+        }
+
+        object[type] = response.data;
+        window.sessionStorage['search_results'] = JSON.stringify(object);
+        return [...object[type]];
+    },
+    async getArtist(artist_id) {
+        if (!window.sessionStorage[artist_id]) {
+            const response = await axios.get(`/artist/${artist_id}`);
+            window.sessionStorage[artist_id] = JSON.stringify(response.data);
+            return response.data;
+        }
+        return JSON.parse(window.sessionStorage[artist_id]);
+    },
+    async getAlbum(album_id) {
+        if (!window.sessionStorage[album_id]) {
+            const response = await axios.get(`/album/${album_id}`);
+            window.sessionStorage[album_id] = JSON.stringify(response.data);
+            return response.data;
+        }
+        return JSON.parse(window.sessionStorage[album_id]);
+    },
+    getTrackUrl(track) {
+        return `${api_url}/stream/${data.token}/${track['data']}`;
+    },
+    get userdata() {
+        return data.userdata;
+    }
+}

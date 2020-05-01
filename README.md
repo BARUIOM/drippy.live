@@ -1,26 +1,20 @@
 ![Hosting](https://github.com/Drippy-Music/drippy.live/workflows/Hosting/badge.svg)
-# drippy-music
-Drippy's Home
+# drippy
 
-## Project setup
-```
-npm install
-```
+> Music streaming service
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Build Setup
 
-### Compiles and minifies for production
-```
-npm run build
-```
+```bash
+# install dependencies
+$ npm install
 
-### Lints and fixes files
-```
-npm run lint
+# serve with hot reload at localhost:3000
+$ npm run dev
+
+# build for production and launch server
+$ npm run build
+$ npm run start
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
