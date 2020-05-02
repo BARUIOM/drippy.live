@@ -72,12 +72,8 @@ export default {
         return [...JSON.parse(window.sessionStorage["playlists"])];
     },
     async getPlaylist(playlist_id) {
-        if (!window.sessionStorage[playlist_id]) {
-            const response = await axios.get(`/playlist/${playlist_id}`);
-            window.sessionStorage[playlist_id] = JSON.stringify(response.data);
-            return response.data;
-        }
-        return JSON.parse(window.sessionStorage[playlist_id]);
+        const response = await axios.get(`/playlist/${playlist_id}`);
+        return response.data;
     },
     async addTrackToPlaylist(playlist_id, track) {
         await axios.post('/save', { id: track.id, playlist: playlist_id });
