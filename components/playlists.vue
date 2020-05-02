@@ -63,8 +63,8 @@ export default {
     methods: {
         async createPlaylist() {
             this.dialog = false;
-            await drippy.createPlaylist(this.playlist_name);
-            this.playlists = await drippy.getPlaylists();
+            await this.$drippy.createPlaylist(this.playlist_name);
+            this.playlists = await this.$drippy.getPlaylists();
         }
     }
 }
