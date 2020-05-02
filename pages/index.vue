@@ -55,8 +55,8 @@ export default {
     methods: {
         add(playlist, track) {
             this.dialog = false;
-            this.$drippy.addTrackToPlaylist(playlist.id, track.data).then(() => {
-                this.$root.$emit('snackbar', `'${track.title}' added to playlist ${playlist.name}`, 'success', true);
+            this.$drippy.addTrackToPlaylist(playlist.id, track).then(() => {
+                this.$root.$emit('snackbar', `'${track.name}' added to playlist ${playlist.name}`, 'success', true);
             });
         }
     }

@@ -1,8 +1,8 @@
 <template>
     <v-container class="player pa-0 grey darken-4 elevation-10" fluid>
-        <div class="hidden-sm-and-down" v-if="$player.current.data">
+        <div class="hidden-sm-and-down" v-if="$player.current.id">
             <v-slider
-                :max="$player.current.duration"
+                :max="$player.current.duration_ms / 1000"
                 @change="$player.position = arguments[0]"
                 :value="position"
                 step="0.01"
@@ -13,21 +13,21 @@
 
         <div class="activator hidden-md-and-up" @click="dialog = true"></div>
         <v-row align="center" justify="center" no-gutters>
-            <v-col class="player-data" cols="6" md="4" v-if="$player.current.data">
+            <v-col class="player-data" cols="6" md="4" v-if="$player.current.id">
                 <div>
-                    <v-img width="72" :src="$player.current.artwork_url"></v-img>
+                    <v-img width="72" :src="$player.current.album.images[0].url"></v-img>
                 </div>
 
                 <v-container class="player-info" fill-height fluid>
                     <v-row>
                         <div
-                            v-text="$player.current.title"
+                            v-text="$player.current.name"
                             class="body-2 font-weight-bold text-truncate"
                         ></div>
                     </v-row>
                     <v-row>
                         <div
-                            v-text="$player.current['artists'].join(', ')"
+                            v-text="$player.current.artists.map(e => e.name).join(', ')"
                             class="body-2 grey--text text-truncate"
                         ></div>
                     </v-row>

@@ -54,8 +54,8 @@ export default {
         const response = await axios.post('/register', { email, username, password });
         return response.data;
     },
-    async login(email, password) {
-        const response = await axios.post('/login', { email, password });
+    async login(options = {}) {
+        const response = await axios.post('/login', options);
         window.localStorage["USER_DATA"] = JSON.stringify(response.data);
         return response.data;
     },
@@ -79,11 +79,11 @@ export default {
         }
         return JSON.parse(window.sessionStorage[playlist_id]);
     },
-    async addTrackToPlaylist(playlist_id, track_id) {
-        const response = await axios.post('/save', { id: track_id, playlist: playlist_id });
+    async addTrackToPlaylist(playlist_id, track) {
+        await axios.post('/save', { id: track.id, playlist: playlist_id });
         if (window.sessionStorage[playlist_id]) {
             let playlist = JSON.parse(window.sessionStorage[playlist_id]);
-            playlist['tracks'].push(response.data);
+            playlist['tracks'].items.push({ track });
             window.sessionStorage[playlist_id] = JSON.stringify(playlist);
         }
     },
@@ -133,8 +133,17 @@ export default {
         }
         return JSON.parse(window.sessionStorage[album_id]);
     },
+    async spotifyCheck(code) {
+        const response = await axios.post('/spotify/auth', { code });
+        if (response.data['token']) {
+            return response.data;
+        }
+    },
+    get spotify() {
+        return `${api_url}/spotify`;
+    },
     getTrackUrl(track) {
-        return `${api_url}/stream/${data.token}/${track['data']}`;
+        return `${api_url}/stream/${data.token}/${track['id']}`;
     },
     get userdata() {
         return data.userdata;

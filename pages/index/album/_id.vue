@@ -23,9 +23,9 @@ export default {
     mounted() {
         this.$drippy.getAlbum(this.$route.params["id"]).then(album => {
             this.name = album.name;
-            this.creator = album.artist;
-            this.song_list = [...album.tracks];
-            this.artworks = [this.song_list[0].artwork_url];
+            this.creator = album.artists.map(e => e.name).join(', ');
+            this.song_list = [...album.tracks.items];
+            this.artworks = [album.images[0].url];
         });
     }
 }

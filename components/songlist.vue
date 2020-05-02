@@ -4,7 +4,7 @@
             <v-hover :key="'i' + index" v-slot:default="{ hover }">
                 <v-list-item @click="$player.play(item, song_list)">
                     <v-list-item-avatar tile size="64">
-                        <v-img v-if="!hideArtwork" :src="item.artwork_url" />
+                        <v-img v-if="!hideArtwork" :src="item.album.images[0].url" />
                         <div v-else>
                             <v-icon v-if="!hover">mdi-music-note-eighth-dotted</v-icon>
                             <v-icon v-else>mdi-play</v-icon>
@@ -12,11 +12,11 @@
                     </v-list-item-avatar>
 
                     <v-list-item-content>
-                        <v-list-item-title class="ma-0 pb-1" v-text="item.title"></v-list-item-title>
+                        <v-list-item-title class="ma-0 pb-1" v-text="item.name"></v-list-item-title>
                         <v-list-item-subtitle class="pt-1">
-                            <span v-text="item.artists.join(', ')"></span>
+                            <span v-text="item.artists.map(e => e.name).join(', ')"></span>
                             <span v-if="!hideAlbum" class="mx-1">•</span>
-                            <span v-if="!hideAlbum">{{ item.album }}</span>
+                            <span v-if="!hideAlbum">{{ item.album.name }}</span>
                         </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-menu offset-y>

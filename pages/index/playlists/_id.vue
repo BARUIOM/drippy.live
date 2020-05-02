@@ -22,8 +22,8 @@ export default {
         this.$drippy.getPlaylist(this.$route.params["id"]).then(playlist => {
             this.name = playlist.name;
             this.creator = playlist.owner.display_name;
-            this.song_list = [...playlist.tracks];
-            this.artworks = this.song_list.slice(0, this.song_list.length < 4 ? 1 : 4).map(e => e['artwork_url']);
+            this.song_list = [...playlist.tracks.items.map(e => e.track)];
+            if (playlist.images[0]) this.artworks = [playlist.images[0].url];
         });
     }
 }

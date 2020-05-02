@@ -55,7 +55,7 @@ class Player extends EventEmitter {
             if (track_list) this._tracks = [...track_list];
 
             if (track) {
-                let found = this._tracks.find(e => e['data'] === track['data']);
+                let found = this._tracks.find(e => e['id'] === track['id']);
                 this.now_playing = this._tracks.indexOf(found);
             }
 

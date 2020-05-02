@@ -6,10 +6,10 @@
                     <v-icon>mdi-chevron-left</v-icon>
                 </v-toolbar-items>
             </v-toolbar>
-            <v-container class="py-0" v-if="$player.current.data" fluid>
+            <v-container class="py-0" v-if="$player.current.id" fluid>
                 <v-row align="center" justify="center">
                     <v-col cols="12">
-                        <v-img max-height="500" contain :src="$player.current.artwork_url"></v-img>
+                        <v-img max-height="500" contain :src="$player.current.album.images[0].url"></v-img>
                     </v-col>
                 </v-row>
                 <v-row align="center" justify="center">
@@ -17,19 +17,19 @@
                         <v-row align="center" justify="center">
                             <span
                                 class="title font-weight-bold text-no-wrap"
-                                v-text="$player.current.title"
+                                v-text="$player.current.name"
                             ></span>
                         </v-row>
                         <v-row align="center" justify="center">
                             <span
                                 class="subtitle-1 grey--text text-no-wrap"
-                                v-text="$player.current.album"
+                                v-text="$player.current.album.name"
                             ></span>
                         </v-row>
                         <v-row align="center" justify="center">
                             <span
                                 class="subtitle-1 grey--text text-no-wrap"
-                                v-text="$player.current['artists'].join(', ')"
+                                v-text="$player.current.artists.map(e => e.name).join(', ')"
                             ></span>
                         </v-row>
                     </v-container>
@@ -45,7 +45,7 @@
                         </v-row>
                         <v-row class="mx-1" align="center" justify="center">
                             <v-slider
-                                :max="$player.current.duration"
+                                :max="$player.current.duration_ms / 1000"
                                 @change="$emit('position', arguments[0])"
                                 :value="position"
                                 step="0.01"

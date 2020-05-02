@@ -17,7 +17,7 @@
                     <v-row no-gutters dense>
                         <v-col cols="auto">
                             <v-avatar size="80" tile>
-                                <v-img :src="artist.picture"></v-img>
+                                <v-img :src="artist.images[0].url"></v-img>
                             </v-avatar>
                         </v-col>
                         <v-col cols="6">

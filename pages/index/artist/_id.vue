@@ -5,12 +5,12 @@
                 <v-container fluid>
                     <v-row no-gutters dense>
                         <v-col cols="auto">
-                            <v-avatar size="128" tile>
-                                <v-img :src="artist_info.picture"></v-img>
+                            <v-avatar v-if="artist.images" size="128" tile>
+                                <v-img :src="artist.images[0].url"></v-img>
                             </v-avatar>
                         </v-col>
                         <v-col cols="6">
-                            <v-card-title class="display-1 text-truncate" v-text="artist_info.name"></v-card-title>
+                            <v-card-title class="display-1 text-truncate" v-text="artist.name"></v-card-title>
                             <v-spacer></v-spacer>
                             <v-card-actions>
                                 <v-btn icon>
@@ -23,16 +23,16 @@
                 </v-container>
             </v-card>
         </v-col>
-        <v-col cols="12" v-if="artist_info.albums.length">
+        <v-col cols="12" v-if="artist.albums.length">
             <v-card>
                 <v-card-title class="headline">Albums</v-card-title>
-                <albums v-bind:albums="artist_info.albums" />
+                <albums v-bind:albums="artist.albums" />
             </v-card>
         </v-col>
-        <v-col cols="12" v-if="artist_info.singles.length">
+        <v-col cols="12" v-if="artist.singles.length">
             <v-card>
                 <v-card-title class="headline">Singles & EPs</v-card-title>
-                <albums v-bind:albums="artist_info.singles" />
+                <albums v-bind:albums="artist.singles" />
             </v-card>
         </v-col>
     </v-row>
@@ -44,13 +44,13 @@ import albums from '~/components/albums'
 export default {
     components: { albums },
     data: () => ({
-        artist_info: {
+        artist: {
             albums: [],
             singles: []
         }
     }),
     mounted() {
-        this.$drippy.getArtist(this.$route.params["id"]).then(artist => this.artist_info = artist);
+        this.$drippy.getArtist(this.$route.params["id"]).then(artist => this.artist = artist);
     }
 }
 </script>
