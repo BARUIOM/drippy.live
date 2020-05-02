@@ -1,96 +1,63 @@
 <template>
     <v-container fill-height fluid>
         <v-row align="center" justify="center">
-            <v-col sm="6" lg="4" xl="3">
+            <v-col cols="12" sm="6" md="4" xl="3">
                 <v-card>
-                    <v-card-title>Drippy Music</v-card-title>
-                    <v-card-subtitle>Unlimited music anywhere</v-card-subtitle>
-                    <v-card-text>
-                        <v-form v-model="valid" :lazy-validation="false" @submit.prevent="submit">
-                            <v-text-field
-                                label="E-mail"
-                                color="orange"
-                                v-model="email"
-                                :rules="emailRules"
-                                required
-                            ></v-text-field>
-                            <v-text-field
-                                label="Password"
-                                color="orange"
-                                v-model="password"
-                                type="password"
-                                :rules="passwordRules"
-                                required
-                            ></v-text-field>
-                            <v-checkbox
-                                label="I don't have an account"
-                                color="orange"
-                                v-model="new_user"
-                            ></v-checkbox>
-                            <v-layout justify-space-between>
+                    <v-card-title class="justify-center">Log in to your account</v-card-title>
+                    <ValidationObserver v-slot="{ valid, handleSubmit }">
+                        <v-form @submit.prevent="handleSubmit(submit)">
+                            <v-card-text>
+                                <ValidationProvider
+                                    name="E-mail"
+                                    rules="required|email"
+                                    v-slot="{ errors }"
+                                >
+                                    <v-text-field
+                                        :error-messages="errors"
+                                        label="E-mail"
+                                        v-model="email"
+                                    ></v-text-field>
+                                </ValidationProvider>
+                                <ValidationProvider
+                                    name="Password"
+                                    rules="required"
+                                    v-slot="{ errors }"
+                                >
+                                    <v-text-field
+                                        :error-messages="errors"
+                                        type="password"
+                                        label="Password"
+                                        v-model="password"
+                                    ></v-text-field>
+                                </ValidationProvider>
+                            </v-card-text>
+                            <v-card-actions class="d-flex flex-column">
+                                <v-btn class="my-1" type="submit" :disabled="!valid" block>Sign in</v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    color="orange"
-                                    type="submit"
-                                    :disabled="!valid"
-                                >{{ new_user ? "Register" : "Login" }}</v-btn>
-                            </v-layout>
+                                <v-btn class="my-1" link to="/auth/register" block>Create an account</v-btn>
+                            </v-card-actions>
                         </v-form>
-                    </v-card-text>
+                    </ValidationObserver>
                 </v-card>
             </v-col>
         </v-row>
-        <v-snackbar v-model="snackbar" :color="status" :bottom="true" :timeout="4000">{{ message }}</v-snackbar>
     </v-container>
 </template>
 
 <script>
-
 export default {
     data: () => ({
         email: '',
-        emailRules: [
-            v => !!v || 'E-mail is required',
-            v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-        ],
-        password: '',
-        passwordRules: [
-            v => !!v || 'Password is required',
-            v => (v && v.length >= 8) || 'Password must have at least 8 characters',
-        ],
-        new_user: false,
-        status: '',
-        message: '',
-        snackbar: false,
-        valid: false
+        password: ''
     }),
     methods: {
-        async submit() {
-            this.valid = false;
-            this.snackbar = false;
-            try {
-                if (this.new_user) {
-                    const response = await this.$drippy.register(this.email, this.password);
-
-                    this.new_user = false;
-                    this.status = 'success';
-                    this.message = response['message'];
-                    this.snackbar = true;
-                } else {
-                    await this.$drippy.login(this.email, this.password);
-                    this.$router.push('/');
-                }
-            } catch (error) {
-                console.error(error);
+        submit() {
+            this.$root.$emit('overlay', true);
+            this.$drippy.login(this.email, this.password).then(() => this.$router.push('/')).catch(error => {
                 if (error.response && error.response.status == 401) {
-                    this.status = 'error';
-                    this.message = error.response.data['message'];
-                    this.snackbar = true;
+                    this.$root.$emit('snackbar', error.response.data['message'], 'error');
                 }
-            } finally {
-                this.valid = true;
-            }
+            }).finally(() => this.$root.$emit('overlay', false));
         }
     }
 }
