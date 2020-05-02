@@ -27,7 +27,7 @@ export default {
         });
     },
     mounted() {
-        if (!this.$route.path.startsWith('/auth') || this.$route.path === '/auth/login') {
+        if (!this.$route.path.startsWith('/auth') || this.$route.path.includes('/auth/login')) {
             this.$drippy.validate().then(() => {
                 if (this.$route.path === '/auth/login') {
                     this.$router.push('/');
