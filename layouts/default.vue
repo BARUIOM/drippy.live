@@ -27,13 +27,17 @@ export default {
         });
     },
     mounted() {
-        this.$drippy.validate().then(() => {
-            if (this.$route.path.startsWith('/auth')) {
-                this.$router.push('/');
-            }
-        }).catch(() => {
-            this.$router.push('/auth/login');
-        }).finally(() => this.overlay = false);
+        if (!this.$route.path.startsWith('/auth') || this.$route.path === '/auth/login') {
+            this.$drippy.validate().then(() => {
+                if (this.$route.path === '/auth/login') {
+                    this.$router.push('/');
+                }
+            }).catch(() => {
+                if (this.$route.path !== '/auth/login') {
+                    this.$router.push('/auth/login');
+                }
+            }).finally(() => this.overlay = false);
+        } else this.overlay = false;
     }
 }
 </script>
