@@ -50,13 +50,17 @@ export default {
     async refresh() {
         await refresh();
     },
-    async register(email, password) {
-        const response = await axios.post('/register', { email, password });
+    async register(email, username, password) {
+        const response = await axios.post('/register', { email, username, password });
         return response.data;
     },
     async login(email, password) {
         const response = await axios.post('/login', { email, password });
         window.localStorage["USER_DATA"] = JSON.stringify(response.data);
+        return response.data;
+    },
+    async checkEmail(email) {
+        const response = await axios.post('/check_email', { email });
         return response.data;
     },
     async getPlaylists() {
