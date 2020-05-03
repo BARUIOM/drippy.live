@@ -85,4 +85,8 @@ export default {
 .v-content {
     max-height: calc(100vh - 72px);
 }
+
+.v-navigation-drawer {
+    max-height: calc(100vh - 72px) !important;
+}
 </style>
