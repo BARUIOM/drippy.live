@@ -31,6 +31,10 @@ export default {
                 if (tab.closed) unload(clearInterval(interval));
             }, 100);
         });
+        this.$root.$on('logout', () => {
+            delete localStorage['USER_DATA'];
+            this.$router.push('/auth/login');
+        });
     },
     mounted() {
         if (!this.$route.path.startsWith('/auth') || this.$route.path.includes('/auth/login')) {

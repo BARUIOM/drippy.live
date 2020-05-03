@@ -8,11 +8,24 @@ const data = {
         }
         return {};
     },
+    set userdata(value) {
+        window.localStorage["USER_DATA"] = JSON.stringify(value);
+    },
     get token() {
         return this.userdata['idToken'];
     },
+    set token(token) {
+        let data = this.userdata;
+        data['idToken'] = token;
+        this.userdata = data;
+    },
     get refresh_token() {
         return this.userdata['refreshToken'];
+    },
+    set refresh_token(token) {
+        let data = this.userdata;
+        data['refreshToken'] = token;
+        this.userdata = data;
     }
 }
 
@@ -36,7 +49,8 @@ axios.interceptors.response.use(null, error => {
 
 const refresh = async () => {
     const response = await axios.post('/refresh', { refresh_token: data.refresh_token });
-    window.localStorage["USER_DATA"] = JSON.stringify(response.data);
+    data.token = response.data['idToken'];
+    data.refresh_token = response.data['refreshToken'];
 }
 
 export default {
@@ -45,6 +59,7 @@ export default {
         return response.data;
     },
     async validate() {
+        if (!data.userdata['displayName']) delete window.localStorage["USER_DATA"];
         await axios.get('/validate');
     },
     async refresh() {
@@ -56,7 +71,7 @@ export default {
     },
     async login(options = {}) {
         const response = await axios.post('/login', options);
-        window.localStorage["USER_DATA"] = JSON.stringify(response.data);
+        data.userdata = response.data;
         return response.data;
     },
     async checkEmail(email) {
