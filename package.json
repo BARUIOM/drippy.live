@@ -12,6 +12,7 @@
     "dependencies": {
         "axios": "^0.19.2",
         "nuxt": "^2.0.0",
+        "spotify-web-api-js": "^1.4.0",
         "vee-validate": "^3.3.0"
     },
     "devDependencies": {

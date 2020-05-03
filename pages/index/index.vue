@@ -17,7 +17,8 @@
                     <v-row no-gutters dense>
                         <v-col cols="auto">
                             <v-avatar size="80" tile>
-                                <v-img :src="artist.images[0].url"></v-img>
+                                <v-img v-if="artist.images.length" :src="artist.images[0].url"></v-img>
+                                <v-icon v-else>mdi-account-music</v-icon>
                             </v-avatar>
                         </v-col>
                         <v-col cols="6">
@@ -62,14 +63,16 @@ export default {
     mounted() {
         if (sessionStorage['search_results']) {
             let search_results = JSON.parse(sessionStorage['search_results']);
-            this.artist_list = search_results['artist'];
-            this.track_list = search_results['track'];
+            this.artist_list = search_results['artists'];
+            this.track_list = search_results['tracks'];
         }
     },
     methods: {
         search() {
-            this.$drippy.search(this.search_input, 'artist').then(results => this.artist_list = results);
-            this.$drippy.search(this.search_input, 'track').then(results => this.track_list = results);
+            this.$drippy.search(this.search_input).then(result => {
+                this.artist_list = result.artists;
+                this.track_list = result.tracks;
+            });
         }
     }
 }

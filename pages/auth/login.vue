@@ -62,7 +62,10 @@ export default {
     methods: {
         submit() {
             this.$root.$emit('overlay', true);
-            this.$drippy.login({ email: this.email, password: this.password }).then(() => this.$router.push('/')).catch(error => {
+            this.$drippy.login({ email: this.email, password: this.password }).then(async () => {
+                await this.$drippy.getToken();
+                this.$router.push('/');
+            }).catch(error => {
                 if (error.response && error.response.status == 401) {
                     this.$root.$emit('snackbar', error.response.data['message'], 'error');
                 }
@@ -79,10 +82,10 @@ export default {
                     this.$root.$emit('overlay', true);
                     this.$drippy.spotifyCheck(code).then(async data => {
                         await this.$drippy.login({ token: data['token'] });
-                        this.$root.$emit('overlay', false);
+                        await this.$drippy.getToken();
                         this.$root.$emit('snackbar', data['message'], 'success', true);
                         this.$router.push('/');
-                    });
+                    }).finally(() => this.$root.$emit('overlay', false));
                 }
             });
         }

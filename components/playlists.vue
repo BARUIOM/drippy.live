@@ -61,10 +61,11 @@ export default {
         this.$drippy.getPlaylists().then(playlists => this.playlists = playlists);
     },
     methods: {
-        async createPlaylist() {
+        createPlaylist() {
             this.dialog = false;
-            await this.$drippy.createPlaylist(this.playlist_name);
-            this.playlists = await this.$drippy.getPlaylists();
+            this.$drippy.createPlaylist(this.playlist_name).then(playlist => {
+                this.playlists.unshift(playlist);
+            });
         }
     }
 }

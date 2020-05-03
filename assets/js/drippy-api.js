@@ -1,31 +1,22 @@
 import Axios from 'axios'
+import SpotifyWebApi from 'spotify-web-api-js';
+
 const api_url = '' || 'https://api.drippy.live';
+const client = new SpotifyWebApi();
 
 const data = {
-    get userdata() {
-        if (window.localStorage["USER_DATA"]) {
-            return JSON.parse(window.localStorage["USER_DATA"]);
+    get profile() {
+        if (localStorage['profile']) {
+            return JSON.parse(localStorage['profile']);
         }
-        return {};
     },
-    set userdata(value) {
-        window.localStorage["USER_DATA"] = JSON.stringify(value);
+    set profile(value) {
+        localStorage['profile'] = JSON.stringify(value);
     },
-    get token() {
-        return this.userdata['idToken'];
-    },
-    set token(token) {
-        let data = this.userdata;
-        data['idToken'] = token;
-        this.userdata = data;
-    },
-    get refresh_token() {
-        return this.userdata['refreshToken'];
-    },
-    set refresh_token(token) {
-        let data = this.userdata;
-        data['refreshToken'] = token;
-        this.userdata = data;
+    get spotify() {
+        if (localStorage['spotify']) {
+            return JSON.parse(localStorage['spotify']);
+        }
     }
 }
 
@@ -33,7 +24,7 @@ const exclude = ['/refresh', '/login', '/register'];
 const axios = Axios.create({ baseURL: api_url });
 axios.interceptors.request.use(config => {
     if (!exclude.includes(config.url)) {
-        config.headers['User-Token'] = data.token;
+        config.headers['User-Token'] = localStorage['idToken'];
     }
     return config;
 });
@@ -48,9 +39,18 @@ axios.interceptors.response.use(null, error => {
 });
 
 const refresh = async () => {
-    const response = await axios.post('/refresh', { refresh_token: data.refresh_token });
-    data.token = response.data['idToken'];
-    data.refresh_token = response.data['refreshToken'];
+    const response = await axios.post('/refresh', { refresh_token: localStorage['refreshToken'] });
+    localStorage['idToken'] = response.data['idToken'];
+    localStorage['refreshToken'] = response.data['refreshToken'];
+}
+
+const getToken = async () => {
+    const response = await axios.get('/token');
+    client.setAccessToken(response.data['access_token']);
+    client.getMe().then(user => {
+        data.profile = { name: user.display_name, photo: user.images[0] ? user.images[0].url : '' };
+        localStorage['spotify'] = JSON.stringify(user);
+    }).catch(() => { return });
 }
 
 export default {
@@ -58,8 +58,10 @@ export default {
         const response = await axios.get(`/auth/verifyEmail/${code}`);
         return response.data;
     },
+    async getToken() {
+        await getToken();
+    },
     async validate() {
-        if (!data.userdata['displayName']) delete window.localStorage["USER_DATA"];
         await axios.get('/validate');
     },
     async refresh() {
@@ -71,7 +73,8 @@ export default {
     },
     async login(options = {}) {
         const response = await axios.post('/login', options);
-        data.userdata = response.data;
+        localStorage['idToken'] = response.data['idToken'];
+        localStorage['refreshToken'] = response.data['refreshToken'];
         return response.data;
     },
     async checkEmail(email) {
@@ -79,70 +82,51 @@ export default {
         return response.data;
     },
     async getPlaylists() {
-        if (!window.sessionStorage['playlists']) {
-            const response = await axios.get('/playlists');
-            window.sessionStorage["playlists"] = JSON.stringify(response.data);
-            return [...response.data];
-        }
-        return [...JSON.parse(window.sessionStorage["playlists"])];
+        const playlists = await client.getUserPlaylists();
+        return [...playlists.items];
     },
     async getPlaylist(playlist_id) {
-        const response = await axios.get(`/playlist/${playlist_id}`);
-        return response.data;
+        return await client.getPlaylist(playlist_id);
     },
     async addTrackToPlaylist(playlist_id, track) {
-        await axios.post('/save', { id: track.id, playlist: playlist_id });
-        if (window.sessionStorage[playlist_id]) {
-            let playlist = JSON.parse(window.sessionStorage[playlist_id]);
-            playlist['tracks'].items.push({ track });
-            window.sessionStorage[playlist_id] = JSON.stringify(playlist);
-        }
+        await client.addTracksToPlaylist(playlist_id, [track.id]);
     },
-    async removeTrackFromPlaylist(playlist_id, track_id) {
-        await axios.post('/remove', { id: track_id, playlist: playlist_id });
-        if (window.sessionStorage[playlist_id]) {
-            let playlist = JSON.parse(window.sessionStorage[playlist_id]);
-            let song = playlist['tracks'].find(e => e['data'] == track_id);
-            playlist['tracks'].splice(playlist['tracks'].indexOf(song), 1);
-            window.sessionStorage[playlist_id] = JSON.stringify(playlist);
-            return playlist['tracks'];
-        }
+    async removeTrackFromPlaylist(playlist_id, track) {
+        await client.removeTracksFromPlaylist(playlist_id, [track.id]);
     },
     async createPlaylist(name) {
-        const response = await axios.post('/create_playlist', { name });
-        if (window.sessionStorage['playlists']) {
-            let playlists = [...JSON.parse(window.sessionStorage['playlists'])];
-            playlists.unshift(response.data);
-            window.sessionStorage['playlists'] = JSON.stringify(playlists);
+        if (data.spotify) {
+            return await client.createPlaylist(data.spotify['id'], { name });
         }
     },
-    async search(query, type) {
-        const response = await axios.post(`/search/${type}`, { query });
-
-        let object = {};
-        if (window.sessionStorage['search_results']) {
-            object = JSON.parse(window.sessionStorage['search_results']);
-        }
-
-        object[type] = response.data;
-        window.sessionStorage['search_results'] = JSON.stringify(object);
-        return [...object[type]];
+    async search(query) {
+        const response = await client.search(query, ['artist', 'track']);
+        const result = { artists: response.artists.items, tracks: response.tracks.items };
+        window.sessionStorage['search_results'] = JSON.stringify(result);
+        return result;
     },
     async getArtist(artist_id) {
-        if (!window.sessionStorage[artist_id]) {
-            const response = await axios.get(`/artist/${artist_id}`);
-            window.sessionStorage[artist_id] = JSON.stringify(response.data);
-            return response.data;
-        }
-        return JSON.parse(window.sessionStorage[artist_id]);
+        var collection = [];
+        const artist = await client.getArtist(artist_id);
+        await (async () => {
+            let albums, offset = 0;
+            const options = { limit: 50, include_groups: 'album,single', country: 'US' };
+            do {
+                albums = await client.getArtistAlbums(artist_id, options);
+                collection = collection.concat(albums.items);
+                offset += albums.items.length;
+                options['offset'] = offset;
+            } while (albums.next);
+        })();
+
+        artist['albums'] = collection.filter(e => e.album_type === 'album');
+        artist['singles'] = collection.filter(e => e.album_type === 'single');
+        return artist;
     },
     async getAlbum(album_id) {
-        if (!window.sessionStorage[album_id]) {
-            const response = await axios.get(`/album/${album_id}`);
-            window.sessionStorage[album_id] = JSON.stringify(response.data);
-            return response.data;
-        }
-        return JSON.parse(window.sessionStorage[album_id]);
+        const album = await client.getAlbum(album_id);
+        album.tracks.items.forEach(e => e['album'] = { images: album.images });
+        return album;
     },
     async spotifyCheck(code) {
         const response = await axios.post('/spotify/auth', { code });
@@ -150,13 +134,13 @@ export default {
             return response.data;
         }
     },
+    getTrackUrl(track) {
+        return `${api_url}/stream/${localStorage['idToken']}/${track['id']}`;
+    },
     get spotify() {
         return `${api_url}/spotify`;
     },
-    getTrackUrl(track) {
-        return `${api_url}/stream/${data.token}/${track['id']}`;
-    },
-    get userdata() {
-        return data.userdata;
+    get profile() {
+        return data.profile;
     }
 }

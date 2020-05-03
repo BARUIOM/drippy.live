@@ -32,7 +32,10 @@ export default {
             }, 100);
         });
         this.$root.$on('logout', () => {
-            delete localStorage['USER_DATA'];
+            delete localStorage['profile'];
+            delete localStorage['spotify'];
+            delete localStorage['idToken'];
+            delete localStorage['refreshToken'];
             this.$router.push('/auth/login');
         });
     },
