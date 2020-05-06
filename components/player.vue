@@ -1,19 +1,18 @@
 <template>
     <v-container class="player pa-0 grey darken-4 elevation-10" fluid>
-        <div class="hidden-sm-and-down" v-if="$player.current.id">
+        <div v-if="$player.current.id">
             <v-slider
-                :max="$player.current.duration_ms / 1000"
                 @change="$player.position = arguments[0]"
                 :value="position"
+                :max="total"
                 step="0.01"
                 height="2"
                 hide-details
             ></v-slider>
         </div>
 
-        <div class="activator hidden-md-and-up" @click="dialog = true"></div>
         <v-row align="center" justify="center" no-gutters>
-            <v-col class="player-data" cols="6" md="4" v-if="$player.current.id">
+            <v-col class="player-data hidden-sm-and-down" cols="6" md="4" v-if="$player.current.id">
                 <div>
                     <v-img width="72" :src="$player.current.album.images[0].url"></v-img>
                 </div>
@@ -33,9 +32,9 @@
                     </v-row>
                 </v-container>
             </v-col>
-            <v-spacer v-else></v-spacer>
+            <v-spacer class="hidden-sm-and-down" v-else></v-spacer>
 
-            <v-col class="hidden-sm-and-down" align="center" cols="4">
+            <v-col align="center" cols="12" md="4">
                 <v-btn class="mx-3" icon>
                     <v-icon>mdi-repeat</v-icon>
                 </v-btn>
@@ -62,37 +61,23 @@
                     <v-icon>mdi-playlist-plus</v-icon>
                 </v-btn>
             </v-col>
-
-            <v-col class="hidden-md-and-up" align="right" cols="6">
-                <v-btn class="mr-4" icon @click.stop="$player.toggle()">
-                    <v-icon x-large v-text="control_icon"></v-icon>
-                </v-btn>
-            </v-col>
         </v-row>
-
-        <fullplayer
-            @add="$root.$emit('add', $player.current)"
-            @close="dialog = false"
-            @position="$player.position = arguments[0]"
-            v-bind:dialog="dialog"
-            v-bind:position="position"
-            v-bind:control_icon="control_icon"
-        />
     </v-container>
 </template>
 
 <script>
-import fullplayer from './fullplayer'
-
 export default {
-    components: { fullplayer },
     data: () => ({
+        total: 0,
         position: 0,
         dialog: false,
         like_icon: "mdi-heart-outline",
         control_icon: "mdi-play"
     }),
     mounted() {
+        this.$player.on('playback-started', () => {
+            this.total = Math.floor(this.$player.current.duration_ms / 1000);
+        });
         this.$player.on('update', value => this.position = value);
         this.$player.on('state', (playing) => {
             if (playing) {
@@ -138,11 +123,5 @@ export default {
         margin: 0px;
         min-height: unset;
     }
-}
-
-.activator {
-    position: fixed;
-    min-width: 100vw;
-    min-height: 72px;
 }
 </style>

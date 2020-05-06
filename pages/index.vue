@@ -1,26 +1,28 @@
 <template>
     <div>
-        <v-app-bar class="hidden-md-and-up" app>
-            <v-btn icon @click.stop="drawer = !drawer">
-                <v-icon>mdi-menu</v-icon>
-            </v-btn>
-        </v-app-bar>
+        <div v-if="!$native">
+            <v-app-bar v-if="!$native" class="hidden-md-and-up" app>
+                <v-btn icon @click.stop="drawer = !drawer">
+                    <v-icon>mdi-menu</v-icon>
+                </v-btn>
+            </v-app-bar>
 
-        <v-navigation-drawer class="hidden-sm-and-down" permanent expand-on-hover app>
-            <drawer />
-        </v-navigation-drawer>
+            <v-navigation-drawer class="hidden-sm-and-down" permanent expand-on-hover app>
+                <drawer />
+            </v-navigation-drawer>
 
-        <v-navigation-drawer v-model="drawer" absolute temporary>
-            <drawer />
-        </v-navigation-drawer>
+            <v-navigation-drawer v-model="drawer" absolute temporary>
+                <drawer />
+            </v-navigation-drawer>
+
+            <player />
+        </div>
 
         <v-content fill-height class="overflow-y-auto">
             <v-container fluid>
                 <nuxt-child />
             </v-container>
         </v-content>
-
-        <player />
 
         <v-dialog v-model="dialog">
             <v-card>
