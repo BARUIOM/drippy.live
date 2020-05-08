@@ -125,7 +125,7 @@ export default {
     },
     async getAlbum(album_id) {
         const album = await client.getAlbum(album_id);
-        album.tracks.items.forEach(e => e['album'] = { images: album.images });
+        album.tracks.items.forEach(e => e['album'] = { name: album.name, images: album.images });
         return album;
     },
     async spotifyCheck(code) {
