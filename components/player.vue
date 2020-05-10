@@ -1,32 +1,31 @@
 <template>
     <v-container class="player pa-0 grey darken-4 elevation-10" fluid>
-        <v-slider
-            v-if="!$native && $player.current.id"
-            @change="$player.position = arguments[0]"
-            :value="position"
-            :max="total"
-            step="0.01"
-            height="2"
-            hide-details
-        ></v-slider>
-
+        <div v-if="!$native">
+            <v-slider
+                v-if="current.id"
+                @change="$player.position = arguments[0]"
+                :max="current.duration_ms / 1000"
+                :value="position"
+                step="0.01"
+                height="2"
+                hide-details
+            ></v-slider>
+        </div>
         <div v-else class="activator" @click="$native.open()"></div>
+
         <v-row align="center" justify="center" no-gutters>
-            <v-col class="player-data" cols="10" md="4" v-if="$player.current.id">
+            <v-col class="player-data" cols="10" md="4" v-if="current.id">
                 <div>
-                    <v-img width="72" :src="$player.current.album.images[0].url"></v-img>
+                    <v-img width="72" :src="current.album.images[0].url"></v-img>
                 </div>
 
                 <v-container class="player-info" fill-height fluid>
                     <v-row>
-                        <div
-                            v-text="$player.current.name"
-                            class="body-2 font-weight-bold text-truncate"
-                        ></div>
+                        <div v-text="current.name" class="body-2 font-weight-bold text-truncate"></div>
                     </v-row>
                     <v-row>
                         <div
-                            v-text="$player.current.artists.map(e => e.name).join(', ')"
+                            v-text="current.artists.map(e => e.name).join(', ')"
                             class="body-2 grey--text text-truncate"
                         ></div>
                     </v-row>
@@ -57,7 +56,7 @@
                     <v-icon v-text="like_icon"></v-icon>
                 </v-btn>
 
-                <v-btn class="mr-4" icon @click="$root.$emit('add', $player.current)">
+                <v-btn class="mr-4" icon @click="$root.$emit('add', current)">
                     <v-icon>mdi-playlist-plus</v-icon>
                 </v-btn>
             </v-col>
@@ -74,16 +73,15 @@
 <script>
 export default {
     data: () => ({
-        total: 0,
         position: 0,
-        dialog: false,
         like_icon: "mdi-heart-outline",
-        control_icon: "mdi-play"
+        control_icon: "mdi-play",
+        current: {
+            duration_ms: 0
+        }
     }),
     mounted() {
-        this.$player.on('playback-started', () => {
-            this.total = Math.floor(this.$player.current.duration_ms / 1000);
-        });
+        this.$player.on('playback-started', track => this.current = track);
         this.$player.on('update', value => this.position = value);
         this.$player.on('state', (playing) => {
             if (playing) {
@@ -135,5 +133,12 @@ export default {
         margin: 0px;
         min-height: unset;
     }
+}
+
+.activator {
+    z-index: 100;
+    position: fixed;
+    min-width: 100vw;
+    min-height: 72px;
 }
 </style>
