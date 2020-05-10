@@ -1,18 +1,18 @@
 <template>
     <v-container class="player pa-0 grey darken-4 elevation-10" fluid>
-        <div v-if="$player.current.id">
-            <v-slider
-                @change="$player.position = arguments[0]"
-                :value="position"
-                :max="total"
-                step="0.01"
-                height="2"
-                hide-details
-            ></v-slider>
-        </div>
+        <v-slider
+            v-if="!$native && $player.current.id"
+            @change="$player.position = arguments[0]"
+            :value="position"
+            :max="total"
+            step="0.01"
+            height="2"
+            hide-details
+        ></v-slider>
 
+        <div v-else class="activator" @click="$native.open()"></div>
         <v-row align="center" justify="center" no-gutters>
-            <v-col class="player-data hidden-sm-and-down" cols="6" md="4" v-if="$player.current.id">
+            <v-col class="player-data" cols="10" md="4" v-if="$player.current.id">
                 <div>
                     <v-img width="72" :src="$player.current.album.images[0].url"></v-img>
                 </div>
@@ -32,9 +32,9 @@
                     </v-row>
                 </v-container>
             </v-col>
-            <v-spacer class="hidden-sm-and-down" v-else></v-spacer>
+            <v-spacer v-else></v-spacer>
 
-            <v-col align="center" cols="12" md="4">
+            <v-col class="hidden-sm-and-down" align="center" cols="12" md="4">
                 <v-btn class="mx-3" icon>
                     <v-icon>mdi-repeat</v-icon>
                 </v-btn>
@@ -59,6 +59,12 @@
 
                 <v-btn class="mr-4" icon @click="$root.$emit('add', $player.current)">
                     <v-icon>mdi-playlist-plus</v-icon>
+                </v-btn>
+            </v-col>
+
+            <v-col class="hidden-md-and-up" align="right" cols="2">
+                <v-btn class="mx-3" icon @click="$player.toggle()">
+                    <v-icon x-large v-text="control_icon"></v-icon>
                 </v-btn>
             </v-col>
         </v-row>
@@ -101,6 +107,12 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 960px) {
+    .player {
+        z-index: 6 !important;
+    }
+}
+
 .player {
     bottom: 0;
     z-index: 10;

@@ -1,22 +1,20 @@
 <template>
     <div>
-        <div v-if="!$native">
-            <v-app-bar v-if="!$native" class="hidden-md-and-up" app>
-                <v-btn icon @click.stop="drawer = !drawer">
-                    <v-icon>mdi-menu</v-icon>
-                </v-btn>
-            </v-app-bar>
+        <v-app-bar class="hidden-md-and-up" app>
+            <v-btn icon @click.stop="drawer = !drawer">
+                <v-icon>mdi-menu</v-icon>
+            </v-btn>
+        </v-app-bar>
 
-            <v-navigation-drawer class="hidden-sm-and-down" permanent expand-on-hover app>
-                <drawer />
-            </v-navigation-drawer>
+        <v-navigation-drawer class="hidden-sm-and-down" permanent expand-on-hover app>
+            <drawer />
+        </v-navigation-drawer>
 
-            <v-navigation-drawer v-model="drawer" absolute temporary>
-                <drawer />
-            </v-navigation-drawer>
+        <v-navigation-drawer v-model="drawer" absolute temporary>
+            <drawer />
+        </v-navigation-drawer>
 
-            <player />
-        </div>
+        <player />
 
         <v-content fill-height class="overflow-y-auto">
             <v-container fluid>
@@ -78,6 +76,10 @@ export default {
     .v-content {
         padding-top: 0px !important;
     }
+
+    .v-navigation-drawer {
+        max-height: calc(100vh - 72px) !important;
+    }
 }
 
 .v-app-bar {
@@ -86,9 +88,5 @@ export default {
 
 .v-content {
     max-height: calc(100vh - 72px);
-}
-
-.v-navigation-drawer {
-    max-height: calc(100vh - 72px) !important;
 }
 </style>
