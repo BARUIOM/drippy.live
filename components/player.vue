@@ -15,7 +15,7 @@
 
         <v-row align="center" justify="center" no-gutters>
             <v-col class="player-data" cols="10" md="4" v-if="current.id">
-                <div>
+                <div class="artwork">
                     <v-img width="72" :src="current.album.images[0].url"></v-img>
                 </div>
 
@@ -135,8 +135,11 @@ export default {
     }
 }
 
+.artwork {
+    z-index: -1 !important;
+}
+
 .activator {
-    z-index: 100;
     position: fixed;
     min-width: 100vw;
     min-height: 72px;
