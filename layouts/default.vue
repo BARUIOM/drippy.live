@@ -25,12 +25,6 @@ export default {
             if (top !== undefined) this.top = top;
             this.snackbar = true;
         });
-        this.$root.$on('open', (url, unload) => {
-            const tab = window.open(url);
-            const interval = setInterval(() => {
-                if (tab.closed) unload(clearInterval(interval));
-            }, 100);
-        });
         this.$root.$on('logout', () => {
             delete localStorage['profile'];
             delete localStorage['spotify'];

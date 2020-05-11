@@ -59,6 +59,20 @@ export default {
         email: '',
         password: ''
     }),
+    mounted() {
+        if (localStorage['spotify_code']) {
+            const code = localStorage['spotify_code'];
+            delete localStorage['spotify_code'];
+
+            this.$root.$emit('overlay', true);
+            this.$drippy.spotifyCheck(code).then(async data => {
+                await this.$drippy.login({ token: data['token'] });
+                await this.$drippy.getToken();
+                this.$root.$emit('snackbar', data['message'], 'success', true);
+                this.$router.push('/');
+            }).finally(() => this.$root.$emit('overlay', false));
+        }
+    },
     methods: {
         submit() {
             this.$root.$emit('overlay', true);
@@ -72,22 +86,8 @@ export default {
             }).finally(() => this.$root.$emit('overlay', false));
         },
         open() {
-            this.$root.$emit('open', this.$drippy.spotify, () => {
-                if (!localStorage['spotify']) {
-                    this.$root.$emit('snackbar', 'Permissions not granted by the user', 'error');
-                } else {
-                    const code = localStorage['spotify'];
-                    delete localStorage['spotify'];
-
-                    this.$root.$emit('overlay', true);
-                    this.$drippy.spotifyCheck(code).then(async data => {
-                        await this.$drippy.login({ token: data['token'] });
-                        await this.$drippy.getToken();
-                        this.$root.$emit('snackbar', data['message'], 'success', true);
-                        this.$router.push('/');
-                    }).finally(() => this.$root.$emit('overlay', false));
-                }
-            });
+            this.$root.$emit('overlay', true);
+            window.open(this.$drippy.spotify, '_self');
         }
     }
 }
