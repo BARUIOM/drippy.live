@@ -11,25 +11,17 @@
                 ></v-text-field>
             </v-form>
         </v-col>
-        <v-col v-for="(artist, i) in artist_list" :key="i" cols="12">
-            <v-card link :to="{ name: 'index-artist-id', params: { id: artist.id } }">
-                <v-container fluid>
-                    <v-row no-gutters dense>
-                        <v-col cols="auto">
-                            <v-avatar size="80" tile>
-                                <v-img v-if="artist.images.length" :src="artist.images[0].url"></v-img>
-                                <v-icon v-else>mdi-account-music</v-icon>
-                            </v-avatar>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-card-title class="headline text-truncate" v-text="artist.name"></v-card-title>
-                            <v-card-subtitle class="pb-0">Artist</v-card-subtitle>
-                        </v-col>
-                        <v-spacer></v-spacer>
-                        <v-icon size="40">mdi-chevron-right</v-icon>
-                    </v-row>
-                </v-container>
-            </v-card>
+        <v-col cols="12">
+            <v-container class="d-flex flex-row overflow-x-auto pa-0" fluid>
+                <v-col v-for="(artist, i) in artist_list" :key="i" cols="6" sm="4" md="2">
+                    <v-card link :to="{ name: 'index-artist-id', params: { id: artist.id } }">
+                        <div class="pa-4">
+                            <v-img :src="getPicture(artist)" class="elevation-10" aspect-ratio="1"></v-img>
+                        </div>
+                        <v-card-title class="text-truncate justify-center" v-text="artist.name"></v-card-title>
+                    </v-card>
+                </v-col>
+            </v-container>
         </v-col>
         <v-col cols="12">
             <v-card>
@@ -73,6 +65,12 @@ export default {
                 this.artist_list = result.artists;
                 this.track_list = result.tracks;
             });
+        },
+        getPicture(artist) {
+            if (artist.images && artist.images.length) {
+                return artist.images[0].url;
+            }
+            return '/images/account-music.png';
         }
     }
 }
