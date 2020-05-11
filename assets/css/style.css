@@ -3,9 +3,11 @@
     scrollbar-color: #212121 transparent !important;
 }
 
-::-webkit-scrollbar {
-    width: 6px !important;
-    height: 6px !important;
+@media screen and (min-width: 960px) {
+    ::-webkit-scrollbar {
+        width: 6px !important;
+        height: 6px !important;
+    }
 }
 
 ::-webkit-scrollbar-thumb {
