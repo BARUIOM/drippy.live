@@ -5,14 +5,13 @@
     "author": "Vitor Macedo",
     "private": true,
     "scripts": {
-        "dev": "nuxt --port 8080",
         "start": "nuxt start",
-        "build": "nuxt build"
+        "build": "nuxt build",
+        "dev": "nuxt --hostname 0.0.0.0 --port 8080"
     },
     "dependencies": {
         "axios": "^0.19.2",
         "nuxt": "^2.0.0",
-        "spotify-web-api-js": "^1.4.0",
         "vee-validate": "^3.3.0"
     },
     "devDependencies": {

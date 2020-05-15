@@ -29,7 +29,6 @@ export default {
     */
     plugins: [
         '~/plugins/prototypes.js',
-        '~/plugins/spotify-loader.js',
         '~/plugins/validation-rules.js'
     ],
     /*

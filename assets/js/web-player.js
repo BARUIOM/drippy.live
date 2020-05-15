@@ -62,7 +62,7 @@ class Player extends EventEmitter {
             if (this.current) {
                 this.emit('playback-started', this.current);
                 audio.src = drippy.getTrackUrl(this.current);
-                audio.play();
+                audio.onloadeddata = () => audio.play();
             }
         });
     }
@@ -85,9 +85,7 @@ audio.addEventListener('play', () => player.emit('state', !audio.paused));
 audio.addEventListener('pause', () => player.emit('state', !audio.paused));
 audio.addEventListener('ended', () => {
     player.now_playing++;
-    if (player.now_playing < player._tracks.length) {
-        player.play();
-    } else player.pause();
+    player.play();
 });
 
 export default player;

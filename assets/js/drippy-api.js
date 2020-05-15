@@ -1,8 +1,5 @@
 import Axios from 'axios'
-import SpotifyWebApi from 'spotify-web-api-js';
-
-const api_url = '' || 'https://api.drippy.live';
-const client = new SpotifyWebApi();
+import Spotify from './spotify-api';
 
 const data = {
     get profile() {
@@ -14,14 +11,24 @@ const data = {
         localStorage['profile'] = JSON.stringify(value);
     },
     get spotify() {
-        if (localStorage['spotify']) {
-            return JSON.parse(localStorage['spotify']);
-        }
+        return client.user;
     }
 }
 
+const api_url = '' || 'https://api.drippy.live';
 const exclude = ['/refresh', '/login', '/register'];
 const axios = Axios.create({ baseURL: api_url });
+
+const client = new Spotify();
+client.on('user', user => {
+    data.profile = { name: user['display_name'], photo: (user.images[0] || { url: null }).url };
+});
+
+client.callback = async () => {
+    const response = await axios.get('/token');
+    return response.data['access_token'];
+};
+
 axios.interceptors.request.use(config => {
     if (!exclude.includes(config.url)) {
         config.headers['User-Token'] = localStorage['idToken'];
@@ -31,41 +38,23 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(null, error => {
     if (error.config && error.response && error.response.status === 403) {
-        if (!exclude.includes(error.config.url)) {
-            return refresh().then(() => axios.request(error.config));
-        }
+        return axios.post('/refresh', { refresh_token: localStorage['refreshToken'] }).then(response => {
+            localStorage['idToken'] = response.data['idToken'];
+            localStorage['refreshToken'] = response.data['refreshToken'];
+            error.config.headers['User-Token'] = localStorage['idToken'];
+            return Axios.request(error.config);
+        });
     }
     throw error;
 });
-
-const refresh = async () => {
-    const response = await axios.post('/refresh', { refresh_token: localStorage['refreshToken'] });
-    localStorage['idToken'] = response.data['idToken'];
-    localStorage['refreshToken'] = response.data['refreshToken'];
-}
-
-const getToken = async () => {
-    const response = await axios.get('/token');
-    client.setAccessToken(response.data['access_token']);
-    client.getMe().then(user => {
-        data.profile = { name: user.display_name, photo: user.images[0] ? user.images[0].url : '' };
-        localStorage['spotify'] = JSON.stringify(user);
-    }).catch(() => { return });
-}
 
 export default {
     async verifyEmail(code) {
         const response = await axios.get(`/auth/verifyEmail/${code}`);
         return response.data;
     },
-    async getToken() {
-        await getToken();
-    },
     async validate() {
         await axios.get('/validate');
-    },
-    async refresh() {
-        await refresh();
     },
     async register(email, username, password) {
         const response = await axios.post('/register', { email, username, password });
@@ -89,14 +78,14 @@ export default {
         return await client.getPlaylist(playlist_id);
     },
     async addTrackToPlaylist(playlist_id, track) {
-        await client.addTracksToPlaylist(playlist_id, [track.id]);
+        await client.addTracksToPlaylist(playlist_id, track.id);
     },
     async removeTrackFromPlaylist(playlist_id, track) {
-        await client.removeTracksFromPlaylist(playlist_id, [track.id]);
+        await client.removeTracksFromPlaylist(playlist_id, track.id);
     },
     async createPlaylist(name) {
         if (data.spotify) {
-            return await client.createPlaylist(data.spotify['id'], { name });
+            return await client.createPlaylist(name);
         }
     },
     async search(query) {
@@ -110,12 +99,10 @@ export default {
         const artist = await client.getArtist(artist_id);
         await (async () => {
             let albums, offset = 0;
-            const options = { limit: 50, include_groups: 'album,single', country: 'US' };
             do {
-                albums = await client.getArtistAlbums(artist_id, options);
+                albums = await client.getArtistAlbums(artist_id, ['album', 'single'], 50, offset);
                 collection = collection.concat(albums.items);
                 offset += albums.items.length;
-                options['offset'] = offset;
             } while (albums.next);
         })();
 
