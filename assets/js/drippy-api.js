@@ -38,12 +38,14 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(null, error => {
     if (error.config && error.response && error.response.status === 403) {
-        return axios.post('/refresh', { refresh_token: localStorage['refreshToken'] }).then(response => {
-            localStorage['idToken'] = response.data['idToken'];
-            localStorage['refreshToken'] = response.data['refreshToken'];
-            error.config.headers['User-Token'] = localStorage['idToken'];
-            return Axios.request(error.config);
-        });
+        if (!exclude.includes(error.config.url)) {
+            return axios.post('/refresh', { refresh_token: localStorage['refreshToken'] }).then(response => {
+                localStorage['idToken'] = response.data['idToken'];
+                localStorage['refreshToken'] = response.data['refreshToken'];
+                error.config.headers['User-Token'] = localStorage['idToken'];
+                return Axios.request(error.config);
+            });
+        }
     }
     throw error;
 });
