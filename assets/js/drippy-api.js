@@ -126,6 +126,12 @@ export default {
     getTrackUrl(track) {
         return `${api_url}/stream/${localStorage['idToken']}/${track['id']}`;
     },
+    getPicture(object, index, unset) {
+        if (object.images && object.images.length) {
+            return object.images[index].url;
+        }
+        return unset;
+    },
     get spotify() {
         return `${api_url}/spotify`;
     },

@@ -4,7 +4,7 @@
             <v-hover :key="'i' + index" v-slot:default="{ hover }">
                 <v-list-item @click="$player.play(item, song_list)">
                     <v-list-item-avatar tile size="64">
-                        <v-img v-if="!hideArtwork" :src="item.album.images[0].url" />
+                        <v-img v-if="!hideArtwork" :src="$drippy.getPicture(item.album, 2)" />
                         <div v-else>
                             <v-icon v-if="!hover">mdi-music-note-eighth-dotted</v-icon>
                             <v-icon v-else>mdi-play</v-icon>

@@ -6,7 +6,9 @@
                     <v-row no-gutters dense>
                         <v-col cols="auto">
                             <v-avatar size="128" tile>
-                                <v-img :src="getPicture(artist)"></v-img>
+                                <v-img
+                                    :src="$drippy.getPicture(artist, 1, '/images/account-music.png')"
+                                ></v-img>
                             </v-avatar>
                         </v-col>
                         <v-col cols="6">
@@ -51,14 +53,6 @@ export default {
     }),
     mounted() {
         this.$drippy.getArtist(this.$route.params["id"]).then(artist => this.artist = artist);
-    },
-    methods: {
-        getPicture(artist) {
-            if (artist.images && artist.images.length) {
-                return artist.images[0].url;
-            }
-            return '/images/account-music.png';
-        }
     }
 }
 </script>

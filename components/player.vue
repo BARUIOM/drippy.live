@@ -16,7 +16,7 @@
         <v-row align="center" justify="center" no-gutters>
             <v-col class="player-data" cols="10" md="4" v-if="current.id">
                 <div class="artwork">
-                    <v-img width="72" :src="current.album.images[0].url"></v-img>
+                    <v-img class="ma-1 elevation-4" :src="$drippy.getPicture(current.album, 2)"></v-img>
                 </div>
 
                 <v-container class="player-info" fill-height fluid>
