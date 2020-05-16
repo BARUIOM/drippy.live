@@ -53,9 +53,9 @@ export default class Spotify extends EventEmitter {
         return response.data;
     }
 
-    async search(query, types = []) {
+    async search(query, types = [], limit = 20) {
         const response = await axios.get('/search', {
-            params: { q: query, type: types.join() }
+            params: { q: query, type: types.join(), limit }
         });
         return response.data;
     }

@@ -23,7 +23,7 @@ export default {
             this.name = playlist.name;
             this.creator = playlist.owner.display_name;
             this.song_list = [...playlist.tracks.items.map(e => e.track)];
-            if (playlist.images[0]) this.artworks = [playlist.images[0].url];
+            this.artworks = [this.$drippy.getPicture(playlist, 0)];
         });
     }
 }

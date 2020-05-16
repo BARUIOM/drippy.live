@@ -91,8 +91,9 @@ export default {
         }
     },
     async search(query) {
-        const response = await client.search(query, ['artist', 'track']);
-        const result = { artists: response.artists.items, tracks: response.tracks.items };
+        const result = {};
+        const response = await client.search(query, ['artist', 'track', 'playlist', 'album'], 10);
+        for (let key of Object.keys(response)) result[key] = response[key].items;
         window.sessionStorage['search_results'] = JSON.stringify(result);
         return result;
     },
@@ -126,9 +127,9 @@ export default {
     getTrackUrl(track) {
         return `${api_url}/stream/${localStorage['idToken']}/${track['id']}`;
     },
-    getPicture(object, index, unset) {
+    getPicture(object, index, unset = '/images/music-box-multiple-outline@4x.png') {
         if (object.images && object.images.length) {
-            return object.images[index].url;
+            return (object.images[index] || object.images[0]).url;
         }
         return unset;
     },

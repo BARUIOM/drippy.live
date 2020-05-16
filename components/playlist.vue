@@ -3,10 +3,9 @@
         <v-container fluid>
             <v-row no-gutters>
                 <v-col cols="12" sm="4" lg="2" class="elevation-10">
-                    <div v-if="artworks.length" class="d-flex flex-row flex-wrap">
+                    <div class="d-flex flex-row flex-wrap">
                         <v-img v-for="(item, i) in artworks" :key="i" :src="item"></v-img>
                     </div>
-                    <v-img v-else src="/images/music-box-multiple-outline@4x.png"></v-img>
                 </v-col>
                 <v-col cols="12" sm="8" lg="10">
                     <v-card-title class="display-1 font-weight-bold" v-text="name"></v-card-title>

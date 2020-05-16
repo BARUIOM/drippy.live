@@ -25,7 +25,7 @@ export default {
             this.name = album.name;
             this.creator = album.artists.map(e => e.name).join(', ');
             this.song_list = [...album.tracks.items];
-            this.artworks = [album.images[0].url];
+            this.artworks = [this.$drippy.getPicture(album, 0)];
         });
     }
 }
