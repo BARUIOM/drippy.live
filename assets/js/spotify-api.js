@@ -21,7 +21,7 @@ export default class Spotify extends EventEmitter {
             if (error.config && error.response && error.response.status === 401) {
                 return this._callback().then(access_token => {
                     this._access_token = access_token;
-                    return axios.request(error.config);
+                    return Axios.request(error.config);
                 });
             }
             throw error;
