@@ -47,6 +47,7 @@ export default {
         dialog: false
     }),
     mounted() {
+        this.$drippy.getProfile().then(profile => this.$root.$emit('profile', profile));
         this.$root.$on('add', track => {
             this.track = track;
             this.dialog = true;

@@ -1,13 +1,13 @@
 <template>
     <v-layout class="d-flex flex-column" justify-space-between fill-height>
         <div>
-            <v-list-item v-if="$drippy.profile" class="px-2">
+            <v-list-item v-if="Object.keys(profile).length" class="px-2">
                 <v-list-item-avatar class="elevation-2">
-                    <v-img v-if="$drippy.profile.photo" :src="$drippy.profile.photo"></v-img>
+                    <v-img v-if="profile.photo" :src="profile.photo"></v-img>
                     <v-icon v-else>mdi-account</v-icon>
                 </v-list-item-avatar>
 
-                <v-list-item-title v-text="$drippy.profile.name"></v-list-item-title>
+                <v-list-item-title v-text="profile.name"></v-list-item-title>
             </v-list-item>
 
             <v-divider></v-divider>
@@ -40,6 +40,17 @@
         </div>
     </v-layout>
 </template>
+
+<script>
+export default {
+    data: () => ({
+        profile: {}
+    }),
+    mounted() {
+        this.$root.$on('profile', profile => this.profile = profile);
+    }
+}
+</script>
 
 <style lang="scss" scoped>
 .v-list-item {

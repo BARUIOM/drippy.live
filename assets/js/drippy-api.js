@@ -1,33 +1,8 @@
 import Axios from 'axios'
-import Spotify from './spotify-api';
-
-const data = {
-    get profile() {
-        if (localStorage['profile']) {
-            return JSON.parse(localStorage['profile']);
-        }
-    },
-    set profile(value) {
-        localStorage['profile'] = JSON.stringify(value);
-    },
-    get spotify() {
-        return client.user;
-    }
-}
 
 const api_url = '' || 'https://api.drippy.live';
 const exclude = ['/refresh', '/login', '/register'];
 const axios = Axios.create({ baseURL: api_url });
-
-const client = new Spotify();
-client.on('user', user => {
-    data.profile = { name: user['display_name'], photo: (user.images[0] || { url: null }).url };
-});
-
-client.callback = async () => {
-    const response = await axios.get('/token');
-    return response.data['access_token'];
-};
 
 axios.interceptors.request.use(config => {
     if (!exclude.includes(config.url)) {
@@ -72,49 +47,35 @@ export default {
         const response = await axios.post('/check_email', { email });
         return response.data;
     },
+    async getProfile() {
+        return (await axios.get('/profile')).data;
+    },
     async getPlaylists() {
-        const playlists = await client.getUserPlaylists();
+        const playlists = (await axios.get('/playlists')).data;
         return [...playlists.items];
     },
     async getPlaylist(playlist_id) {
-        return await client.getPlaylist(playlist_id);
+        return (await axios.get(`/playlists/${playlist_id}`)).data;
     },
     async addTrackToPlaylist(playlist_id, track) {
-        await client.addTracksToPlaylist(playlist_id, track.id);
+        await axios.post(`/playlists/${playlist_id}/tracks`, { tracks: [track.id] });
     },
     async removeTrackFromPlaylist(playlist_id, track) {
-        await client.removeTracksFromPlaylist(playlist_id, track.id);
+        await axios.delete(`/playlists/${playlist_id}/tracks`, { tracks: [track.id] });
     },
     async createPlaylist(name) {
-        if (data.spotify) {
-            return await client.createPlaylist(name);
-        }
+        return (await axios.post('/playlists', { name })).data;
     },
     async search(query) {
-        const result = {};
-        const response = await client.search(query, ['artist', 'track', 'playlist', 'album'], 10);
-        for (let key of Object.keys(response)) result[key] = response[key].items;
-        window.sessionStorage['search_results'] = JSON.stringify(result);
-        return result;
+        const response = (await axios.post('/search', { query })).data;
+        window.sessionStorage['search_results'] = JSON.stringify(response);
+        return response;
     },
     async getArtist(artist_id) {
-        var collection = [];
-        const artist = await client.getArtist(artist_id);
-        await (async () => {
-            let albums, offset = 0;
-            do {
-                albums = await client.getArtistAlbums(artist_id, ['album', 'single'], 50, offset);
-                collection = collection.concat(albums.items);
-                offset += albums.items.length;
-            } while (albums.next);
-        })();
-
-        artist['albums'] = collection.filter(e => e.album_type === 'album');
-        artist['singles'] = collection.filter(e => e.album_type === 'single');
-        return artist;
+        return (await axios.get(`/artists/${artist_id}`)).data;
     },
     async getAlbum(album_id) {
-        const album = await client.getAlbum(album_id);
+        const album = (await axios.get(`/albums/${album_id}`)).data;
         album.tracks.items.forEach(e => e['album'] = { name: album.name, images: album.images });
         return album;
     },
@@ -135,8 +96,5 @@ export default {
     },
     get spotify() {
         return `${api_url}/spotify`;
-    },
-    get profile() {
-        return data.profile;
     }
 }
