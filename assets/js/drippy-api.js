@@ -12,7 +12,7 @@ axios.interceptors.request.use(config => {
 });
 
 axios.interceptors.response.use(null, error => {
-    if (error.config && error.response && error.response.status === 403) {
+    if (error.config && error.response && error.response.status === 401) {
         if (!exclude.includes(error.config.url)) {
             return axios.post('/refresh', { refresh_token: localStorage['refreshToken'] }).then(response => {
                 localStorage['idToken'] = response.data['idToken'];
