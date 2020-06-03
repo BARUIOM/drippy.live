@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <span class="headline font-weight-bold pa-4" v-text="title"></span>
+    <v-card color="accent" elevation="0" tile>
+        <v-card-title class="headline font-weight-bold" v-text="title"></v-card-title>
         <v-container class="d-flex flex-row overflow-x-hidden pa-0" fluid>
             <v-col v-for="(item, i) in contents" :key="i" cols="6" sm="4" md="2">
                 <v-card @click="open(item.id)">
@@ -15,7 +15,7 @@
                 </v-card>
             </v-col>
         </v-container>
-    </div>
+    </v-card>
 </template>
 
 <script>

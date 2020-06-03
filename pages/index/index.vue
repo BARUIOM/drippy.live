@@ -1,44 +1,35 @@
 <template>
     <v-row dense>
-        <v-col cols="12">
+        <v-col class="pa-4" cols="12">
             <v-form @submit.prevent="search">
                 <v-text-field
-                    label="Search for artists, tracks or playlists"
+                    placeholder="Search for artists, tracks or playlists"
                     prepend-inner-icon="mdi-magnify"
                     v-model="search_input"
                     hide-details
                     clearable
+                    rounded
                     solo
                 ></v-text-field>
             </v-form>
         </v-col>
-        <v-col cols="12" v-if="results.artists.length">
+        <v-col class="pa-0" cols="12" v-if="results.artists.length">
             <contents title="Artists" route="index-artist-id" v-bind:contents="results.artists" />
         </v-col>
-        <v-col cols="12" v-if="results.playlists.length">
+        <v-col class="pa-0" cols="12" v-if="results.playlists.length">
             <contents
                 title="Playlists"
                 route="index-playlists-id"
                 v-bind:contents="results.playlists"
             />
         </v-col>
-        <v-col cols="12" v-if="results.albums.length">
+        <v-col class="pa-0" cols="12" v-if="results.albums.length">
             <contents title="Albums" route="index-album-id" v-bind:contents="results.albums" />
         </v-col>
-        <v-col cols="12">
-            <v-card>
-                <songlist
-                    v-bind:class="{ 'pb-0': results.tracks.length > 3 }"
-                    v-bind:song_list="results.tracks.slice(0, 3)"
-                />
-                <v-expansion-panels v-if="results.tracks.length > 3" accordion hover tile>
-                    <v-expansion-panel>
-                        <v-expansion-panel-content>
-                            <songlist class="pa-0" v-bind:song_list="results.tracks.slice(3)" />
-                        </v-expansion-panel-content>
-                        <v-expansion-panel-header></v-expansion-panel-header>
-                    </v-expansion-panel>
-                </v-expansion-panels>
+        <v-col class="pa-0" cols="12">
+            <v-card color="accent" elevation="0" tile>
+                <v-card-title class="headline font-weight-bold">Tracks</v-card-title>
+                <songlist v-bind:song_list="results.tracks" />
             </v-card>
         </v-col>
     </v-row>

@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card color="accent" tile>
         <v-container fluid>
             <v-row no-gutters>
                 <v-col cols="12" sm="4" lg="2" class="elevation-10">
@@ -20,14 +20,12 @@
                     </v-card-actions>
                 </v-col>
             </v-row>
-            <v-card-text class="pa-0">
-                <songlist
-                    v-bind:song_list="song_list"
-                    v-bind:hideAlbum="hideAlbum"
-                    v-bind:hideArtwork="hideArtwork"
-                />
-            </v-card-text>
         </v-container>
+        <songlist
+            v-bind:song_list="song_list"
+            v-bind:hideAlbum="hideAlbum"
+            v-bind:hideArtwork="hideArtwork"
+        />
     </v-card>
 </template>
 

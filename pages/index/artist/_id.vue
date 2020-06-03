@@ -1,18 +1,21 @@
 <template>
     <v-row dense>
         <v-col cols="12">
-            <v-card>
+            <v-card color="accent" elevation="0" tile>
                 <v-container fluid>
                     <v-row no-gutters dense>
                         <v-col cols="auto">
-                            <v-avatar size="128" tile>
+                            <v-avatar class="elevation-8" size="128" tile>
                                 <v-img
                                     :src="$drippy.getPicture(artist, 1, '/images/account-music.png')"
                                 ></v-img>
                             </v-avatar>
                         </v-col>
                         <v-col cols="6">
-                            <v-card-title class="display-1 text-truncate" v-text="artist.name"></v-card-title>
+                            <v-card-title
+                                class="display-1 text-truncate font-weight-bold"
+                                v-text="artist.name"
+                            ></v-card-title>
                             <v-spacer></v-spacer>
                             <v-card-actions>
                                 <v-btn icon>
@@ -26,14 +29,16 @@
             </v-card>
         </v-col>
         <v-col cols="12" v-if="artist.albums.length">
-            <v-card>
-                <v-card-title class="headline">Albums</v-card-title>
+            <v-card color="accent" elevation="0" tile>
+                <v-card-title class="headline font-weight-bold">Albums</v-card-title>
+                <v-divider></v-divider>
                 <albums v-bind:albums="artist.albums" />
             </v-card>
         </v-col>
         <v-col cols="12" v-if="artist.singles.length">
-            <v-card>
-                <v-card-title class="headline">Singles & EPs</v-card-title>
+            <v-card color="accent" elevation="0" tile>
+                <v-card-title class="headline font-weight-bold">Singles & EPs</v-card-title>
+                <v-divider></v-divider>
                 <albums v-bind:albums="artist.singles" />
             </v-card>
         </v-col>

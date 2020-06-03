@@ -1,5 +1,7 @@
 <template>
-    <playlists @event="open" />
+    <v-container fluid>
+        <playlists @event="open" />
+    </v-container>
 </template>
 
 <script>

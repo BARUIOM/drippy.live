@@ -17,7 +17,7 @@
         <player />
 
         <v-content fill-height class="overflow-y-auto">
-            <v-container fluid>
+            <v-container class="pa-0 overflow-hidden" fluid>
                 <nuxt-child />
             </v-container>
         </v-content>
@@ -89,5 +89,9 @@ export default {
 
 .v-content {
     max-height: calc(100vh - 72px);
+}
+
+.v-navigation-drawer {
+    background-color: #212121 !important;
 }
 </style>
