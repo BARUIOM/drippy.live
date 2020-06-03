@@ -62,9 +62,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss">
-.v-expansion-panel-content > div {
-    padding: 0px !important;
-}
-</style>

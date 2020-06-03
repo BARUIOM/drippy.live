@@ -23,3 +23,7 @@ html {
     overflow-x: auto !important;
     overflow-y: auto !important;
 }
+
+.row {
+    margin: 0px !important;
+}
