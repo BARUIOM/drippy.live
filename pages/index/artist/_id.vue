@@ -1,6 +1,6 @@
 <template>
     <v-row dense>
-        <v-col cols="12">
+        <v-col class="pa-0" cols="12">
             <v-card color="accent" elevation="0" tile>
                 <v-container fluid>
                     <v-row no-gutters dense>
@@ -28,14 +28,14 @@
                 </v-container>
             </v-card>
         </v-col>
-        <v-col cols="12" v-if="artist.albums.length">
+        <v-col class="pa-0" cols="12" v-if="artist.albums.length">
             <v-card color="accent" elevation="0" tile>
                 <v-card-title class="headline font-weight-bold">Albums</v-card-title>
                 <v-divider></v-divider>
                 <albums v-bind:albums="artist.albums" />
             </v-card>
         </v-col>
-        <v-col cols="12" v-if="artist.singles.length">
+        <v-col class="pa-0" cols="12" v-if="artist.singles.length">
             <v-card color="accent" elevation="0" tile>
                 <v-card-title class="headline font-weight-bold">Singles & EPs</v-card-title>
                 <v-divider></v-divider>
