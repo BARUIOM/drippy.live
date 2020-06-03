@@ -1,9 +1,7 @@
 <template>
     <div>
         <v-app-bar class="hidden-md-and-up" app>
-            <v-btn icon @click.stop="drawer = !drawer">
-                <v-icon>mdi-menu</v-icon>
-            </v-btn>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         </v-app-bar>
 
         <v-navigation-drawer class="hidden-sm-and-down" permanent expand-on-hover app>
@@ -76,19 +74,12 @@ export default {
 @media screen and (min-width: 960px) {
     .v-content {
         padding-top: 0px !important;
-    }
-
-    .v-navigation-drawer {
-        max-height: calc(100vh - 72px) !important;
+        max-height: calc(100vh - 72px);
     }
 }
 
 .v-app-bar {
     left: 0px !important;
-}
-
-.v-content {
-    max-height: calc(100vh - 72px);
 }
 
 .v-navigation-drawer {

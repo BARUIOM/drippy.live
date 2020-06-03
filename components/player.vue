@@ -1,6 +1,6 @@
 <template>
     <v-container class="player pa-0 grey darken-4 elevation-10" fluid>
-        <div v-if="!$native">
+        <div class="slider" v-if="!$native">
             <v-slider
                 v-if="current.id"
                 @change="$player.position = arguments[0]"
@@ -13,11 +13,9 @@
         </div>
         <div v-else class="activator" @click="$native.open()"></div>
 
-        <v-row align="center" justify="center" no-gutters>
-            <v-col class="player-data" cols="10" md="4" v-if="current.id">
-                <div class="artwork">
-                    <v-img class="ma-1 elevation-4" :src="$drippy.getPicture(current.album, 2)"></v-img>
-                </div>
+        <v-row align="center" justify="center" dense no-gutters>
+            <v-col class="player-data d-inline-flex" cols="10" md="4" v-if="current.id">
+                <v-img class="ma-1 elevation-4" :src="$drippy.getPicture(current.album, 2)"></v-img>
 
                 <v-container class="player-info" fill-height fluid>
                     <v-row>
@@ -95,12 +93,10 @@ export default {
 </script>
 
 <style lang="scss">
-.player {
-    .v-slider {
-        z-index: 1;
-        margin: 0px;
-        cursor: pointer;
-    }
+.player .v-slider {
+    z-index: 1;
+    margin: 0px;
+    cursor: pointer;
 }
 </style>
 
@@ -111,32 +107,35 @@ export default {
     }
 }
 
+@media screen and (min-width: 960px) {
+    .player {
+        .slider {
+            padding-left: 56px;
+        }
+
+        .player-data {
+            padding-left: 56px;
+        }
+    }
+}
+
 .player {
     bottom: 0;
-    z-index: 10;
+    z-index: 4;
     position: fixed;
     min-height: 72px;
 
     .row {
         min-height: 72px;
     }
-}
 
-.player-data {
-    display: inline-flex;
-}
+    .player-info {
+        min-height: 72px;
 
-.player-info {
-    min-height: 72px;
-
-    .row {
-        margin: 0px;
-        min-height: unset;
+        .row {
+            min-height: unset;
+        }
     }
-}
-
-.artwork {
-    z-index: -1 !important;
 }
 
 .activator {
