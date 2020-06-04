@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-app-bar class="hidden-md-and-up" app>
+        <v-app-bar class="hidden-md-and-up" scroll-target="#content" hide-on-scroll app>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         </v-app-bar>
 
@@ -14,7 +14,7 @@
 
         <player />
 
-        <v-content fill-height class="overflow-y-auto">
+        <v-content id="content" class="overflow-y-auto">
             <v-container class="pa-0 overflow-hidden" fluid>
                 <nuxt-child />
             </v-container>
@@ -65,21 +65,26 @@ export default {
 <style lang="scss" scoped>
 @media screen and (max-width: 960px) {
     .v-content {
-        margin-top: 56px;
         padding: 0 !important;
-        max-height: calc(100vh - 128px) !important;
+
+        .container {
+            margin-top: 56px !important;
+        }
     }
 }
 
 @media screen and (min-width: 960px) {
     .v-content {
         padding-top: 0px !important;
-        max-height: calc(100vh - 72px);
     }
 }
 
 .v-app-bar {
     left: 0px !important;
+}
+
+.v-content {
+    max-height: calc(100vh - 72px);
 }
 
 .v-navigation-drawer {
