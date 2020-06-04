@@ -15,7 +15,7 @@
         <player />
 
         <v-content id="content" class="overflow-y-auto">
-            <v-container class="pa-0 overflow-hidden" fluid>
+            <v-container class="pa-0 overflow-hidden" margin fluid>
                 <nuxt-child />
             </v-container>
         </v-content>
@@ -67,7 +67,7 @@ export default {
     .v-content {
         padding: 0 !important;
 
-        .container {
+        .container.margin {
             margin-top: 56px !important;
         }
     }
