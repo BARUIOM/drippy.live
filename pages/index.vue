@@ -53,6 +53,7 @@ export default {
         createPlaylist(name) {
             this.$drippy.createPlaylist(name).then(async () => {
                 this.playlists = await this.$drippy.getPlaylists();
+                this.$root.$emit('snackbar', `Playlist '${name}' created!`, 'success', true);
             });
         }
     }

@@ -1,6 +1,6 @@
 <template>
     <v-overlay v-model="visible" color="black" opacity="0.9" z-index="100">
-        <v-form @submit.prevent="visible = false; $emit('submit', name)">
+        <v-form ref="form" @submit.prevent="submit">
             <v-container class="pa-0" fluid>
                 <v-row align="center" justify="center">
                     <v-col cols="12" align="center">
@@ -9,7 +9,7 @@
                     <v-col cols="12">
                         <v-text-field
                             v-model="name"
-                            label="Playlist name"
+                            :placeholder="value"
                             color="orange"
                             hide-details
                             solo
@@ -17,10 +17,10 @@
                         ></v-text-field>
                     </v-col>
                     <v-col cols="6" align="right">
-                        <v-btn @click="visible = false" text>Cancel</v-btn>
+                        <v-btn @click="visible = false" rounded outlined>Cancel</v-btn>
                     </v-col>
                     <v-col cols="6" align="left">
-                        <v-btn type="submit" color="orange" text>Create</v-btn>
+                        <v-btn type="submit" color="orange" rounded>Create</v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -32,10 +32,18 @@
 export default {
     data: () => ({
         name: '',
-        visible: false
+        visible: false,
+        value: 'Untitled Playlist'
     }),
     mounted() {
         this.$on('show', () => this.visible = true);
+    },
+    methods: {
+        submit() {
+            this.visible = false;
+            this.$emit('submit', this.name.trim() || this.value);
+            this.$refs['form'].reset();
+        }
     }
 }
 </script>
