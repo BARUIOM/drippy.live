@@ -26,6 +26,12 @@ export default {
             this.creator = album.artists.map(e => e.name).join(', ');
             this.song_list = [...album.tracks.items];
             this.artworks = [this.$drippy.getPicture(album, 0)];
+
+            if (this.$route.query['highlight']) {
+                const track = this.song_list.find(e => e['id'] === this.$route.query['highlight']);
+                this.$player.play(track, this.song_list);
+                this.$router.replace({});
+            }
         });
     }
 }

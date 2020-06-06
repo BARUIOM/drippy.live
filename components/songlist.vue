@@ -1,7 +1,7 @@
 <template>
     <v-list v-if="song_list.length" class="pa-0" color="accent" two-line>
         <v-hover v-for="(item, index) in song_list" :key="'i' + index" v-slot:default="{ hover }">
-            <v-list-item @click="$player.play(item, song_list)">
+            <v-list-item :id="item.id" @click="$player.play(item, song_list)">
                 <v-list-item-avatar v-if="!hideArtwork" class="elevation-4" size="48" tile>
                     <v-img :src="$drippy.getPicture(item.album, 2)" />
                 </v-list-item-avatar>
@@ -31,6 +31,9 @@
                         <v-list-item v-if="user_playlist" @click.stop="remove(item, index)">
                             <v-list-item-title>Remove track from this playlist</v-list-item-title>
                         </v-list-item>
+                        <v-list-item @click="copy(item)">
+                            <v-list-item-title>Copy track link</v-list-item-title>
+                        </v-list-item>
                     </v-list>
                 </v-menu>
             </v-list-item>
@@ -59,6 +62,11 @@ export default {
         remove(track, index) {
             this.$drippy.removeTrackFromPlaylist(this.$route.params['id'], track).then(() => {
                 this.song_list.splice(index, 1);
+            });
+        },
+        copy(track) {
+            navigator.clipboard.writeText(`${window.location.origin}/track/${track.id}`).then(() => {
+                this.$root.$emit('snackbar', 'Track link copied to clipboard!', 'success', true);
             });
         }
     }
