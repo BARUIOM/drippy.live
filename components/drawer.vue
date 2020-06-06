@@ -87,22 +87,28 @@ export default {
     background: #363636 !important;
 }
 
+.playlists {
+    max-height: calc(100vh - 218px);
+}
+
+.v-subheader {
+    transition: visibility 0.1s, opacity 0.25s linear;
+}
+
 .v-navigation-drawer--mini-variant div {
     overflow: hidden !important;
 
     .v-subheader {
-        display: none;
-    }
-
-    .playlists {
-        max-height: calc(100vh - 170px);
+        opacity: 0;
+        visibility: hidden;
     }
 }
 
 .v-navigation-drawer--is-mobile div,
 .v-navigation-drawer--is-mouseover div {
-    .playlists {
-        max-height: calc(100vh - 218px);
+    .v-subheader {
+        opacity: 1;
+        visibility: visible;
     }
 }
 </style>
