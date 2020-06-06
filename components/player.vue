@@ -54,7 +54,7 @@
                     <v-icon v-text="like_icon"></v-icon>
                 </v-btn>
 
-                <v-btn class="mr-4" icon @click="$root.$emit('add', current)">
+                <v-btn class="mr-4" icon @click="$root.$emit('add', [current])">
                     <v-icon>mdi-playlist-plus</v-icon>
                 </v-btn>
             </v-col>

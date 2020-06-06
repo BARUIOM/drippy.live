@@ -1,5 +1,5 @@
 <template>
-    <v-layout class="d-flex flex-column" justify-space-between fill-height>
+    <v-layout class="d-flex flex-column overflow-hidden" justify-space-between fill-height>
         <div>
             <v-list-item v-if="Object.keys(profile).length" class="px-2">
                 <v-list-item-avatar class="elevation-2">
@@ -19,12 +19,37 @@
                     </v-list-item-icon>
                     <v-list-item-title>Home</v-list-item-title>
                 </v-list-item>
-
-                <v-list-item link to="/playlists" exact>
+            </v-list>
+            <v-subheader>
+                <span>Playlists</span>
+                <v-spacer></v-spacer>
+                <v-btn @click="$root.$emit('create')" icon>
+                    <v-icon>mdi-plus</v-icon>
+                </v-btn>
+            </v-subheader>
+            <v-list class="playlists overflow-y-auto" subheader nav dense>
+                <v-list-item
+                    v-for="(item, i) in playlists.user"
+                    :to="{ name: 'index-playlists-id', params: { id: item.id } }"
+                    :key="'u' + i"
+                >
                     <v-list-item-icon>
                         <v-icon>mdi-playlist-music</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-title>Playlists</v-list-item-title>
+                    <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item>
+
+                <v-divider class="mb-1"></v-divider>
+
+                <v-list-item
+                    v-for="(item, i) in playlists.liked"
+                    :to="{ name: 'index-playlists-id', params: { id: item.id } }"
+                    :key="'l' + i"
+                >
+                    <v-list-item-icon>
+                        <v-icon>mdi-playlist-music</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title v-text="item.name"></v-list-item-title>
                 </v-list-item>
             </v-list>
         </div>
@@ -43,17 +68,41 @@
 
 <script>
 export default {
-    data: () => ({
-        profile: {}
-    }),
-    mounted() {
-        this.$root.$on('profile', profile => this.profile = profile);
+    props: {
+        profile: Object,
+        playlists: {
+            type: Object,
+            default: () => ({ user: [], liked: [] })
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.v-list-item {
-    flex: unset !important;
+* {
+    scrollbar-color: #363636 transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #363636 !important;
+}
+
+.v-navigation-drawer--mini-variant div {
+    overflow: hidden !important;
+
+    .v-subheader {
+        display: none;
+    }
+
+    .playlists {
+        max-height: calc(100vh - 170px);
+    }
+}
+
+.v-navigation-drawer--is-mobile div,
+.v-navigation-drawer--is-mouseover div {
+    .playlists {
+        max-height: calc(100vh - 218px);
+    }
 }
 </style>

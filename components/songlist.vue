@@ -25,7 +25,7 @@
                         </v-btn>
                     </template>
                     <v-list>
-                        <v-list-item @click.stop="$root.$emit('add', item)">
+                        <v-list-item @click.stop="$root.$emit('add', [item])">
                             <v-list-item-title>Add track to playlist</v-list-item-title>
                         </v-list-item>
                     </v-list>

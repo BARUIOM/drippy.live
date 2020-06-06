@@ -1,5 +1,10 @@
 import Axios from 'axios'
 
+const user = {
+    profile: {},
+    playlists: {}
+}
+
 const api_url = '' || 'https://api.drippy.live';
 const exclude = ['/refresh', '/login', '/register'];
 const axios = Axios.create({ baseURL: api_url });
@@ -48,23 +53,33 @@ export default {
         return response.data;
     },
     async getProfile() {
-        return (await axios.get('/profile')).data;
+        if (!Object.keys(user.profile).length) {
+            return user.profile = (await axios.get('/profile')).data;
+        }
+        return user.profile;
     },
     async getPlaylists() {
-        const playlists = (await axios.get('/playlists')).data;
-        return [...playlists.items];
+        if (!Object.keys(user.playlists).length) {
+            return user.playlists = (await axios.get('/playlists')).data;
+        }
+        return user.playlists;
     },
     async getPlaylist(playlist_id) {
         return (await axios.get(`/playlists/${playlist_id}`)).data;
     },
-    async addTrackToPlaylist(playlist_id, track) {
-        await axios.post(`/playlists/${playlist_id}/tracks`, { tracks: [track.id] });
+    async addTracksToPlaylist(playlist_id, tracks) {
+        await axios.post(`/playlists/${playlist_id}/tracks`, { tracks: tracks.map(e => e['id']) });
+        user.playlists.user.find(e => e['id'] === playlist_id).tracks.total++;
     },
     async removeTrackFromPlaylist(playlist_id, track) {
         await axios.delete(`/playlists/${playlist_id}/tracks`, { tracks: [track.id] });
+        user.playlists.user.find(e => e['id'] === playlist_id).tracks.total--;
     },
     async createPlaylist(name) {
-        return (await axios.post('/playlists', { name })).data;
+        const playlists = await this.getPlaylists();
+        const playlist = (await axios.post('/playlists', { name })).data;
+        playlists.user.unshift(playlist);
+        user.playlists = playlists;
     },
     async search(query) {
         const response = (await axios.post('/search', { query })).data;

@@ -19,12 +19,22 @@ export default {
         artworks: []
     }),
     mounted() {
-        this.$drippy.getPlaylist(this.$route.params["id"]).then(playlist => {
-            this.name = playlist.name;
-            this.creator = playlist.owner.display_name;
-            this.song_list = [...playlist.tracks.items.map(e => e.track)];
-            this.artworks = [this.$drippy.getPicture(playlist, 0)];
-        });
+        this.load(this.$route.params["id"]);
+    },
+    methods: {
+        load(id) {
+            this.$drippy.getPlaylist(id).then(playlist => {
+                this.name = playlist.name;
+                this.creator = playlist.owner.display_name;
+                this.song_list = [...playlist.tracks.items.map(e => e.track)];
+                this.artworks = [this.$drippy.getPicture(playlist, 0)];
+            });
+        }
+    },
+    watch: {
+        $route(to, from) {
+            this.load(to.params['id']);
+        }
     }
 }
 </script>

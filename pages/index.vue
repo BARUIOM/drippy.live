@@ -5,11 +5,11 @@
         </v-app-bar>
 
         <v-navigation-drawer class="hidden-sm-and-down" permanent expand-on-hover app>
-            <drawer />
+            <drawer v-bind:profile="profile" v-bind:playlists="playlists" />
         </v-navigation-drawer>
 
         <v-navigation-drawer v-model="drawer" absolute temporary>
-            <drawer />
+            <drawer v-bind:profile="profile" v-bind:playlists="playlists" />
         </v-navigation-drawer>
 
         <player />
@@ -20,42 +20,39 @@
             </v-container>
         </v-content>
 
-        <v-dialog v-model="dialog">
-            <v-card>
-                <v-card-title class="justify-center">Add track to playlist</v-card-title>
-                <v-card-text>
-                    <playlists v-bind:track="track" @event="add" />
-                </v-card-text>
-            </v-card>
-        </v-dialog>
+        <addtracks ref="add_tracks" @selected="add" v-bind:playlists="playlists.user" />
+        <newplaylist ref="new_playlist" @submit="createPlaylist" />
     </div>
 </template>
 
 <script>
 import drawer from '~/components/drawer'
 import player from '~/components/player'
-import playlists from '~/components/playlists'
+import addtracks from '~/components/addtracks'
+import newplaylist from '~/components/newplaylist'
 
 export default {
-    components: { drawer, player, playlists },
+    components: { drawer, player, addtracks, newplaylist },
     data: () => ({
-        track: {},
-        message: '',
-        drawer: false,
-        dialog: false
+        profile: {},
+        playlists: {},
+        drawer: false
     }),
     mounted() {
-        this.$drippy.getProfile().then(profile => this.$root.$emit('profile', profile));
-        this.$root.$on('add', track => {
-            this.track = track;
-            this.dialog = true;
-        });
+        this.$drippy.getProfile().then(profile => this.profile = profile);
+        this.$drippy.getPlaylists().then(playlists => this.playlists = playlists);
+        this.$root.$on('create', () => this.$refs['new_playlist'].$emit('show'));
+        this.$root.$on('add', tracks => this.$refs['add_tracks'].$emit('show', tracks));
     },
     methods: {
-        add(playlist, track) {
-            this.dialog = false;
-            this.$drippy.addTrackToPlaylist(playlist.id, track).then(() => {
-                this.$root.$emit('snackbar', `'${track.name}' added to playlist ${playlist.name}`, 'success', true);
+        add(playlist, tracks) {
+            this.$drippy.addTracksToPlaylist(playlist.id, tracks).then(() => {
+                this.$root.$emit('snackbar', `Tracks were added to playlist ${playlist.name}`, 'success', true);
+            });
+        },
+        createPlaylist(name) {
+            this.$drippy.createPlaylist(name).then(async () => {
+                this.playlists = await this.$drippy.getPlaylists();
             });
         }
     }
