@@ -4,6 +4,7 @@
         v-bind:creator="creator"
         v-bind:song_list="song_list"
         v-bind:artworks="artworks"
+        v-bind:user_playlist="user_playlist"
     />
 </template>
 
@@ -16,7 +17,8 @@ export default {
         name: '',
         creator: '',
         song_list: [],
-        artworks: []
+        artworks: [],
+        user_playlist: false
     }),
     mounted() {
         this.load(this.$route.params["id"]);
@@ -28,6 +30,7 @@ export default {
                 this.creator = playlist.owner.display_name;
                 this.song_list = [...playlist.tracks.items.map(e => e.track)];
                 this.artworks = [this.$drippy.getPicture(playlist, 0)];
+                this.user_playlist = playlist.owner.id === this.$drippy.user.profile.id;
             });
         }
     },

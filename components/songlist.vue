@@ -18,15 +18,18 @@
                         <span v-if="!hideAlbum">{{ item.album.name }}</span>
                     </v-list-item-subtitle>
                 </v-list-item-content>
-                <v-menu offset-y>
+                <v-menu v-model="item.menu" offset-y>
                     <template v-slot:activator="{ on }">
                         <v-btn v-on="on" icon>
-                            <v-icon v-if="hover">mdi-dots-vertical</v-icon>
+                            <v-icon v-if="item.menu || hover">mdi-dots-vertical</v-icon>
                         </v-btn>
                     </template>
-                    <v-list>
+                    <v-list class="py-1" dense>
                         <v-list-item @click.stop="$root.$emit('add', [item])">
                             <v-list-item-title>Add track to playlist</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item v-if="user_playlist" @click.stop="remove(item, index)">
+                            <v-list-item-title>Remove track from this playlist</v-list-item-title>
                         </v-list-item>
                     </v-list>
                 </v-menu>
@@ -39,6 +42,7 @@
 export default {
     props: {
         song_list: Array,
+        user_playlist: Boolean,
         hideAlbum: {
             type: Boolean,
             default: false
@@ -50,12 +54,21 @@ export default {
     },
     data: () => ({
         menu: false
-    })
+    }),
+    methods: {
+        remove(track, index) {
+            this.$drippy.removeTrackFromPlaylist(this.$route.params['id'], track).then(() => {
+                this.song_list.splice(index, 1);
+            });
+        }
+    }
 }
 </script>
 
 <style lang="scss" scoped>
-.v-list-item {
-    height: 64px;
+.v-card {
+    .v-list-item {
+        height: 64px;
+    }
 }
 </style>

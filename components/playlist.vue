@@ -25,6 +25,7 @@
             v-bind:song_list="song_list"
             v-bind:hideAlbum="hideAlbum"
             v-bind:hideArtwork="hideArtwork"
+            v-bind:user_playlist="user_playlist"
         />
     </v-card>
 </template>
@@ -39,6 +40,10 @@ export default {
         creator: String,
         song_list: Array,
         artworks: Array,
+        user_playlist: {
+            type: Boolean,
+            default: false
+        },
         hideAlbum: {
             type: Boolean,
             default: false

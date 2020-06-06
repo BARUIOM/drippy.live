@@ -72,7 +72,7 @@ export default {
         user.playlists.user.find(e => e['id'] === playlist_id).tracks.total++;
     },
     async removeTrackFromPlaylist(playlist_id, track) {
-        await axios.delete(`/playlists/${playlist_id}/tracks`, { tracks: [track.id] });
+        await axios.delete(`/playlists/${playlist_id}/tracks`, { data: { tracks: [track.id] } });
         user.playlists.user.find(e => e['id'] === playlist_id).tracks.total--;
     },
     async createPlaylist(name) {
@@ -111,5 +111,8 @@ export default {
     },
     get spotify() {
         return `${api_url}/spotify`;
+    },
+    get user() {
+        return user;
     }
 }
