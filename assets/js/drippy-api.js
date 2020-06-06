@@ -94,6 +94,9 @@ export default {
         album.tracks.items.forEach(e => e['album'] = { name: album.name, images: album.images });
         return album;
     },
+    async getTrack(track_id) {
+        return (await axios.get(`/track/${track_id}`)).data;
+    },
     async spotifyCheck(code) {
         const response = await axios.post('/spotify/auth', { code });
         if (response.data['token']) {
