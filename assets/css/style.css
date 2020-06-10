@@ -1,27 +1,26 @@
 * {
-    scrollbar-width: thin !important;
-    scrollbar-color: #212121 transparent !important;
+    scrollbar-width: thin;
+    scrollbar-color: #212121 transparent;
 }
 
 @media screen and (min-width: 960px) {
     ::-webkit-scrollbar {
-        width: 6px !important;
-        height: 6px !important;
+        width: 6px;
+        height: 6px;
     }
 }
 
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background: #212121 !important;
+    background: #212121;
 }
 
 ::-webkit-scrollbar-track-piece {
-    background: transparent !important;
+    background: transparent;
 }
 
 html {
-    overflow-x: auto !important;
-    overflow-y: auto !important;
+    overflow: auto !important;
 }
 
 .row {
