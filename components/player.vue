@@ -22,7 +22,10 @@
                         <div v-text="current.name" class="body-2 font-weight-bold text-truncate"></div>
                     </v-row>
                     <v-row>
-                        <ArtistHyperlink v-bind:artists="current.artists" />
+                        <ArtistHyperlink
+                            class="body-2 grey--text text-truncate"
+                            v-bind:artists="current.artists"
+                        />
                     </v-row>
                 </v-container>
             </v-col>

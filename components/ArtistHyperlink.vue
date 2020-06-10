@@ -1,15 +1,13 @@
 <template>
-    <span>
+    <span class="d-inline-flex">
         <template v-for="(artist, i) in artists">
-            <span class="body-2 grey--text text-truncate" :key="'a' + i">
-                <span v-if="i > 0">,</span>
-                <nuxt-link
-                    class="link"
-                    :to="'/artist/' + artist.id"
-                    v-text="artist.name"
-                    no-prefetch
-                />
-            </span>
+            <span
+                v-if="i > 0"
+                v-bind:class="{ 'mx-1': spacer, 'mr-1': !spacer }"
+                v-text="separator"
+                :key="'s' + i"
+            ></span>
+            <span class="link" :key="'a' + i" @click.stop="open(artist.id)" v-text="artist.name"></span>
         </template>
     </span>
 </template>
@@ -17,18 +15,32 @@
 <script>
 export default {
     props: {
-        artists: Array
+        artists: Array,
+        spacer: {
+            type: Boolean,
+            default: false
+        },
+        separator: {
+            type: String,
+            default: ','
+        }
+    },
+    methods: {
+        open(id) {
+            this.$router.push({ name: 'index-artist-id', params: { id } });
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-a.link {
+span.link {
+    cursor: pointer;
     color: inherit;
     text-decoration: none;
 }
 
-a.link:hover {
+span.link:hover {
     color: white;
     text-decoration: underline;
 }

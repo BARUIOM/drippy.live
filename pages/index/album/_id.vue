@@ -1,7 +1,7 @@
 <template>
     <playlist
         v-bind:name="name"
-        v-bind:creator="creator"
+        v-bind:artists="artists"
         v-bind:song_list="song_list"
         v-bind:artworks="artworks"
         hide-album
@@ -16,14 +16,14 @@ export default {
     components: { playlist },
     data: () => ({
         name: '',
-        creator: '',
+        artists: [],
         song_list: [],
         artworks: []
     }),
     mounted() {
         this.$drippy.getAlbum(this.$route.params["id"]).then(album => {
             this.name = album.name;
-            this.creator = album.artists.map(e => e.name).join(', ');
+            this.artists = [...album.artists];
             this.song_list = [...album.tracks.items];
             this.artworks = [this.$drippy.getPicture(album, 0)];
 

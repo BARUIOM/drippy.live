@@ -9,7 +9,10 @@
                 </v-col>
                 <v-col cols="12" sm="8" lg="10">
                     <v-card-title class="display-1 font-weight-bold" v-text="name"></v-card-title>
-                    <v-card-subtitle class="title" v-text="creator"></v-card-subtitle>
+                    <v-card-subtitle v-if="artists.length" class="title">
+                        <ArtistHyperlink v-bind:artists="artists" separator="•" spacer />
+                    </v-card-subtitle>
+                    <v-card-subtitle v-else class="title" v-text="author"></v-card-subtitle>
                     <v-card-actions>
                         <v-btn icon>
                             <v-icon>mdi-heart-outline</v-icon>
@@ -31,13 +34,14 @@
 </template>
 
 <script>
-import songlist from '~/components/songlist'
+import songlist from './songlist'
+import ArtistHyperlink from './ArtistHyperlink'
 
 export default {
-    components: { songlist },
+    components: { songlist, ArtistHyperlink },
     props: {
         name: String,
-        creator: String,
+        author: String,
         song_list: Array,
         artworks: Array,
         user_playlist: {
@@ -51,6 +55,10 @@ export default {
         hideArtwork: {
             type: Boolean,
             default: false
+        },
+        artists: {
+            type: Array,
+            default: () => ([])
         }
     }
 };
