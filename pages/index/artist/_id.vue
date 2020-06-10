@@ -57,7 +57,14 @@ export default {
         }
     }),
     mounted() {
-        this.$drippy.getArtist(this.$route.params["id"]).then(artist => this.artist = artist);
+        this.$drippy.getArtist(this.$route.params["id"])
+            .then(artist => this.artist = artist);
+    },
+    watch: {
+        $route(to, from) {
+            this.$drippy.getArtist(to.params['id'])
+                .then(artist => this.artist = artist);
+        }
     }
 }
 </script>
