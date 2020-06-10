@@ -22,10 +22,7 @@
                         <div v-text="current.name" class="body-2 font-weight-bold text-truncate"></div>
                     </v-row>
                     <v-row>
-                        <div
-                            v-text="current.artists.map(e => e.name).join(', ')"
-                            class="body-2 grey--text text-truncate"
-                        ></div>
+                        <ArtistHyperlink v-bind:artists="current.artists" />
                     </v-row>
                 </v-container>
             </v-col>
@@ -69,7 +66,10 @@
 </template>
 
 <script>
+import ArtistHyperlink from './ArtistHyperlink'
+
 export default {
+    components: { ArtistHyperlink },
     data: () => ({
         position: 0,
         like_icon: "mdi-heart-outline",

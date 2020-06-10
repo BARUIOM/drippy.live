@@ -13,7 +13,7 @@
                 <v-list-item-content>
                     <v-list-item-title class="ma-0 pb-1" v-text="item.name"></v-list-item-title>
                     <v-list-item-subtitle class="pt-1">
-                        <span v-text="item.artists.map(e => e.name).join(', ')"></span>
+                        <ArtistHyperlink v-bind:artists="item.artists" />
                         <span v-if="!hideAlbum" class="mx-1">•</span>
                         <span v-if="!hideAlbum">{{ item.album.name }}</span>
                     </v-list-item-subtitle>
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import ArtistHyperlink from './ArtistHyperlink'
+
 export default {
     props: {
         song_list: Array,
@@ -55,6 +57,7 @@ export default {
             default: false
         }
     },
+    components: { ArtistHyperlink },
     data: () => ({
         menu: false
     }),
