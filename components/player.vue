@@ -2,7 +2,7 @@
     <v-container class="player pa-0 grey darken-4 elevation-10" fluid>
         <div class="slider" v-if="!$native">
             <v-slider
-                v-if="current.id"
+                v-if="$player.loaded"
                 @change="$player.position = arguments[0]"
                 :max="current.duration_ms / 1000"
                 :value="position"
@@ -14,7 +14,7 @@
         <div v-else class="activator" @click="$native.open()"></div>
 
         <v-row align="center" justify="center" dense no-gutters>
-            <v-col class="player-data d-inline-flex" cols="10" md="4" v-if="current.id">
+            <v-col class="player-data d-inline-flex" cols="10" md="4" v-if="$player.loaded">
                 <v-img class="ma-1 elevation-4" :src="$drippy.getPicture(current.album, 2)"></v-img>
 
                 <v-container class="player-info" fill-height fluid>
@@ -32,35 +32,40 @@
             <v-spacer v-else></v-spacer>
 
             <v-col class="hidden-sm-and-down" align="center" cols="12" md="4">
-                <v-btn class="mx-3" icon>
+                <v-btn class="mx-3" :disabled="!$player.loaded" icon>
                     <v-icon>mdi-repeat</v-icon>
                 </v-btn>
-                <v-btn class="mx-3" icon @click="$player.previous()">
+                <v-btn class="mx-3" @click="$player.previous()" :disabled="!$player.loaded" icon>
                     <v-icon>mdi-skip-previous</v-icon>
                 </v-btn>
-                <v-btn class="mx-3" icon @click="$player.toggle()">
+                <v-btn class="mx-3" @click="$player.toggle()" :disabled="!$player.loaded" icon>
                     <v-icon x-large v-text="control_icon"></v-icon>
                 </v-btn>
-                <v-btn class="mx-3" icon @click="$player.next()">
+                <v-btn class="mx-3" @click="$player.next()" :disabled="!$player.loaded" icon>
                     <v-icon>mdi-skip-next</v-icon>
                 </v-btn>
-                <v-btn class="mx-3" icon @click="$player.shuffle()">
+                <v-btn class="mx-3" @click="$player.shuffle()" :disabled="!$player.loaded" icon>
                     <v-icon>mdi-shuffle</v-icon>
                 </v-btn>
             </v-col>
 
             <v-col class="hidden-sm-and-down" align="right" cols="4">
-                <v-btn class="mr-4" icon color="pink">
-                    <v-icon v-text="like_icon"></v-icon>
+                <v-btn class="mx-2" @click="$root.$emit('queue')" :disabled="!$player.loaded" icon>
+                    <v-icon>mdi-menu-open</v-icon>
                 </v-btn>
 
-                <v-btn class="mr-4" icon @click="$root.$emit('add', [current])">
+                <v-btn
+                    class="mx-2"
+                    @click="$root.$emit('add', [current])"
+                    :disabled="!$player.loaded"
+                    icon
+                >
                     <v-icon>mdi-playlist-plus</v-icon>
                 </v-btn>
             </v-col>
 
             <v-col class="hidden-md-and-up" align="right" cols="2">
-                <v-btn class="mx-3" icon @click.stop="$player.toggle()">
+                <v-btn class="mx-3" @click.stop="$player.toggle()" icon>
                     <v-icon x-large v-text="control_icon"></v-icon>
                 </v-btn>
             </v-col>
