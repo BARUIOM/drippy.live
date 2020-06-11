@@ -20,6 +20,7 @@
             </v-container>
         </v-content>
 
+        <queue ref="queue" />
         <addtracks ref="add_tracks" @selected="add" v-bind:playlists="playlists.user" />
         <newplaylist ref="new_playlist" @submit="createPlaylist" />
     </div>
@@ -28,11 +29,12 @@
 <script>
 import drawer from '~/components/drawer'
 import player from '~/components/player'
+import queue from '~/components/queue'
 import addtracks from '~/components/addtracks'
 import newplaylist from '~/components/newplaylist'
 
 export default {
-    components: { drawer, player, addtracks, newplaylist },
+    components: { drawer, player, queue, addtracks, newplaylist },
     data: () => ({
         profile: {},
         playlists: {},
@@ -41,6 +43,7 @@ export default {
     mounted() {
         this.$drippy.getProfile().then(profile => this.profile = profile);
         this.$drippy.getPlaylists().then(playlists => this.playlists = playlists);
+        this.$root.$on('queue', () => this.$refs['queue'].$emit('show'));
         this.$root.$on('create', () => this.$refs['new_playlist'].$emit('show'));
         this.$root.$on('add', tracks => this.$refs['add_tracks'].$emit('show', tracks));
     },
