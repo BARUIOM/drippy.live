@@ -65,7 +65,7 @@
             </v-col>
 
             <v-col class="hidden-md-and-up" align="right" cols="2">
-                <v-btn class="mx-3" @click.stop="$player.toggle()" icon>
+                <v-btn class="mx-3" @click.stop="$player.toggle()" :disabled="!$player.loaded" icon>
                     <v-icon x-large v-text="control_icon"></v-icon>
                 </v-btn>
             </v-col>
