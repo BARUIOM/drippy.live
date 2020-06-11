@@ -29,7 +29,10 @@ export default {
 
             if (this.$route.query['highlight']) {
                 const track = this.song_list.find(e => e['id'] === this.$route.query['highlight']);
-                this.$player.play(track, this.song_list);
+                if (this.$player.playlist !== this.song_list)
+                    this.$player.playlist = this.song_list;
+
+                this.$player.play(this.song_list.indexOf(track));
                 this.$router.replace({});
             }
         });

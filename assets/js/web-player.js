@@ -9,11 +9,19 @@ class Player extends EventEmitter {
         super();
         this._tracks = [];
         this._playing = false;
-        this.now_playing = 0;
+        this._index = 0;
     }
 
-    get current() {
-        return this._tracks[this.now_playing] || {};
+    get playlist() {
+        return this._tracks;
+    }
+
+    set playlist(value) {
+        this._tracks = value;
+    }
+
+    get index() {
+        return this._index;
     }
 
     set position(value) {
@@ -21,17 +29,17 @@ class Player extends EventEmitter {
     }
 
     next() {
-        if (!this._tracks[this.now_playing + 1]) {
-            this.now_playing = 0;
-        } else this.now_playing++;
-        this.play();
+        if (!this._tracks[this._index + 1]) {
+            this._index = 0;
+        } else this._index++;
+        this.play(this._index);
     }
 
     previous() {
-        if (!this._tracks[this.now_playing - 1]) {
-            this.now_playing = this._tracks.length - 1;
-        } else this.now_playing--;
-        this.play();
+        if (!this._tracks[this._index - 1]) {
+            this._index = this._tracks.length - 1;
+        } else this._index--;
+        this.play(this._index);
     }
 
     resume() {
@@ -43,38 +51,23 @@ class Player extends EventEmitter {
     }
 
     shuffle() {
-        this.now_playing = 0;
         this._tracks = this._tracks.map((a) => ({ sort: Math.random(), value: a }))
             .sort((a, b) => a.sort - b.sort).map((a) => a.value);
-        this.play();
+        this.play(0);
     }
 
-    play(track, track_list) {
+    play(index) {
         audio.pause();
         drippy.validate().then(() => {
-            if (track_list) this._tracks = [...track_list];
-
-            if (track) {
-                let found = this._tracks.find(e => e['id'] === track['id']);
-                this.now_playing = this._tracks.indexOf(found);
-            }
-
-            if (this.current) {
-                this.emit('playback-started', this.current);
-                audio.src = drippy.getTrackUrl(this.current);
-                audio.onloadeddata = () => audio.play();
-            }
+            this._index = index;
+            this.emit('playback-started', this._tracks[index]);
+            audio.src = drippy.getTrackUrl(this._tracks[index]);
+            audio.onloadeddata = () => audio.play();
         });
     }
 
     toggle() {
-        if (this.current) {
-            if (audio.paused) {
-                this.resume();
-            } else {
-                this.pause();
-            }
-        }
+        audio.paused ? this.resume() : this.pause();
     }
 
 }
@@ -83,9 +76,6 @@ const player = new Player();
 audio.addEventListener('timeupdate', () => player.emit('update', audio.currentTime));
 audio.addEventListener('play', () => player.emit('state', !audio.paused));
 audio.addEventListener('pause', () => player.emit('state', !audio.paused));
-audio.addEventListener('ended', () => {
-    player.now_playing++;
-    player.play();
-});
+audio.addEventListener('ended', () => player.play(player._index + 1));
 
 export default player;
