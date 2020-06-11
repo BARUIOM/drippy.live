@@ -20,6 +20,10 @@ class Player extends EventEmitter {
         this._tracks = value;
     }
 
+    get loaded() {
+        return this._tracks.length > 0;
+    }
+
     get index() {
         return this._index;
     }
@@ -60,7 +64,7 @@ class Player extends EventEmitter {
         audio.pause();
         drippy.validate().then(() => {
             this._index = index;
-            this.emit('playback-started', this._tracks[index]);
+            this.emit('playback-started', this._tracks[index], index);
             audio.src = drippy.getTrackUrl(this._tracks[index]);
             audio.onloadeddata = () => audio.play();
         });
