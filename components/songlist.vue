@@ -81,7 +81,10 @@ export default {
         index: vm.$player.index
     }),
     mounted() {
-        this.$player.on('playback-started', (track, index) => this.index = index);
+        this.$player.on('playback-started', this.define);
+    },
+    beforeDestroy() {
+        this.$player.off('playback-started', this.define);
     },
     methods: {
         play(index) {
@@ -98,6 +101,9 @@ export default {
             navigator.clipboard.writeText(`${window.location.origin}/track/${track.id}`).then(() => {
                 this.$root.$emit('snackbar', 'Track link copied to clipboard!', 'success', true);
             });
+        },
+        define(track, index) {
+            this.index = index;
         }
     }
 }
