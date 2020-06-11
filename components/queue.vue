@@ -36,6 +36,11 @@ export default {
             this.visible = true;
             this.playlist = JSON.parse(JSON.stringify(this.$player.playlist));
         });
+    },
+    watch: {
+        $route(to, from) {
+            this.visible = false;
+        }
     }
 }
 </script>
