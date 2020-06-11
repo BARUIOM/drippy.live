@@ -104,6 +104,7 @@ export default {
         },
         define(track, index) {
             this.index = index;
+            this.$root.$emit('playback-started', this.song_list[index]);
         }
     }
 }
