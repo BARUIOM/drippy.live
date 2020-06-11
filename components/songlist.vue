@@ -1,7 +1,10 @@
 <template>
     <v-list v-if="song_list.length" class="pa-0" color="accent" two-line>
         <v-hover v-for="(item, index) in song_list" :key="'i' + index" v-slot:default="{ hover }">
-            <v-list-item :id="item.id" @click="$player.play(item, song_list)">
+            <v-list-item
+                v-bind:class="{ 'disabled': disabled }"
+                @click="$player.play(item, song_list)"
+            >
                 <v-list-item-avatar v-if="!hideArtwork" class="elevation-4" size="48" tile>
                     <v-img :src="$drippy.getPicture(item.album, 2)" />
                 </v-list-item-avatar>
@@ -55,12 +58,13 @@ export default {
         hideArtwork: {
             type: Boolean,
             default: false
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     components: { ArtistHyperlink },
-    data: () => ({
-        menu: false
-    }),
     methods: {
         remove(track, index) {
             this.$drippy.removeTrackFromPlaylist(this.$route.params['id'], track).then(() => {
@@ -81,5 +85,13 @@ export default {
     .v-list-item {
         height: 64px;
     }
+}
+
+.v-list-item.disabled {
+    transition: opacity 0.2s linear;
+}
+
+.v-list-item.disabled:not(:hover) {
+    opacity: 0.4;
 }
 </style>
