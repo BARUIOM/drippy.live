@@ -80,6 +80,9 @@ const player = new Player();
 audio.addEventListener('timeupdate', () => player.emit('update', audio.currentTime));
 audio.addEventListener('play', () => player.emit('state', !audio.paused));
 audio.addEventListener('pause', () => player.emit('state', !audio.paused));
-audio.addEventListener('ended', () => player.play(player._index + 1));
+audio.addEventListener('ended', () => {
+    if ((player._index + 1) < player.playlist.length)
+        player.play(player._index + 1)
+});
 
 export default player;
