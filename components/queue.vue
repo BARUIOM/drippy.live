@@ -32,7 +32,7 @@ export default {
         playlist: []
     }),
     mounted() {
-        this.$on('show', () => {
+        this.$root.$on('queue', () => {
             this.visible = true;
             this.playlist = JSON.parse(JSON.stringify(this.$player.playlist));
         });

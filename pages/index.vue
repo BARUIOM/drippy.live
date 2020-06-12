@@ -12,17 +12,16 @@
             <drawer v-bind:profile="profile" v-bind:playlists="playlists" />
         </v-navigation-drawer>
 
-        <player />
-
         <v-main id="content" class="overflow-y-auto">
             <v-container class="pa-0 overflow-hidden" margin fluid>
                 <nuxt-child />
             </v-container>
         </v-main>
 
-        <queue ref="queue" />
-        <addtracks ref="add_tracks" @selected="add" v-bind:playlists="playlists.user" />
-        <newplaylist ref="new_playlist" @submit="createPlaylist" />
+        <queue />
+        <player />
+        <addtracks @selected="add" v-bind:playlists="playlists.user" />
+        <newplaylist @submit="createPlaylist" />
     </div>
 </template>
 
@@ -41,11 +40,10 @@ export default {
         drawer: false
     }),
     mounted() {
-        this.$drippy.getProfile().then(profile => this.profile = profile);
-        this.$drippy.getPlaylists().then(playlists => this.playlists = playlists);
-        this.$root.$on('queue', () => this.$refs['queue'].$emit('show'));
-        this.$root.$on('create', () => this.$refs['new_playlist'].$emit('show'));
-        this.$root.$on('add', tracks => this.$refs['add_tracks'].$emit('show', tracks));
+        this.$drippy.getProfile().then(async profile => {
+            this.profile = profile;
+            this.playlists = await this.$drippy.getPlaylists();
+        });
     },
     methods: {
         add(playlist, tracks) {
@@ -54,8 +52,7 @@ export default {
             });
         },
         createPlaylist(name) {
-            this.$drippy.createPlaylist(name).then(async () => {
-                this.playlists = await this.$drippy.getPlaylists();
+            this.$drippy.createPlaylist(name).then(() => {
                 this.$root.$emit('snackbar', `Playlist '${name}' created!`, 'success', true);
             });
         }

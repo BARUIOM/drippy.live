@@ -45,7 +45,7 @@ export default {
         visible: false
     }),
     mounted() {
-        this.$on('show', tracks => {
+        this.$root.$on('add', tracks => {
             this.visible = true;
             this.tracks = tracks;
         });

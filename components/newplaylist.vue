@@ -36,7 +36,7 @@ export default {
         value: 'Untitled Playlist'
     }),
     mounted() {
-        this.$on('show', () => this.visible = true);
+        this.$root.$on('create', () => this.visible = true);
     },
     methods: {
         submit() {
