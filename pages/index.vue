@@ -14,11 +14,11 @@
 
         <player />
 
-        <v-content id="content" class="overflow-y-auto">
+        <v-main id="content" class="overflow-y-auto">
             <v-container class="pa-0 overflow-hidden" margin fluid>
                 <nuxt-child />
             </v-container>
-        </v-content>
+        </v-main>
 
         <queue ref="queue" />
         <addtracks ref="add_tracks" @selected="add" v-bind:playlists="playlists.user" />
@@ -65,7 +65,7 @@ export default {
 
 <style lang="scss" scoped>
 @media screen and (max-width: 960px) {
-    .v-content {
+    .v-main {
         padding: 0 !important;
 
         .container.margin {
@@ -75,7 +75,7 @@ export default {
 }
 
 @media screen and (min-width: 960px) {
-    .v-content {
+    .v-main {
         padding-top: 0px !important;
     }
 }
@@ -84,7 +84,7 @@ export default {
     left: 0px !important;
 }
 
-.v-content {
+.v-main {
     max-height: calc(100vh - 72px);
 }
 
