@@ -87,7 +87,7 @@ export default {
         }
     }),
     mounted() {
-        this.$root.$on('playback-started', track => this.current = track);
+        this.$player.on('playback-started', track => this.current = track);
         this.$player.on('update', value => this.position = value);
         this.$player.on('state', (playing) => {
             if (playing) {
