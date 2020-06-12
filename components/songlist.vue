@@ -110,17 +110,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-card {
+.v-list.v-list--two-line {
+    border-color: transparent !important;
+    background-color: transparent !important;
+
     .v-list-item {
         height: 64px;
     }
-}
 
-.v-list-item.disabled {
-    transition: opacity 0.2s linear;
-}
+    .v-list-item.disabled {
+        transition: opacity 0.2s linear;
+    }
 
-.v-list-item.disabled:not(:hover) {
-    opacity: 0.4;
+    .v-list-item.disabled:not(:hover) {
+        opacity: 0.4;
+    }
 }
 </style>
