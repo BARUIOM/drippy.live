@@ -1,8 +1,8 @@
 <template>
     <v-card color="accent" flat tile>
         <v-card-title class="headline font-weight-bold" v-text="title"></v-card-title>
-        <v-container class="d-flex flex-row overflow-x-hidden pa-0" fluid>
-            <v-col v-for="(item, i) in contents" :key="i" cols="6" sm="4" md="2">
+        <v-container class="d-flex flex-row overflow-x-hidden pa-2" fluid>
+            <v-col class="pa-2" v-for="(item, i) in contents" :key="i" cols="6" sm="4" md="2">
                 <v-card @click="open(item.id)">
                     <div class="pa-4">
                         <v-img
