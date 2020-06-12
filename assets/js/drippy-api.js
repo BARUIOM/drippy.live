@@ -91,7 +91,7 @@ export default {
     },
     async getAlbum(album_id) {
         const album = (await axios.get(`/albums/${album_id}`)).data;
-        album.tracks.items.forEach(e => e['album'] = { name: album.name, images: album.images });
+        album.tracks.items.forEach(e => e['album'] = { id: album.id, name: album.name, images: album.images });
         return album;
     },
     async getTrack(track_id) {
