@@ -86,6 +86,10 @@ export default {
             this.$root.$emit('overlay', true);
             window.open(this.$drippy.spotify, '_self');
         }
+    },
+    middleware({ redirect, route }) {
+        if (localStorage['idToken'] && localStorage['refreshToken'])
+            return redirect('/');
     }
 }
 </script>

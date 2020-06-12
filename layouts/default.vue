@@ -9,9 +9,11 @@
 </template>
 
 <script>
+import drippy from '~/assets/js/drippy-api'
+
 export default {
     data: () => ({
-        overlay: true,
+        overlay: false,
         snackbar: false,
         status: 'success',
         message: '',
@@ -33,18 +35,16 @@ export default {
             this.$router.push('/auth/login');
         });
     },
-    mounted() {
-        if (!this.$route.path.startsWith('/auth') || this.$route.path.includes('/auth/login')) {
-            this.$drippy.validate().then(() => {
-                if (this.$route.path === '/auth/login') {
-                    this.$router.push('/');
+    middleware({ redirect, route }) {
+        if (!route.name.startsWith('auth')) {
+            return drippy.validate().catch(error => {
+                if (error.response && error.response.status == 401) {
+                    delete localStorage['idToken'];
+                    delete localStorage['refreshToken'];
+                    redirect('/auth/login');
                 }
-            }).catch(() => {
-                if (this.$route.path !== '/auth/login') {
-                    this.$router.push('/auth/login');
-                }
-            }).finally(() => this.overlay = false);
-        } else this.overlay = false;
+            });
+        }
     }
 }
 </script>
