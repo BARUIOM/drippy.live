@@ -14,7 +14,7 @@
             </v-form>
         </v-col>
         <v-col class="pa-0" cols="12" v-if="results.tracks.length">
-            <v-card color="accent" flat tile>
+            <v-card flat tile>
                 <v-card-title class="headline font-weight-bold">Tracks</v-card-title>
                 <songlist v-bind:song_list="results.tracks" />
             </v-card>

@@ -1,5 +1,5 @@
 <template>
-    <v-list v-if="song_list.length" class="pa-0" color="accent" two-line>
+    <v-list v-if="song_list.length" class="pa-0" two-line>
         <template v-for="(item, index) in song_list">
             <div :key="'i' + index">
                 <div v-if="queue">

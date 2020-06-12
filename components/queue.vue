@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="visible" transition="dialog-bottom-transition" fullscreen scrollable>
-        <v-card color="accent" flat tile>
+        <v-card flat tile>
             <v-toolbar dark>
                 <v-btn @click.stop="visible = false" icon>
                     <v-icon>mdi-chevron-down</v-icon>
@@ -51,6 +51,7 @@ export default {
 
     .v-dialog.v-dialog--fullscreen {
         padding-left: 56px;
+        background-color: #121212;
     }
 }
 

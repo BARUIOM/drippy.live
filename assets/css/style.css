@@ -26,3 +26,8 @@ html {
 .row {
     margin: 0px !important;
 }
+
+.v-list, .v-card.v-card--flat {
+    border-color: transparent !important;
+    background-color: transparent !important;
+}

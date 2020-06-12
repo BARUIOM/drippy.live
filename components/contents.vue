@@ -1,5 +1,5 @@
 <template>
-    <v-card color="accent" flat tile>
+    <v-card flat tile>
         <v-card-title class="headline font-weight-bold" v-text="title"></v-card-title>
         <v-container class="d-flex flex-row overflow-x-hidden pa-2" fluid>
             <v-col class="pa-2" v-for="(item, i) in contents" :key="i" cols="6" sm="4" md="2">

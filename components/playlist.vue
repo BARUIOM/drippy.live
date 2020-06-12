@@ -1,5 +1,5 @@
 <template>
-    <v-card color="accent" tile>
+    <v-card flat tile>
         <v-container fluid>
             <v-row no-gutters>
                 <v-col cols="12" sm="4" lg="2" class="elevation-10">
