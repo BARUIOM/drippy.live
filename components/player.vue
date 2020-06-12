@@ -15,7 +15,10 @@
 
         <v-row align="center" justify="center" dense no-gutters>
             <v-col class="player-data d-inline-flex" cols="10" md="4" v-if="$player.loaded">
-                <v-img class="ma-1 elevation-4" :src="$drippy.getPicture(current.album, 2)"></v-img>
+                <div class="ma-1 artwork" @click="open">
+                    <v-icon>mdi-open-in-new</v-icon>
+                    <v-img class="elevation-4" :src="$drippy.getPicture(current.album, 2)"></v-img>
+                </div>
 
                 <v-container class="player-info" fill-height fluid>
                     <v-row>
@@ -96,13 +99,18 @@ export default {
                 this.control_icon = "mdi-play";
             }
         });
+    },
+    methods: {
+        open() {
+            this.$router.push({ name: 'index-album-id', params: { id: this.current.album['id'] } });
+        }
     }
 }
 </script>
 
 <style lang="scss">
 .player .v-slider {
-    z-index: 1;
+    z-index: 2;
     margin: 0px;
     cursor: pointer;
 }
@@ -150,5 +158,26 @@ export default {
     position: fixed;
     min-width: 100vw;
     min-height: 72px;
+}
+
+.artwork {
+    cursor: pointer;
+    position: relative;
+
+    i.v-icon {
+        top: 0px;
+        left: 0px;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        opacity: 0.7;
+        position: absolute;
+        background-color: black;
+        transition: opacity 0.2s linear;
+    }
+}
+
+.artwork:not(:hover) i.v-icon {
+    opacity: 0;
 }
 </style>
