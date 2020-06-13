@@ -103,8 +103,9 @@ export default {
             return response.data;
         }
     },
-    getTrackUrl(track) {
-        return `${api_url}/stream/${localStorage['idToken']}/${track['id']}`;
+    async createSession(track) {
+        const response = await axios.get(`/stream/${track['id']}`);
+        return `${api_url}/audio/${response.data['digest']}`;
     },
     getPicture(object, index, unset = '/images/music-box-multiple-outline@4x.png') {
         if (object.images && object.images.length) {

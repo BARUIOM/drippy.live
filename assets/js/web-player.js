@@ -62,11 +62,10 @@ class Player extends EventEmitter {
 
     play(index) {
         audio.pause();
-        drippy.validate().then(() => {
-            this._index = index;
-            this.emit('playback-started', this._tracks[index], index);
-            audio.src = drippy.getTrackUrl(this._tracks[index]);
-            audio.onloadeddata = () => audio.play();
+        this._index = index;
+        drippy.createSession(this._tracks[index]).then(src => {
+            audio.src = src;
+            audio.load();
         });
     }
 
@@ -83,6 +82,10 @@ audio.addEventListener('pause', () => player.emit('state', !audio.paused));
 audio.addEventListener('ended', () => {
     if ((player._index + 1) < player.playlist.length)
         player.play(player._index + 1)
+});
+audio.addEventListener('loadeddata', () => {
+    player.emit('playback-started', player._tracks[player._index], player._index);
+    audio.play();
 });
 
 export default player;
