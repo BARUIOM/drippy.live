@@ -12,7 +12,8 @@ export default (() => {
             }
 
             set playlist(value) {
-                _tracks = value;
+                window.native.setData(localStorage['idToken'], localStorage['refreshToken']);
+                window.native.load(JSON.stringify(_tracks = value));
             }
 
             get loaded() {
@@ -24,8 +25,7 @@ export default (() => {
             }
 
             play(index) {
-                window.native.setData(localStorage['idToken'], localStorage['refreshToken']);
-                window.native.load(_index = index, JSON.stringify(_tracks));
+                window.native.play(_index = index);
             }
 
             toggle() {
