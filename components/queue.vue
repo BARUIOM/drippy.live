@@ -46,13 +46,18 @@ export default {
 </script>
 
 <style lang="scss">
-.v-dialog__content {
-    z-index: 4 !important;
+@media screen and (min-width: 960px) {
+    .v-dialog__content {
+        z-index: 4 !important;
 
-    .v-dialog.v-dialog--fullscreen {
-        padding-left: 56px;
-        background-color: #121212;
+        .v-dialog.v-dialog--fullscreen {
+            padding-left: 56px;
+        }
     }
+}
+
+.v-dialog__content > .v-dialog.v-dialog--fullscreen {
+    background-color: #121212;
 }
 
 .v-card .v-toolbar {

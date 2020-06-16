@@ -2,6 +2,10 @@
     <div>
         <v-app-bar class="hidden-md-and-up" scroll-target="#content" hide-on-scroll app>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-spacer></v-spacer>
+            <v-btn @click="$root.$emit('queue')" icon>
+                <v-icon>mdi-menu-open</v-icon>
+            </v-btn>
         </v-app-bar>
 
         <v-navigation-drawer class="hidden-sm-and-down" permanent expand-on-hover app>
