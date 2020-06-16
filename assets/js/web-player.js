@@ -3,6 +3,11 @@ import drippy from './drippy-api';
 
 const audio = new Audio();
 
+function getArtworks(track) {
+    return track['album'].images
+        .map(e => ({ src: e['url'], sizes: `${e['width']}x${e['height']}`, type: 'image/jpg' }));
+}
+
 class Player extends EventEmitter {
 
     constructor() {
@@ -83,9 +88,23 @@ audio.addEventListener('ended', () => {
     if ((player._index + 1) < player.playlist.length)
         player.play(player._index + 1)
 });
-audio.addEventListener('loadeddata', () => {
+audio.addEventListener('loadeddata', async () => {
     player.emit('playback-started', player._tracks[player._index], player._index);
-    audio.play();
+    await audio.play();
+    if ('mediaSession' in navigator) {
+        const track = player._tracks[player._index];
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: track['name'],
+            artist: track['artists'][0].name,
+            album: track['album'].name,
+            artwork: getArtworks(track)
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => player.resume());
+        navigator.mediaSession.setActionHandler('pause', () => player.pause());
+        navigator.mediaSession.setActionHandler('previoustrack', () => player.previous());
+        navigator.mediaSession.setActionHandler('nexttrack', () => player.next());
+    }
 });
 
 export default player;
