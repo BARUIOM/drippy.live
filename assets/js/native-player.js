@@ -24,6 +24,10 @@ export default (() => {
                 return _index;
             }
 
+            get track() {
+                return _tracks[_index] || {};
+            }
+
             play(index) {
                 window.native.play(_index = index);
             }
