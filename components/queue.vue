@@ -9,7 +9,7 @@
             </v-toolbar>
 
             <v-card-text class="pa-0">
-                <songlist v-bind:song_list="playlist" queue>
+                <songlist v-bind:song_list="playlist" queue disabled>
                     <template v-slot:title>
                         <v-card-title>Now playing</v-card-title>
                     </template>

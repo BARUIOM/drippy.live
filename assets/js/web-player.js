@@ -33,6 +33,10 @@ class Player extends EventEmitter {
         return this._index;
     }
 
+    get track() {
+        return this._tracks[this._index] || {};
+    }
+
     set position(value) {
         audio.currentTime = value;
     }
