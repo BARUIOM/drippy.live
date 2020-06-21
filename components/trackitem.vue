@@ -1,6 +1,10 @@
 <template>
     <v-hover v-slot:default="{ hover }">
-        <v-list-item @contextmenu.prevent="menu = true" @blur="menu = false" @click="$emit('play')">
+        <v-list-item
+            v-bind:class="{'now-playing': track.id === $player.track.id}"
+            @contextmenu.prevent="menu = true"
+            @click="$emit('play')"
+        >
             <v-list-item-avatar v-if="!hideArtwork" class="elevation-4" size="48" tile>
                 <v-img :src="$drippy.getPicture(track.album, 2)" />
             </v-list-item-avatar>
@@ -46,3 +50,14 @@ export default {
     })
 }
 </script>
+
+<style lang="scss" scoped>
+.v-list-item.now-playing {
+    opacity: 1 !important;
+
+    .v-icon,
+    .body-1 {
+        color: orange !important;
+    }
+}
+</style>

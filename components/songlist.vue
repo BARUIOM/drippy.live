@@ -7,7 +7,7 @@
                     <slot v-else-if="index === $data.index + 1" name="subtitle"></slot>
                 </div>
                 <trackitem
-                    v-bind:class="{ 'disabled': disabled, 'now-playing': item.id === $player.track.id }"
+                    v-bind:class="{ 'disabled': disabled }"
                     v-if="!queue || index >= $data.index"
                     @play="play(index)"
                     v-bind:track="item"
@@ -81,6 +81,7 @@ export default {
         },
         define(track, index) {
             this.index = index;
+            this.$forceUpdate();
         }
     }
 }
@@ -101,11 +102,6 @@ export default {
 
     .v-list-item.disabled:not(:hover) {
         opacity: 0.4;
-    }
-
-    .v-list-item.now-playing {
-        opacity: 1 !important;
-        color: orange !important;
     }
 }
 </style>
