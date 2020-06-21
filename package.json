@@ -10,11 +10,11 @@
         "dev": "nuxt --hostname 0.0.0.0 --port 8080"
     },
     "dependencies": {
-        "axios": "^0.19.2",
-        "nuxt": "^2.12.2",
-        "vee-validate": "^3.3.3"
+        "axios": "0.19.2",
+        "nuxt": "2.12.2",
+        "vee-validate": "3.3.3"
     },
     "devDependencies": {
-        "@nuxtjs/vuetify": "^1.11.2"
+        "@nuxtjs/vuetify": "1.11.2"
     }
 }
