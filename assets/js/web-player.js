@@ -5,6 +5,7 @@ const audio = new Audio();
 
 const canvas = document.createElement('canvas');
 canvas.width = canvas.height = 512;
+const context = canvas.getContext('2d');
 
 const video = document.createElement('video');
 video.srcObject = canvas.captureStream();
@@ -127,7 +128,7 @@ audio.addEventListener('loadeddata', async () => {
         image.src = artwork[0].src;
 
         await image.decode();
-        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
     }
 });
 
