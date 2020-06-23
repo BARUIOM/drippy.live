@@ -3,6 +3,13 @@ import drippy from './drippy-api';
 
 const audio = new Audio();
 
+const canvas = document.createElement('canvas');
+canvas.width = canvas.height = 512;
+
+const video = document.createElement('video');
+video.srcObject = canvas.captureStream();
+video.muted = true;
+
 function getArtworks(track) {
     return track['album'].images
         .map(e => ({ src: e['url'], sizes: `${e['width']}x${e['height']}`, type: 'image/jpg' }));
@@ -82,6 +89,10 @@ class Player extends EventEmitter {
         audio.paused ? this.resume() : this.pause();
     }
 
+    display() {
+        video.play().then(() => video.requestPictureInPicture());
+    }
+
 }
 
 const player = new Player();
@@ -93,21 +104,30 @@ audio.addEventListener('ended', () => {
         player.play(player._index + 1)
 });
 audio.addEventListener('loadeddata', async () => {
-    player.emit('playback-started', player._tracks[player._index], player._index);
+    const track = player._tracks[player._index];
+    player.emit('playback-started', track, player._index);
+
     await audio.play();
     if ('mediaSession' in navigator) {
-        const track = player._tracks[player._index];
+        const artwork = getArtworks(track);
         navigator.mediaSession.metadata = new MediaMetadata({
             title: track['name'],
             artist: track['artists'][0].name,
             album: track['album'].name,
-            artwork: getArtworks(track)
+            artwork
         });
 
         navigator.mediaSession.setActionHandler('play', () => player.resume());
         navigator.mediaSession.setActionHandler('pause', () => player.pause());
         navigator.mediaSession.setActionHandler('previoustrack', () => player.previous());
         navigator.mediaSession.setActionHandler('nexttrack', () => player.next());
+
+        const image = new Image();
+        image.crossOrigin = true;
+        image.src = artwork[0].src;
+
+        await image.decode();
+        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
     }
 });
 

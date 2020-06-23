@@ -53,6 +53,10 @@
             </v-col>
 
             <v-col class="hidden-sm-and-down" align="right" cols="4">
+                <v-btn class="mx-2" @click="$player.display()" :disabled="!$player.loaded" icon>
+                    <v-icon>mdi-picture-in-picture-bottom-right</v-icon>
+                </v-btn>
+
                 <v-btn class="mx-2" @click="$root.$emit('queue')" :disabled="!$player.loaded" icon>
                     <v-icon>mdi-menu-open</v-icon>
                 </v-btn>
