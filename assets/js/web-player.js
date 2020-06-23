@@ -8,7 +8,6 @@ canvas.width = canvas.height = 512;
 const context = canvas.getContext('2d');
 
 const video = document.createElement('video');
-video.srcObject = canvas.captureStream();
 video.muted = true;
 
 function getArtworks(track) {
@@ -122,6 +121,9 @@ audio.addEventListener('loadeddata', async () => {
         navigator.mediaSession.setActionHandler('pause', () => player.pause());
         navigator.mediaSession.setActionHandler('previoustrack', () => player.previous());
         navigator.mediaSession.setActionHandler('nexttrack', () => player.next());
+
+        if (!video.readyState)
+            video.srcObject = canvas.captureStream();
 
         const image = new Image();
         image.crossOrigin = true;
