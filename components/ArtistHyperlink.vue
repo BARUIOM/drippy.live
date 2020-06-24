@@ -1,9 +1,9 @@
 <template>
-    <span class="d-inline-flex">
+    <span v-bind:class="{ 'd-inline-flex': spacer, 'd-inline-block': !spacer }">
         <template v-for="(artist, i) in artists">
             <span
                 v-if="i > 0"
-                v-bind:class="{ 'mx-1': spacer, 'mr-1': !spacer }"
+                v-bind:class="{ 'mx-1': spacer }"
                 v-text="separator"
                 :key="'s' + i"
             ></span>
