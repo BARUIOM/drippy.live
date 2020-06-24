@@ -25,22 +25,38 @@
 
             <v-col class="hidden-sm-and-down" md="4">
                 <v-container class="pa-0" fluid>
-                    <v-row class="player-controls" align="center" justify="center">
-                        <v-btn :disabled="!$player.loaded" icon>
-                            <v-icon small>mdi-repeat</v-icon>
-                        </v-btn>
-                        <v-btn @click="$player.previous()" :disabled="!$player.loaded" icon>
-                            <v-icon small>mdi-skip-previous</v-icon>
-                        </v-btn>
-                        <v-btn @click="$player.toggle()" :disabled="!$player.loaded" icon>
-                            <v-icon v-text="control_icon"></v-icon>
-                        </v-btn>
-                        <v-btn @click="$player.next()" :disabled="!$player.loaded" icon>
-                            <v-icon small>mdi-skip-next</v-icon>
-                        </v-btn>
-                        <v-btn @click="$player.shuffle()" :disabled="!$player.loaded" icon>
-                            <v-icon small>mdi-shuffle</v-icon>
-                        </v-btn>
+                    <v-row class="pa-1 player-controls" align="center" justify="center">
+                        <v-col class="pa-0" align="left" cols="2">
+                            <v-btn @click="$root.$emit('queue')" :disabled="!$player.loaded" icon>
+                                <v-icon>mdi-menu-open</v-icon>
+                            </v-btn>
+                        </v-col>
+                        <v-col class="pa-0" align="center" cols="8">
+                            <v-btn :disabled="!$player.loaded" icon>
+                                <v-icon small>mdi-repeat</v-icon>
+                            </v-btn>
+                            <v-btn @click="$player.previous()" :disabled="!$player.loaded" icon>
+                                <v-icon small>mdi-skip-previous</v-icon>
+                            </v-btn>
+                            <v-btn @click="$player.toggle()" :disabled="!$player.loaded" icon>
+                                <v-icon v-text="control_icon"></v-icon>
+                            </v-btn>
+                            <v-btn @click="$player.next()" :disabled="!$player.loaded" icon>
+                                <v-icon small>mdi-skip-next</v-icon>
+                            </v-btn>
+                            <v-btn @click="$player.shuffle()" :disabled="!$player.loaded" icon>
+                                <v-icon small>mdi-shuffle</v-icon>
+                            </v-btn>
+                        </v-col>
+                        <v-col class="pa-0" align="right" cols="2">
+                            <v-btn
+                                @click="$root.$emit('add', [current])"
+                                :disabled="!$player.loaded"
+                                icon
+                            >
+                                <v-icon>mdi-playlist-plus</v-icon>
+                            </v-btn>
+                        </v-col>
                     </v-row>
                     <v-row v-if="!$native" align="center" justify="center">
                         <span class="mx-1 caption grey--text">{{ format(position * 1000) }}</span>
@@ -58,22 +74,9 @@
                 </v-container>
             </v-col>
 
-            <v-col class="hidden-sm-and-down" align="right" cols="4">
-                <v-btn class="mx-2" @click="$player.display()" :disabled="!$player.loaded" icon>
+            <v-col class="player-controls hidden-sm-and-down" align="right" cols="4">
+                <v-btn @click="$player.display()" :disabled="!$player.loaded" icon>
                     <v-icon>mdi-picture-in-picture-bottom-right</v-icon>
-                </v-btn>
-
-                <v-btn class="mx-2" @click="$root.$emit('queue')" :disabled="!$player.loaded" icon>
-                    <v-icon>mdi-menu-open</v-icon>
-                </v-btn>
-
-                <v-btn
-                    class="mx-2"
-                    @click="$root.$emit('add', [current])"
-                    :disabled="!$player.loaded"
-                    icon
-                >
-                    <v-icon>mdi-playlist-plus</v-icon>
                 </v-btn>
             </v-col>
 
