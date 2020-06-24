@@ -48,6 +48,14 @@ class Player extends EventEmitter {
         audio.currentTime = value;
     }
 
+    get volume() {
+        return audio.volume;
+    }
+
+    set volume(value) {
+        audio.volume = value;
+    }
+
     next() {
         if (!this._tracks[this._index + 1]) {
             this._index = 0;
