@@ -74,10 +74,21 @@
                 </v-container>
             </v-col>
 
-            <v-col class="player-controls hidden-sm-and-down" align="right" cols="4">
+            <v-col class="pr-2 player-controls hidden-sm-and-down" align="right" cols="4">
                 <v-btn @click="$player.display()" :disabled="!$player.loaded" icon>
                     <v-icon>mdi-picture-in-picture-bottom-right</v-icon>
                 </v-btn>
+
+                <v-menu :close-on-content-click="false" offset-y>
+                    <template v-slot:activator="{ on }">
+                        <v-btn :disabled="!$player.loaded" v-on="on" icon>
+                            <v-icon v-text="volume_icon"></v-icon>
+                        </v-btn>
+                    </template>
+                    <div class="pa-2 player-volume">
+                        <v-slider v-model="volume" min="0" max="100" vertical></v-slider>
+                    </div>
+                </v-menu>
             </v-col>
 
             <v-col class="hidden-md-and-up" align="right" cols="2">
@@ -95,8 +106,9 @@ import ArtistHyperlink from './ArtistHyperlink'
 export default {
     components: { ArtistHyperlink },
     data: () => ({
+        volume: 100,
         position: 0,
-        like_icon: "mdi-heart-outline",
+        volume_icon: "mdi-volume-high",
         control_icon: "mdi-play",
         current: {
             duration_ms: 0
@@ -121,13 +133,22 @@ export default {
             return new Date(Math.floor(time)).toLocaleTimeString()
                 .split(/:(.+)/, 2)[1];
         }
+    },
+    watch: {
+        volume(value) {
+            this.$player.volume = value / 100.0;
+            if (this.$player.volume == 0) {
+                this.volume_icon = 'mdi-volume-off'
+            } else
+                this.volume_icon = 'mdi-volume-high'
+        }
     }
 }
 </script>
 
 <style lang="scss">
-.player .v-slider {
-    cursor: pointer;
+.v-slider {
+    cursor: pointer !important;
 }
 </style>
 
@@ -167,6 +188,11 @@ export default {
         margin-left: 8px;
         margin-right: 8px;
     }
+}
+
+.player-volume {
+    overflow: hidden;
+    background-color: #212121;
 }
 
 .activator {
