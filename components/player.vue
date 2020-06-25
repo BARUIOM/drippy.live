@@ -131,7 +131,7 @@ export default {
         },
         format(time) {
             return new Date(Math.floor(time)).toLocaleTimeString()
-                .split(/:(.+)/, 2)[1];
+                .replace(/[A-Z]/gi, '').trim().split(/:(.+)/, 2)[1];
         }
     },
     watch: {
