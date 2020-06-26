@@ -29,29 +29,9 @@
                 </v-btn>
             </v-subheader>
             <v-list class="playlists overflow-y-auto" subheader nav dense>
-                <v-list-item
-                    v-for="(item, i) in playlists.user"
-                    :to="{ name: 'index-playlists-id', params: { id: item.id } }"
-                    :key="'u' + i"
-                >
-                    <v-list-item-icon class="icon">
-                        <v-icon>mdi-playlist-music</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title v-text="item.name"></v-list-item-title>
-                </v-list-item>
-
-                <v-divider class="mb-1"></v-divider>
-
-                <v-list-item
-                    v-for="(item, i) in playlists.liked"
-                    :to="{ name: 'index-playlists-id', params: { id: item.id } }"
-                    :key="'l' + i"
-                >
-                    <v-list-item-icon class="icon">
-                        <v-icon>mdi-playlist-music</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title v-text="item.name"></v-list-item-title>
-                </v-list-item>
+                <Playlists v-bind:playlists="playlists.user" />
+                <v-divider class="my-1"></v-divider>
+                <Playlists v-bind:playlists="playlists.liked" />
             </v-list>
         </div>
         <div>
@@ -69,6 +49,8 @@
 </template>
 
 <script>
+import Playlists from './Playlists';
+
 export default {
     props: {
         profile: Object,
@@ -76,7 +58,8 @@ export default {
             type: Object,
             default: () => ({ user: [], liked: [] })
         }
-    }
+    },
+    components: { Playlists }
 }
 </script>
 

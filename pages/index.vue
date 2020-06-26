@@ -15,11 +15,11 @@
             :permanent="!$vuetify.breakpoint.mobile"
             app
         >
-            <drawer v-bind:profile="profile" v-bind:playlists="playlists">
+            <Drawer v-bind:profile="profile" v-bind:playlists="playlists">
                 <v-btn v-if="!$vuetify.breakpoint.mobile" @click.stop="mini = !mini" icon>
                     <v-icon>mdi-chevron-double-left</v-icon>
                 </v-btn>
-            </drawer>
+            </Drawer>
         </v-navigation-drawer>
 
         <v-main id="content" class="overflow-y-auto">
@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import drawer from '~/components/drawer'
+import Drawer from '@/components/home/Drawer'
 import player from '~/components/player'
 import queue from '~/components/queue'
 import addtracks from '~/components/addtracks'
 import newplaylist from '~/components/newplaylist'
 
 export default {
-    components: { drawer, player, queue, addtracks, newplaylist },
+    components: { Drawer, player, queue, addtracks, newplaylist },
     data: () => ({
         _mini: true,
         profile: {},
