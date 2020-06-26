@@ -8,6 +8,7 @@
                 </v-list-item-avatar>
 
                 <v-list-item-title v-text="profile.name"></v-list-item-title>
+                <slot></slot>
             </v-list-item>
 
             <v-divider></v-divider>
@@ -33,7 +34,7 @@
                     :to="{ name: 'index-playlists-id', params: { id: item.id } }"
                     :key="'u' + i"
                 >
-                    <v-list-item-icon>
+                    <v-list-item-icon class="icon">
                         <v-icon>mdi-playlist-music</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title v-text="item.name"></v-list-item-title>
@@ -46,7 +47,7 @@
                     :to="{ name: 'index-playlists-id', params: { id: item.id } }"
                     :key="'l' + i"
                 >
-                    <v-list-item-icon>
+                    <v-list-item-icon class="icon">
                         <v-icon>mdi-playlist-music</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title v-text="item.name"></v-list-item-title>
@@ -62,6 +63,7 @@
 
                 <v-list-item-title>Logout</v-list-item-title>
             </v-list-item>
+            <v-divider></v-divider>
         </div>
     </v-layout>
 </template>
@@ -79,6 +81,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 960px) {
+    .playlists {
+        max-height: calc(100vh - 219px);
+    }
+}
+
+@media screen and (min-width: 960px) {
+    .playlists {
+        max-height: calc(100vh - 291px);
+    }
+}
+
 * {
     scrollbar-color: #363636 transparent !important;
 }
@@ -87,8 +101,8 @@ export default {
     background: #363636 !important;
 }
 
-.playlists {
-    max-height: calc(100vh - 218px);
+.playlists .icon {
+    display: none;
 }
 
 .v-subheader {
@@ -102,13 +116,9 @@ export default {
         opacity: 0;
         visibility: hidden;
     }
-}
 
-.v-navigation-drawer--is-mobile div,
-.v-navigation-drawer--is-mouseover div {
-    .v-subheader {
-        opacity: 1;
-        visibility: visible;
+    .playlists .icon {
+        display: initial;
     }
 }
 </style>

@@ -8,11 +8,21 @@
             </v-btn>
         </v-app-bar>
 
-        <v-navigation-drawer class="hidden-sm-and-down" permanent expand-on-hover app>
-            <drawer v-bind:profile="profile" v-bind:playlists="playlists" />
+        <v-navigation-drawer
+            class="hidden-sm-and-down"
+            :mini-variant.sync="mini"
+            width="232"
+            permanent
+            app
+        >
+            <drawer v-bind:profile="profile" v-bind:playlists="playlists">
+                <v-btn @click.stop="mini = !mini" icon>
+                    <v-icon>mdi-chevron-double-left</v-icon>
+                </v-btn>
+            </drawer>
         </v-navigation-drawer>
 
-        <v-navigation-drawer v-model="drawer" absolute temporary>
+        <v-navigation-drawer v-model="drawer" temporary app>
             <drawer v-bind:profile="profile" v-bind:playlists="playlists" />
         </v-navigation-drawer>
 
@@ -41,7 +51,8 @@ export default {
     data: () => ({
         profile: {},
         playlists: {},
-        drawer: false
+        drawer: false,
+        mini: true
     }),
     mounted() {
         this.$drippy.getProfile().then(async profile => {
@@ -78,6 +89,10 @@ export default {
 @media screen and (min-width: 960px) {
     .v-main {
         padding-top: 0px !important;
+    }
+
+    .v-navigation-drawer {
+        max-height: calc(100vh - 72px) !important;
     }
 }
 

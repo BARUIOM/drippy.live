@@ -46,16 +46,6 @@ export default {
 </script>
 
 <style lang="scss">
-@media screen and (min-width: 960px) {
-    .v-dialog__content {
-        z-index: 4 !important;
-
-        .v-dialog.v-dialog--fullscreen {
-            padding-left: 56px;
-        }
-    }
-}
-
 .v-dialog__content > .v-dialog.v-dialog--fullscreen {
     background-color: #121212;
 }

@@ -1,9 +1,10 @@
 <template>
-    <v-container class="player pa-0 grey darken-4 elevation-10" fluid>
+    <v-container class="player pa-0 grey darken-4 elevation-4" fluid>
+        <v-divider></v-divider>
         <div v-if="$native" class="activator" @click="$native.open()"></div>
 
         <v-row align="center" justify="center" dense no-gutters>
-            <v-col class="player-data d-inline-flex" cols="10" md="4" v-if="$player.loaded">
+            <v-col class="player-data d-inline-flex" cols="10" md="3" v-if="$player.loaded">
                 <div class="ma-1 artwork" @click="open">
                     <v-icon>mdi-open-in-new</v-icon>
                     <v-img class="elevation-4" :src="$drippy.getPicture(current.album, 2)"></v-img>
@@ -23,7 +24,7 @@
             </v-col>
             <v-spacer v-else></v-spacer>
 
-            <v-col class="hidden-sm-and-down" md="4">
+            <v-col class="hidden-sm-and-down" cols="6">
                 <v-container class="pa-0" fluid>
                     <v-row class="pa-1 player-controls" align="center" justify="center">
                         <v-col class="pa-0" align="left" cols="2">
@@ -74,7 +75,7 @@
                 </v-container>
             </v-col>
 
-            <v-col class="pr-2 player-controls hidden-sm-and-down" align="right" cols="4">
+            <v-col class="pr-2 player-controls hidden-sm-and-down" align="right" cols="3">
                 <v-btn @click="$player.display()" :disabled="!$player.loaded" icon>
                     <v-icon>mdi-picture-in-picture-bottom-right</v-icon>
                 </v-btn>
@@ -153,18 +154,6 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-@media screen and (max-width: 960px) {
-    .player {
-        z-index: 6 !important;
-    }
-}
-
-@media screen and (min-width: 960px) {
-    .player .player-data {
-        padding-left: 56px;
-    }
-}
-
 .player {
     bottom: 0;
     z-index: 4;
