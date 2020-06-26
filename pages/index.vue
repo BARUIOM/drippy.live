@@ -9,21 +9,17 @@
         </v-app-bar>
 
         <v-navigation-drawer
-            class="hidden-sm-and-down"
+            v-model="drawer"
             :mini-variant.sync="mini"
-            width="232"
-            permanent
+            :temporary="$vuetify.breakpoint.mobile"
+            :permanent="!$vuetify.breakpoint.mobile"
             app
         >
             <drawer v-bind:profile="profile" v-bind:playlists="playlists">
-                <v-btn @click.stop="mini = !mini" icon>
+                <v-btn v-if="!$vuetify.breakpoint.mobile" @click.stop="mini = !mini" icon>
                     <v-icon>mdi-chevron-double-left</v-icon>
                 </v-btn>
             </drawer>
-        </v-navigation-drawer>
-
-        <v-navigation-drawer v-model="drawer" temporary app>
-            <drawer v-bind:profile="profile" v-bind:playlists="playlists" />
         </v-navigation-drawer>
 
         <v-main id="content" class="overflow-y-auto">
@@ -49,10 +45,10 @@ import newplaylist from '~/components/newplaylist'
 export default {
     components: { drawer, player, queue, addtracks, newplaylist },
     data: () => ({
+        _mini: true,
         profile: {},
         playlists: {},
-        drawer: false,
-        mini: true
+        drawer: false
     }),
     mounted() {
         this.$drippy.getProfile().then(async profile => {
@@ -70,6 +66,19 @@ export default {
             this.$drippy.createPlaylist(name).then(() => {
                 this.$root.$emit('snackbar', `Playlist '${name}' created!`, 'success', true);
             });
+        }
+    },
+    computed: {
+        mini: {
+            get() {
+                if (this.$vuetify.breakpoint.mobile)
+                    return false;
+                return this.$data._mini;
+            },
+            set(value) {
+                if (!this.$vuetify.breakpoint.mobile)
+                    this.$data._mini = value;
+            }
         }
     }
 }
