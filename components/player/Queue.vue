@@ -9,24 +9,24 @@
             </v-toolbar>
 
             <v-card-text class="pa-0">
-                <songlist v-bind:song_list="playlist" queue disabled>
+                <Tracklist v-bind:song_list="playlist" queue disabled>
                     <template v-slot:title>
                         <v-card-title>Now playing</v-card-title>
                     </template>
                     <template v-slot:subtitle>
                         <v-card-title>Next</v-card-title>
                     </template>
-                </songlist>
+                </Tracklist>
             </v-card-text>
         </v-card>
     </v-dialog>
 </template>
 
 <script>
-import songlist from './songlist'
+import Tracklist from '../misc/Tracklist'
 
 export default {
-    components: { songlist },
+    components: { Tracklist },
     data: () => ({
         visible: false,
         playlist: []

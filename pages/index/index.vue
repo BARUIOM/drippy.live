@@ -16,31 +16,31 @@
         <v-col class="pa-0" cols="12" v-if="results.tracks.length">
             <v-card flat tile>
                 <v-card-title class="headline font-weight-bold">Tracks</v-card-title>
-                <songlist v-bind:song_list="results.tracks" />
+                <Tracklist v-bind:song_list="results.tracks" />
             </v-card>
         </v-col>
         <v-col class="pa-0" cols="12" v-if="results.artists.length">
-            <contents title="Artists" route="index-artist-id" v-bind:contents="results.artists" />
+            <Contents title="Artists" route="index-artist-id" v-bind:contents="results.artists" />
         </v-col>
         <v-col class="pa-0" cols="12" v-if="results.playlists.length">
-            <contents
+            <Contents
                 title="Playlists"
                 route="index-playlists-id"
                 v-bind:contents="results.playlists"
             />
         </v-col>
         <v-col class="pa-0" cols="12" v-if="results.albums.length">
-            <contents title="Albums" route="index-album-id" v-bind:contents="results.albums" />
+            <Contents title="Albums" route="index-album-id" v-bind:contents="results.albums" />
         </v-col>
     </v-row>
 </template>
 
 <script>
-import songlist from '~/components/songlist'
-import contents from '~/components/contents'
+import Tracklist from '@/components/misc/Tracklist'
+import Contents from '@/components/Contents'
 
 export default {
-    components: { songlist, contents },
+    components: { Tracklist, Contents },
     data: () => ({
         results: {
             artists: [],

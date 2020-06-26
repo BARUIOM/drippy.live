@@ -24,7 +24,7 @@
                 </v-col>
             </v-row>
         </v-container>
-        <songlist
+        <Tracklist
             v-bind:song_list="song_list"
             v-bind:hideAlbum="hideAlbum"
             v-bind:hideArtwork="hideArtwork"
@@ -34,11 +34,11 @@
 </template>
 
 <script>
-import songlist from './songlist'
-import ArtistHyperlink from './ArtistHyperlink'
+import Tracklist from './Tracklist'
+import ArtistHyperlink from '../ArtistHyperlink'
 
 export default {
-    components: { songlist, ArtistHyperlink },
+    components: { Tracklist, ArtistHyperlink },
     props: {
         name: String,
         author: String,

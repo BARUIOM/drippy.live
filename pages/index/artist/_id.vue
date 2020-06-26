@@ -32,24 +32,24 @@
             <v-card flat tile>
                 <v-card-title class="headline font-weight-bold">Albums</v-card-title>
                 <v-divider></v-divider>
-                <albums v-bind:albums="artist.albums" />
+                <Albums v-bind:albums="artist.albums" />
             </v-card>
         </v-col>
         <v-col class="pa-0" cols="12" v-if="artist.singles.length">
             <v-card flat tile>
                 <v-card-title class="headline font-weight-bold">Singles & EPs</v-card-title>
                 <v-divider></v-divider>
-                <albums v-bind:albums="artist.singles" />
+                <Albums v-bind:albums="artist.singles" />
             </v-card>
         </v-col>
     </v-row>
 </template>
 
 <script>
-import albums from '~/components/albums'
+import Albums from '@/components/artist/Albums'
 
 export default {
-    components: { albums },
+    components: { Albums },
     data: () => ({
         artist: {
             albums: [],

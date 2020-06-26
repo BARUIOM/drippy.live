@@ -1,5 +1,5 @@
 <template>
-    <playlist
+    <Playlist
         v-bind:name="name"
         v-bind:artists="artists"
         v-bind:song_list="song_list"
@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import playlist from '~/components/playlist'
+import Playlist from '@/components/misc/Playlist'
 
 export default {
-    components: { playlist },
+    components: { Playlist },
     data: () => ({
         name: '',
         artists: [],

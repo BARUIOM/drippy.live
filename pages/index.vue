@@ -28,22 +28,22 @@
             </v-container>
         </v-main>
 
-        <queue />
-        <player />
-        <addtracks @selected="add" v-bind:playlists="playlists.user" />
-        <newplaylist @submit="createPlaylist" />
+        <Queue />
+        <Player />
+        <AddTracks @selected="add" v-bind:playlists="playlists.user" />
+        <NewPlaylist @submit="createPlaylist" />
     </div>
 </template>
 
 <script>
 import Drawer from '@/components/home/Drawer'
-import player from '~/components/player'
-import queue from '~/components/queue'
-import addtracks from '~/components/addtracks'
-import newplaylist from '~/components/newplaylist'
+import AddTracks from '@/components/home/AddTracks'
+import NewPlaylist from '@/components/home/NewPlaylist'
+import Player from '@/components/player/Player'
+import Queue from '@/components/player/Queue'
 
 export default {
-    components: { Drawer, player, queue, addtracks, newplaylist },
+    components: { Drawer, AddTracks, NewPlaylist, Player, Queue },
     data: () => ({
         _mini: true,
         profile: {},

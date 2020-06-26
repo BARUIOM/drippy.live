@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import ArtistHyperlink from './ArtistHyperlink'
+import ArtistHyperlink from '../ArtistHyperlink'
 
 export default {
     props: {

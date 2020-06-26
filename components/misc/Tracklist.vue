@@ -6,7 +6,7 @@
                     <slot v-if="index === $data.index" name="title"></slot>
                     <slot v-else-if="index === $data.index + 1" name="subtitle"></slot>
                 </div>
-                <trackitem
+                <TrackItem
                     v-bind:class="{ 'disabled': disabled }"
                     v-if="!queue || index >= $data.index"
                     @play="play(index)"
@@ -23,14 +23,14 @@
                     <v-list-item @click.stop="copy(item)">
                         <v-list-item-title>Copy track link</v-list-item-title>
                     </v-list-item>
-                </trackitem>
+                </TrackItem>
             </div>
         </template>
     </v-list>
 </template>
 
 <script>
-import trackitem from './trackitem';
+import TrackItem from './TrackItem';
 
 export default {
     props: {
@@ -53,7 +53,7 @@ export default {
             default: false
         }
     },
-    components: { trackitem },
+    components: { TrackItem },
     data: (vm) => ({
         index: vm.$player.index
     }),
