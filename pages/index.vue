@@ -15,7 +15,7 @@
             :permanent="!$vuetify.breakpoint.mobile"
             app
         >
-            <Drawer v-bind:profile="profile" v-bind:playlists="playlists">
+            <Drawer v-bind:profile="profile" v-bind:playlists="playlists" v-bind:visible="!mini">
                 <v-btn v-if="!$vuetify.breakpoint.mobile" @click.stop="mini = !mini" icon>
                     <v-icon>mdi-chevron-double-left</v-icon>
                 </v-btn>

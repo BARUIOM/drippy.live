@@ -29,9 +29,9 @@
                 </v-btn>
             </v-subheader>
             <v-list class="playlists overflow-y-auto" subheader nav dense>
-                <Playlists v-bind:playlists="playlists.user" />
+                <Playlists v-bind:playlists="playlists.user" v-bind:tooltip="!visible" />
                 <v-divider class="my-1"></v-divider>
-                <Playlists v-bind:playlists="playlists.liked" />
+                <Playlists v-bind:playlists="playlists.liked" v-bind:tooltip="!visible" />
             </v-list>
         </div>
         <div>
@@ -53,6 +53,7 @@ import Playlists from './Playlists';
 
 export default {
     props: {
+        visible: Boolean,
         profile: Object,
         playlists: {
             type: Object,
