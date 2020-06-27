@@ -70,9 +70,8 @@ export default {
             this.$player.play(index);
         },
         remove(track, index) {
-            this.$drippy.removeTrackFromPlaylist(this.$route.params['id'], track).then(() => {
-                this.song_list.splice(index, 1);
-            });
+            this.$root.$emit('remove', { id: this.$route.params['id'] }, track);
+            this.song_list.splice(index, 1);
         },
         copy(track) {
             navigator.clipboard.writeText(`${window.location.origin}/track/${track.id}`).then(() => {

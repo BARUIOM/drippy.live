@@ -51,6 +51,12 @@ export default {
         drawer: false
     }),
     mounted() {
+        this.$root.$on('remove', async (playlist, track) => {
+            await this.$drippy.removeTrackFromPlaylist(playlist.id, track);
+            this.playlists.user.find(e => e['id'] === playlist.id).tracks.total--;
+            this.$root.$emit('snackbar', 'Track removed from playlist', 'success', true);
+        });
+
         this.$drippy.getProfile().then(async profile => {
             this.profile = profile;
             const playlists = await this.$drippy.getPlaylists();
@@ -67,7 +73,7 @@ export default {
         add(playlist, tracks) {
             this.$drippy.addTracksToPlaylist(playlist.id, tracks).then(() => {
                 this.playlists.user.find(e => e['id'] === playlist.id).tracks.total++;
-                this.$root.$emit('snackbar', `Tracks were added to playlist ${playlist.name}`, 'success', true);
+                this.$root.$emit('snackbar', `Tracks were added to playlist '${playlist.name}'`, 'success', true);
             });
         },
         createPlaylist(name) {
