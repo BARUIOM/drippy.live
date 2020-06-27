@@ -27,7 +27,7 @@ html {
     margin: 0px !important;
 }
 
-.v-card.v-card--flat {
+.v-card.v-card--flat, .v-tabs-items {
     border-color: transparent !important;
     background-color: transparent !important;
 }

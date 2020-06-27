@@ -47,23 +47,32 @@ export default {
     data: () => ({
         _mini: true,
         profile: {},
-        playlists: {},
+        playlists: { user: [], liked: [] },
         drawer: false
     }),
     mounted() {
         this.$drippy.getProfile().then(async profile => {
             this.profile = profile;
-            this.playlists = await this.$drippy.getPlaylists();
+            const playlists = await this.$drippy.getPlaylists();
+
+            playlists.filter(e => e['owner'].id === profile['id']).forEach(playlist => {
+                this.playlists.user.push(playlist);
+            });
+            playlists.filter(e => e['owner'].id !== profile['id']).forEach(playlist => {
+                this.playlists.liked.push(playlist);
+            });
         });
     },
     methods: {
         add(playlist, tracks) {
             this.$drippy.addTracksToPlaylist(playlist.id, tracks).then(() => {
+                this.playlists.user.find(e => e['id'] === playlist.id).tracks.total++;
                 this.$root.$emit('snackbar', `Tracks were added to playlist ${playlist.name}`, 'success', true);
             });
         },
         createPlaylist(name) {
-            this.$drippy.createPlaylist(name).then(() => {
+            this.$drippy.createPlaylist(name).then(playlist => {
+                this.playlists.user.unshift(playlist);
                 this.$root.$emit('snackbar', `Playlist '${name}' created!`, 'success', true);
             });
         }

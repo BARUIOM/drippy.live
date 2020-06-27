@@ -20,6 +20,12 @@
                     </v-list-item-icon>
                     <v-list-item-title>Home</v-list-item-title>
                 </v-list-item>
+                <v-list-item link to="/collection" exact>
+                    <v-list-item-icon>
+                        <v-icon>mdi-view-list</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Library</v-list-item-title>
+                </v-list-item>
             </v-list>
             <v-subheader>
                 <span>Playlists</span>
@@ -67,13 +73,13 @@ export default {
 <style lang="scss" scoped>
 @media screen and (max-width: 960px) {
     .playlists {
-        max-height: calc(100vh - 219px);
+        max-height: calc(100vh - 263px);
     }
 }
 
 @media screen and (min-width: 960px) {
     .playlists {
-        max-height: calc(100vh - 291px);
+        max-height: calc(100vh - 335px);
     }
 }
 
