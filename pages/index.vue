@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-app-bar class="hidden-md-and-up" scroll-target="#content" hide-on-scroll app>
+        <v-app-bar scroll-target="#content" hide-on-scroll dense app>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-spacer></v-spacer>
             <v-btn @click="$root.$emit('queue')" icon>
@@ -100,28 +100,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media screen and (max-width: 960px) {
-    .v-main {
-        padding: 0 !important;
-
-        .container.margin {
-            margin-top: 56px !important;
-        }
-    }
-}
-
 @media screen and (min-width: 960px) {
-    .v-main {
-        padding-top: 0px !important;
-    }
-
     .v-navigation-drawer {
         max-height: calc(100vh - 72px) !important;
     }
-}
-
-.v-app-bar {
-    left: 0px !important;
 }
 
 .v-main {
