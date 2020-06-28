@@ -1,6 +1,6 @@
 <template>
     <v-row dense>
-        <v-col class="pa-4" cols="12">
+        <portal to="header">
             <v-form @submit.prevent="search">
                 <v-text-field
                     placeholder="Search for artists, tracks or playlists"
@@ -9,10 +9,11 @@
                     hide-details
                     clearable
                     rounded
+                    dense
                     solo
                 ></v-text-field>
             </v-form>
-        </v-col>
+        </portal>
         <v-col class="pa-0" cols="12" v-if="results.tracks.length">
             <v-card flat tile>
                 <v-card-title class="headline font-weight-bold">Tracks</v-card-title>

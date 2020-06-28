@@ -1,23 +1,23 @@
 <template>
     <div>
-        <v-tabs v-model="tab" grow>
-            <v-tab>Playlists</v-tab>
-            <v-tab>Artists</v-tab>
-            <v-tab>Albums</v-tab>
-        </v-tabs>
-        <v-container class="pa-0 overflow-y-auto" fluid>
-            <v-tabs-items v-model="tab">
-                <v-tab-item>
-                    <Contents route="index-playlists-id" v-bind:contents="playlists" wrap />
-                </v-tab-item>
-                <v-tab-item>
-                    <Contents route="index-artist-id" v-bind:contents="artists" wrap />
-                </v-tab-item>
-                <v-tab-item>
-                    <Contents route="index-album-id" v-bind:contents="albums" wrap />
-                </v-tab-item>
-            </v-tabs-items>
-        </v-container>
+        <portal to="header">
+            <v-tabs v-model="tab" grow>
+                <v-tab>Playlists</v-tab>
+                <v-tab>Artists</v-tab>
+                <v-tab>Albums</v-tab>
+            </v-tabs>
+        </portal>
+        <v-tabs-items v-model="tab">
+            <v-tab-item>
+                <Contents route="index-playlists-id" v-bind:contents="playlists" wrap />
+            </v-tab-item>
+            <v-tab-item>
+                <Contents route="index-artist-id" v-bind:contents="artists" wrap />
+            </v-tab-item>
+            <v-tab-item>
+                <Contents route="index-album-id" v-bind:contents="albums" wrap />
+            </v-tab-item>
+        </v-tabs-items>
     </div>
 </template>
 
@@ -40,16 +40,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@media screen and (max-width: 960px) {
-    .container {
-        max-height: calc(100vh - 176px);
-    }
-}
-
-@media screen and (min-width: 960px) {
-    .container {
-        max-height: calc(100vh - 120px);
-    }
+<style lang="scss">
+.v-tabs-bar {
+    background-color: transparent !important;
 }
 </style>
