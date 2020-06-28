@@ -5,7 +5,8 @@ const user = {
     collection: {
         playlists: [],
         following: [],
-        albums: []
+        albums: [],
+        tracks: []
     }
 }
 
@@ -73,6 +74,12 @@ export default {
             return user.collection.albums = (await axios.get('/collection/albums')).data;
         }
         return user.collection.albums;
+    },
+    async getSavedTracks() {
+        if (!user.collection.tracks.length) {
+            return user.collection.tracks = (await axios.get('/collection/tracks')).data;
+        }
+        return user.collection.tracks;
     },
     async getPlaylists() {
         if (!user.collection.playlists.length) {
