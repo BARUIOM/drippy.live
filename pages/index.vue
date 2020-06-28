@@ -9,7 +9,11 @@
         </v-app-bar>
 
         <v-navigation-drawer v-model="drawer" :temporary="$vuetify.breakpoint.mobile" app>
-            <Drawer v-bind:playlists="playlists" v-bind:visible="!mini" />
+            <Drawer>
+                <Playlists v-bind:playlists="playlists.user" />
+                <v-divider class="my-1"></v-divider>
+                <Playlists v-bind:playlists="playlists.liked" />
+            </Drawer>
         </v-navigation-drawer>
 
         <v-main id="content" class="overflow-y-auto">
@@ -27,13 +31,14 @@
 
 <script>
 import Drawer from '@/components/home/Drawer'
+import Playlists from '@/components/home/Playlists';
 import AddTracks from '@/components/home/AddTracks'
 import NewPlaylist from '@/components/home/NewPlaylist'
 import Player from '@/components/player/Player'
 import Queue from '@/components/player/Queue'
 
 export default {
-    components: { Drawer, AddTracks, NewPlaylist, Player, Queue },
+    components: { Drawer, Playlists, AddTracks, NewPlaylist, Player, Queue },
     data: () => ({
         profile: {},
         playlists: { user: [], liked: [] },

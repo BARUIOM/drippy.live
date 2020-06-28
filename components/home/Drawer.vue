@@ -26,9 +26,7 @@
             </v-col>
             <v-col cols="12">
                 <v-list class="playlists overflow-y-auto" subheader nav dense>
-                    <Playlists v-bind:playlists="playlists.user" v-bind:tooltip="!visible" />
-                    <v-divider class="my-1"></v-divider>
-                    <Playlists v-bind:playlists="playlists.liked" v-bind:tooltip="!visible" />
+                    <slot></slot>
                 </v-list>
                 <v-divider></v-divider>
             </v-col>
@@ -43,21 +41,6 @@
         <v-divider></v-divider>
     </v-layout>
 </template>
-
-<script>
-import Playlists from './Playlists';
-
-export default {
-    props: {
-        visible: Boolean,
-        playlists: {
-            type: Object,
-            default: () => ({ user: [], liked: [] })
-        }
-    },
-    components: { Playlists }
-}
-</script>
 
 <style lang="scss" scoped>
 @media screen and (max-width: 960px) {
