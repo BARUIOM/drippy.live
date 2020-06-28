@@ -1,6 +1,6 @@
 <template>
     <div>
-        <portal to="header">
+        <portal to="extension">
             <v-tabs v-model="tab" grow>
                 <v-tab>Playlists</v-tab>
                 <v-tab>Artists</v-tab>

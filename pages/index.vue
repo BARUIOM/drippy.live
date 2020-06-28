@@ -3,6 +3,9 @@
         <v-app-bar scroll-target="#content" hide-on-scroll dense app>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" tile></v-app-bar-nav-icon>
             <portal-target class="mx-2" name="header" />
+            <template v-if="routes.includes($route.name)" v-slot:extension>
+                <portal-target name="extension" />
+            </template>
             <v-toolbar-items>
                 <v-btn @click="$root.$emit('queue')" icon>
                     <v-icon>mdi-menu-open</v-icon>
@@ -66,6 +69,7 @@ export default {
     data: () => ({
         profile: {},
         playlists: { user: [], liked: [] },
+        routes: ['index-collection'],
         drawer: false
     }),
     mounted() {
