@@ -1,5 +1,6 @@
 <template>
     <Playlist
+        hide-actions
         name="Liked Songs"
         :artworks="['/images/thumb-up.png']"
         :author="$drippy.user.profile.name"

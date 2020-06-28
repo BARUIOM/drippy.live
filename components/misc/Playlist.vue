@@ -13,7 +13,7 @@
                         <ArtistHyperlink v-bind:artists="artists" separator="•" spacer />
                     </v-card-subtitle>
                     <v-card-subtitle v-else class="title" v-text="author"></v-card-subtitle>
-                    <v-card-actions>
+                    <v-card-actions v-if="!hideActions">
                         <v-btn icon>
                             <v-icon>mdi-heart-outline</v-icon>
                         </v-btn>
@@ -53,6 +53,10 @@ export default {
             default: false
         },
         hideArtwork: {
+            type: Boolean,
+            default: false
+        },
+        hideActions: {
             type: Boolean,
             default: false
         },
