@@ -1,8 +1,8 @@
 <template>
     <div>
         <v-app-bar scroll-target="#content" hide-on-scroll dense app>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-spacer></v-spacer>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer; mini = !mini"></v-app-bar-nav-icon>
+            <portal-target name="header" />
             <v-btn @click="$root.$emit('queue')" icon>
                 <v-icon>mdi-menu-open</v-icon>
             </v-btn>
@@ -12,14 +12,9 @@
             v-model="drawer"
             :mini-variant.sync="mini"
             :temporary="$vuetify.breakpoint.mobile"
-            :permanent="!$vuetify.breakpoint.mobile"
             app
         >
-            <Drawer v-bind:profile="profile" v-bind:playlists="playlists" v-bind:visible="!mini">
-                <v-btn v-if="!$vuetify.breakpoint.mobile" @click.stop="mini = !mini" icon>
-                    <v-icon>mdi-chevron-double-left</v-icon>
-                </v-btn>
-            </Drawer>
+            <Drawer v-bind:playlists="playlists" v-bind:visible="!mini" />
         </v-navigation-drawer>
 
         <v-main id="content" class="overflow-y-auto">
@@ -112,5 +107,9 @@ export default {
 
 .v-navigation-drawer {
     background-color: #212121 !important;
+}
+
+.vue-portal-target {
+    width: 100%;
 }
 </style>
