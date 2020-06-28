@@ -12,6 +12,7 @@
     "dependencies": {
         "axios": "0.19.2",
         "nuxt": "2.12.2",
+        "portal-vue": "^2.1.7",
         "vee-validate": "3.3.3"
     },
     "devDependencies": {
