@@ -63,19 +63,19 @@ export default {
         return user.profile;
     },
     async getFollowedArtists() {
-        if (!Object.keys(user.collection.following).length) {
+        if (!user.collection.following.length) {
             return user.collection.following = (await axios.get('/collection/artists')).data;
         }
         return user.collection.following;
     },
     async getSavedAlbums() {
-        if (!Object.keys(user.collection.albums).length) {
+        if (!user.collection.albums.length) {
             return user.collection.albums = (await axios.get('/collection/albums')).data;
         }
         return user.collection.albums;
     },
     async getPlaylists() {
-        if (!Object.keys(user.collection.playlists).length) {
+        if (!user.collection.playlists.length) {
             return user.collection.playlists = (await axios.get('/collection/playlists')).data;
         }
         return user.collection.playlists;
