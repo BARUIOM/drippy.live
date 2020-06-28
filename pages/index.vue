@@ -1,19 +1,14 @@
 <template>
     <div>
         <v-app-bar scroll-target="#content" hide-on-scroll dense app>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer; mini = !mini"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <portal-target name="header" />
             <v-btn @click="$root.$emit('queue')" icon>
                 <v-icon>mdi-menu-open</v-icon>
             </v-btn>
         </v-app-bar>
 
-        <v-navigation-drawer
-            v-model="drawer"
-            :mini-variant.sync="mini"
-            :temporary="$vuetify.breakpoint.mobile"
-            app
-        >
+        <v-navigation-drawer v-model="drawer" :temporary="$vuetify.breakpoint.mobile" app>
             <Drawer v-bind:playlists="playlists" v-bind:visible="!mini" />
         </v-navigation-drawer>
 
@@ -40,7 +35,6 @@ import Queue from '@/components/player/Queue'
 export default {
     components: { Drawer, AddTracks, NewPlaylist, Player, Queue },
     data: () => ({
-        _mini: true,
         profile: {},
         playlists: { user: [], liked: [] },
         drawer: false
@@ -76,19 +70,6 @@ export default {
                 this.playlists.user.unshift(playlist);
                 this.$root.$emit('snackbar', `Playlist '${name}' created!`, 'success', true);
             });
-        }
-    },
-    computed: {
-        mini: {
-            get() {
-                if (this.$vuetify.breakpoint.mobile)
-                    return false;
-                return this.$data._mini;
-            },
-            set(value) {
-                if (!this.$vuetify.breakpoint.mobile)
-                    this.$data._mini = value;
-            }
         }
     }
 }
