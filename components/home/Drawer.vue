@@ -1,18 +1,6 @@
 <template>
     <v-layout class="d-flex flex-column overflow-hidden" justify-space-between fill-height>
         <div>
-            <v-list-item v-if="Object.keys(profile).length" class="px-2">
-                <v-list-item-avatar class="elevation-2">
-                    <v-img v-if="profile.photo" :src="profile.photo"></v-img>
-                    <v-icon v-else>mdi-account</v-icon>
-                </v-list-item-avatar>
-
-                <v-list-item-title v-text="profile.name"></v-list-item-title>
-                <slot></slot>
-            </v-list-item>
-
-            <v-divider></v-divider>
-
             <v-list nav dense>
                 <v-list-item link to="/" exact>
                     <v-list-item-icon>
@@ -60,7 +48,6 @@ import Playlists from './Playlists';
 export default {
     props: {
         visible: Boolean,
-        profile: Object,
         playlists: {
             type: Object,
             default: () => ({ user: [], liked: [] })
