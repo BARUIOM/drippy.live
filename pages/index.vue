@@ -1,11 +1,35 @@
 <template>
     <div>
         <v-app-bar scroll-target="#content" hide-on-scroll dense app>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-            <portal-target name="header" />
-            <v-btn @click="$root.$emit('queue')" icon>
-                <v-icon>mdi-menu-open</v-icon>
-            </v-btn>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer" tile></v-app-bar-nav-icon>
+            <portal-target class="mx-2" name="header" />
+            <v-toolbar-items>
+                <v-btn @click="$root.$emit('queue')" icon>
+                    <v-icon>mdi-menu-open</v-icon>
+                </v-btn>
+                <v-menu offset-y>
+                    <template v-slot:activator="{ on }">
+                        <v-btn v-on="on" icon>
+                            <v-icon>mdi-dots-vertical</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list dense>
+                        <v-list-item>
+                            <v-list-item-icon>
+                                <v-img v-if="profile.photo" :src="profile.photo"></v-img>
+                                <v-icon v-else>mdi-account</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title v-text="profile.name"></v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click.stop="$root.$emit('logout')">
+                            <v-list-item-icon>
+                                <v-icon color="red">mdi-exit-to-app</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>Logout</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-toolbar-items>
         </v-app-bar>
 
         <v-navigation-drawer v-model="drawer" :temporary="$vuetify.breakpoint.mobile" app>
@@ -83,7 +107,7 @@ export default {
 <style lang="scss" scoped>
 @media screen and (min-width: 960px) {
     .v-navigation-drawer {
-        max-height: calc(100vh - 72px) !important;
+        max-height: calc(100vh - 73px) !important;
     }
 }
 
