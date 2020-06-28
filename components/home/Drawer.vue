@@ -42,13 +42,13 @@
 <style lang="scss" scoped>
 @media screen and (max-width: 960px) {
     .playlists {
-        max-height: calc(100vh - 150px);
+        max-height: calc(100vh - 193px);
     }
 }
 
 @media screen and (min-width: 960px) {
     .playlists {
-        max-height: calc(100vh - 222px);
+        max-height: calc(100vh - 265px);
     }
 }
 
