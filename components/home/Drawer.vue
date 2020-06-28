@@ -15,6 +15,12 @@
                         </v-list-item-icon>
                         <v-list-item-title>Library</v-list-item-title>
                     </v-list-item>
+                    <v-list-item link to="/collection/tracks" exact>
+                        <v-list-item-icon>
+                            <v-icon>mdi-thumb-up</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Liked songs</v-list-item-title>
+                    </v-list-item>
                 </v-list>
                 <v-subheader>
                     <span>Playlists</span>
