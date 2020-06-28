@@ -28,30 +28,21 @@
                 <v-list class="playlists overflow-y-auto" subheader nav dense>
                     <slot></slot>
                 </v-list>
-                <v-divider></v-divider>
             </v-col>
         </v-row>
-        <v-list-item class="px-2" @click="$root.$emit('logout')">
-            <v-list-item-avatar>
-                <v-icon color="red">mdi-exit-to-app</v-icon>
-            </v-list-item-avatar>
-
-            <v-list-item-title>Logout</v-list-item-title>
-        </v-list-item>
-        <v-divider></v-divider>
     </v-layout>
 </template>
 
 <style lang="scss" scoped>
 @media screen and (max-width: 960px) {
     .playlists {
-        max-height: calc(100vh - 200px);
+        max-height: calc(100vh - 150px);
     }
 }
 
 @media screen and (min-width: 960px) {
     .playlists {
-        max-height: calc(100vh - 272px);
+        max-height: calc(100vh - 222px);
     }
 }
 
