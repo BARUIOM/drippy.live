@@ -43,7 +43,7 @@
             </Drawer>
         </v-navigation-drawer>
 
-        <v-main id="content" class="overflow-y-auto">
+        <v-main id="content" class="pt-12 overflow-y-auto">
             <v-container class="pa-0 overflow-hidden" margin fluid>
                 <nuxt-child />
             </v-container>

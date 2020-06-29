@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-row class="pt-12">
         <portal to="extension">
             <v-tabs v-model="tab" grow>
                 <v-tab>Playlists</v-tab>
@@ -18,7 +18,7 @@
                 <Contents route="index-album-id" v-bind:contents="albums" wrap />
             </v-tab-item>
         </v-tabs-items>
-    </div>
+    </v-row>
 </template>
 
 <script>
