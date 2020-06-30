@@ -18,11 +18,14 @@
                     </template>
                     <v-list dense>
                         <v-list-item>
-                            <v-list-item-icon>
-                                <v-img v-if="profile.photo" :src="profile.photo"></v-img>
+                            <v-list-item-avatar size="24" class="elevation-4">
+                                <v-img
+                                    v-if="$drippy.user.profile.photo"
+                                    :src="$drippy.user.profile.photo"
+                                ></v-img>
                                 <v-icon v-else>mdi-account</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-title v-text="profile.name"></v-list-item-title>
+                            </v-list-item-avatar>
+                            <v-list-item-title v-text="$drippy.user.profile.name"></v-list-item-title>
                         </v-list-item>
                         <v-list-item @click.stop="$root.$emit('logout')">
                             <v-list-item-icon>
@@ -67,7 +70,6 @@ import Queue from '@/components/player/Queue'
 export default {
     components: { Drawer, Playlists, AddTracks, NewPlaylist, Player, Queue },
     data: () => ({
-        profile: {},
         playlists: { user: [], liked: [] },
         drawer: false
     }),
@@ -79,7 +81,6 @@ export default {
         });
 
         this.$drippy.getProfile().then(async profile => {
-            this.profile = profile;
             const playlists = await this.$drippy.getPlaylists();
 
             playlists.filter(e => e['owner'].id === profile['id']).forEach(playlist => {
