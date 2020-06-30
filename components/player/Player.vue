@@ -29,7 +29,7 @@
                     <v-row class="pa-1 player-controls" align="center" justify="center">
                         <v-col class="pa-0" align="left" cols="2">
                             <v-btn :disabled="!$player.loaded" icon>
-                                <v-icon>mdi-thumb-up-outline</v-icon>
+                                <v-icon v-text="thumb_icon"></v-icon>
                             </v-btn>
                         </v-col>
                         <v-col class="pa-0" align="center" cols="8">
@@ -109,6 +109,7 @@ export default {
     data: () => ({
         volume: 100,
         position: 0,
+        thumb_icon: "mdi-thumb-up-outline",
         volume_icon: "mdi-volume-high",
         control_icon: "mdi-play",
         current: {
@@ -116,7 +117,13 @@ export default {
         }
     }),
     mounted() {
-        this.$player.on('playback-started', track => this.current = track);
+        this.$player.on('playback-started', track => {
+            this.current = track;
+
+            this.thumb_icon = 'mdi-thumb-up-outline';
+            if (this.$drippy.isSaved(track))
+                this.thumb_icon = 'mdi-thumb-up';
+        });
         this.$player.on('update', value => this.position = value);
         this.$player.on('state', (playing) => {
             if (playing) {

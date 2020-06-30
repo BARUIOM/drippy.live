@@ -133,6 +133,9 @@ export default {
         }
         return unset;
     },
+    isSaved(track) {
+        return user.collection.tracks.some(e => e['id'] === track['id']);
+    },
     get spotify() {
         return `${api_url}/spotify`;
     },
