@@ -13,6 +13,11 @@
         <q-page-container>
             <router-view />
         </q-page-container>
+
+        <q-footer class="bg-grey-10">
+            <q-separator />
+            <Player />
+        </q-footer>
     </q-layout>
 </template>
 
@@ -20,9 +25,10 @@
 import Vue from 'vue'
 
 import Drawer from '@/components/home/Drawer.vue'
+import Player from '@/components/player/Player.vue'
 
 export default Vue.extend({
-    components: { Drawer },
+    components: { Drawer, Player },
     data: () => ({
         drawer: false
     })
