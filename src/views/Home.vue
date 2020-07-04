@@ -11,7 +11,9 @@
         </q-drawer>
 
         <q-page-container>
-            <router-view />
+            <q-scroll-area>
+                <router-view />
+            </q-scroll-area>
         </q-page-container>
 
         <q-footer class="bg-grey-10">
@@ -34,3 +36,9 @@ export default Vue.extend({
     })
 });
 </script>
+
+<style lang="scss" scoped>
+.q-scrollarea {
+    height: calc(100vh - 122px);
+}
+</style>
