@@ -1,62 +1,38 @@
 <template>
-    <v-layout class="d-flex flex-column overflow-hidden" justify-space-between fill-height>
-        <v-row no-gutters dense>
-            <v-col cols="12">
-                <v-list nav dense>
-                    <v-list-item link to="/" exact>
-                        <v-list-item-icon>
-                            <v-icon>mdi-home</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Home</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link to="/collection" exact>
-                        <v-list-item-icon>
-                            <v-icon>mdi-view-list</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Library</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link to="/collection/tracks" exact>
-                        <v-list-item-icon>
-                            <v-icon>mdi-thumb-up</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Liked songs</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-                <v-subheader>
-                    <span>Playlists</span>
-                    <v-spacer></v-spacer>
-                    <v-btn @click="$root.$emit('create')" icon>
-                        <v-icon>mdi-plus</v-icon>
-                    </v-btn>
-                </v-subheader>
-            </v-col>
-            <v-col cols="12">
-                <v-list class="playlists overflow-y-auto" subheader nav dense>
-                    <slot></slot>
-                </v-list>
-            </v-col>
-        </v-row>
-    </v-layout>
+    <div class="row">
+        <div class="col-12">
+            <q-list padding>
+                <q-item clickable v-ripple to="/" exact>
+                    <q-item-section avatar>
+                        <q-icon name="home" />
+                    </q-item-section>
+                    <q-item-section>Home</q-item-section>
+                </q-item>
+                <q-item clickable v-ripple to="/collection" exact>
+                    <q-item-section avatar>
+                        <q-icon name="view_list" />
+                    </q-item-section>
+                    <q-item-section>Library</q-item-section>
+                </q-item>
+                <q-item clickable v-ripple to="/collection/tracks" exact>
+                    <q-item-section avatar>
+                        <q-icon name="thumb_up" />
+                    </q-item-section>
+                    <q-item-section>Liked songs</q-item-section>
+                </q-item>
+            </q-list>
+            <div class="q-px-md flex flex-center">
+                <span class="text-subtitle2 text-grey">Playlists</span>
+                <q-space />
+                <q-btn icon="add" flat dense></q-btn>
+            </div>
+        </div>
+    </div>
 </template>
 
-<style lang="scss" scoped>
-@media screen and (max-width: 960px) {
-    .playlists {
-        max-height: calc(100vh - 193px);
-    }
-}
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
 
-@media screen and (min-width: 960px) {
-    .playlists {
-        max-height: calc(100vh - 265px);
-    }
-}
-
-* {
-    scrollbar-color: #363636 transparent !important;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #363636 !important;
-}
-</style>
+});
+</script>
