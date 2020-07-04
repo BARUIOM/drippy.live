@@ -8,6 +8,7 @@ import Drippy, { Manager } from '@/modules/drippy-api'
 const drippy = new Drippy();
 
 import '@/plugins/quasar'
+import '@/plugins/validation-rules'
 
 Vue.config.productionTip = false;
 Vue.prototype.$drippy = drippy;
