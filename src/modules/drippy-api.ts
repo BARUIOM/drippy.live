@@ -21,7 +21,7 @@ axios.interceptors.response.use(e => e, error => {
     throw error;
 });
 
-export default class Drippy {
+export class Drippy {
 
     public async validate(): Promise<void> {
         if (!localStorage['idToken'])
@@ -91,8 +91,8 @@ export default class Drippy {
             return response.data as SpotifyAuthResponse;
     }
 
-    public async createSession(track: any): Promise<string> {
-        const response = await axios.get(`/stream/${track['id']}`);
+    public async createSession(id: string): Promise<string> {
+        const response = await axios.get(`/stream/${id}`);
         return `${api_url}/audio/${response.data['digest']}`;
     }
 
@@ -143,3 +143,6 @@ export declare interface SpotifyAuthResponse extends MessageResponse {
     readonly token: string
 
 }
+
+const drippy = new Drippy();
+export default drippy;

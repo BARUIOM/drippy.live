@@ -4,14 +4,15 @@ import { Loading } from 'quasar'
 import App from '@/App.vue'
 import router from '@/router'
 
-import Drippy, { Manager } from '@/modules/drippy-api'
-const drippy = new Drippy();
+import player from '@/modules/web-player'
+import drippy, { Manager } from '@/modules/drippy-api'
 
 import '@/plugins/quasar'
 import '@/plugins/validation-rules'
 
 Vue.config.productionTip = false;
 Vue.prototype.$drippy = drippy;
+Vue.prototype.$player = player;
 
 Loading.show();
 drippy.validate().then(async () => {
