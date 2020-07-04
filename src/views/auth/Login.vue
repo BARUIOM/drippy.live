@@ -1,101 +1,73 @@
 <template>
-    <v-container fill-height fluid>
-        <v-row align="center" justify="center">
-            <v-col cols="12" sm="6" md="4" xl="3">
-                <v-card>
-                    <v-card-title class="justify-center">Log in to your account</v-card-title>
-                    <ValidationObserver v-slot="{ valid, handleSubmit }">
-                        <v-form @submit.prevent="handleSubmit(submit)">
-                            <v-card-text>
-                                <ValidationProvider
-                                    name="E-mail"
-                                    rules="required|email"
-                                    v-slot="{ errors }"
-                                >
-                                    <v-text-field
-                                        :error-messages="errors"
-                                        label="E-mail"
-                                        v-model="email"
-                                    ></v-text-field>
-                                </ValidationProvider>
-                                <ValidationProvider
-                                    name="Password"
-                                    rules="required"
-                                    v-slot="{ errors }"
-                                >
-                                    <v-text-field
-                                        :error-messages="errors"
-                                        type="password"
-                                        label="Password"
-                                        v-model="password"
-                                    ></v-text-field>
-                                </ValidationProvider>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-btn type="submit" :disabled="!valid" block>Sign in</v-btn>
-                            </v-card-actions>
-                            <v-card-actions>
-                                <v-btn link to="/auth/register" block>Create an account</v-btn>
-                            </v-card-actions>
-                            <v-divider></v-divider>
-                            <v-card-actions>
-                                <v-btn @click="open" color="#1DB954" block>
-                                    <v-img src="/images/spotify.svg" max-width="24"></v-img>
-                                    <v-spacer></v-spacer>
-                                    <span class="absolute">Sign in with Spotify</span>
-                                </v-btn>
-                            </v-card-actions>
-                        </v-form>
-                    </ValidationObserver>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <div class="q-pa-md window-height">
+        <div class="row justify-center items-center fit">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <q-card class="my-card">
+                    <q-card-section>
+                        <div class="text-h6 text-center">Log in to your account</div>
+                    </q-card-section>
+
+                    <q-form @submit.prevent="submit">
+                        <q-card-section>
+                            <q-input v-model="email" class="q-pb-sm" type="email" label="Email" />
+                            <q-input v-model="password" type="password" label="Password" />
+                        </q-card-section>
+
+                        <q-card-actions vertical>
+                            <q-btn color="grey-10" type="submit">Sign in</q-btn>
+                            <q-btn color="grey-10" disable>Create an account</q-btn>
+                        </q-card-actions>
+                    </q-form>
+
+                    <q-separator />
+
+                    <q-card-actions vertical>
+                        <q-btn style="background: #1DB954" @click="open">
+                            <q-icon name="img:/spotify.svg" left />Sign in with Spotify
+                        </q-btn>
+                    </q-card-actions>
+                </q-card>
+            </div>
+        </div>
+    </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
     data: () => ({
-        email: '',
-        password: ''
+        email: "",
+        password: ""
     }),
     mounted() {
         if (localStorage['spotify_code']) {
-            const code = localStorage['spotify_code'];
-            delete localStorage['spotify_code'];
-
-            this.$root.$emit('overlay', true);
-            this.$drippy.spotifyCheck(code).then(async data => {
-                await this.$drippy.login({ token: data['token'] });
-                this.$root.$emit('snackbar', data['message'], 'success', true);
-                this.$router.push('/');
-            }).finally(() => this.$root.$emit('overlay', false));
+            this.$q.loading.show();
+            this.$drippy.spotifyCheck(localStorage['spotify_code']).then(async data => {
+                if (data !== undefined) {
+                    await this.$drippy.login({ token: data['token'] });
+                    this.$q.notify({ type: 'positive', message: data['message'], position: 'top' });
+                    this.$router.push('/');
+                }
+            }).finally(() => {
+                this.$q.loading.hide();
+                delete localStorage['spotify_code'];
+            });
         }
     },
     methods: {
         submit() {
-            this.$root.$emit('overlay', true);
+            this.$q.loading.show();
             this.$drippy.login({ email: this.email, password: this.password })
                 .then(() => this.$router.push('/')).catch(error => {
-                    if (error.response && error.response.status == 401) {
-                        this.$root.$emit('snackbar', error.response.data['message'], 'error');
-                    }
-                }).finally(() => this.$root.$emit('overlay', false));
+                    if (error.response && error.response.status == 400)
+                        this.$q.notify({ type: 'negative', message: error.response.data['message'] });
+                }).finally(() => this.$q.loading.hide());
         },
         open() {
-            this.$root.$emit('overlay', true);
-            window.open(this.$drippy.spotify, '_self');
+            this.$q.loading.show();
+            window.open(this.$drippy.url + '/spotify', '_self');
         }
-    },
-    middleware({ redirect, route }) {
-        if (localStorage['idToken'] && localStorage['refreshToken'])
-            return redirect('/');
     }
-}
+});
 </script>
-
-<style lang="scss" scoped>
-.absolute {
-    position: absolute;
-}
-</style>
