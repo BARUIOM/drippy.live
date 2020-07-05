@@ -1,20 +1,28 @@
 import Axios from 'axios'
+import { LocalStorage, SessionStorage } from 'quasar'
+
 import User from './drippy-user'
 
 const api_url = '' || 'https://api.drippy.live';
 const axios = Axios.create({ baseURL: api_url });
 
 axios.interceptors.request.use(config => {
-    config.headers['User-Token'] = localStorage['idToken'];
+    if (LocalStorage.has('session')) {
+        const session = LocalStorage.getItem('session') as UserSession;
+        config.headers['User-Token'] = session.idToken;
+    }
     return config;
 });
 
 axios.interceptors.response.use(e => e, error => {
     if (error.config && error.response && error.response.status === 401) {
-        return axios.post('/refresh', { refresh_token: localStorage['refreshToken'] }).then(response => {
-            localStorage['idToken'] = response.data['id_token'];
-            localStorage['refreshToken'] = response.data['refresh_token'];
+        const session = LocalStorage.getItem('session') as UserSession;
+        return axios.post('/refresh', { refresh_token: session.refreshToken }).then(response => {
             error.config.headers['User-Token'] = response.data['id_token'];
+            LocalStorage.set('session', {
+                idToken: response.data['id_token'],
+                refreshToken: response.data['refresh_token']
+            } as UserSession);
             return Axios.request(error.config);
         });
     }
@@ -24,7 +32,7 @@ axios.interceptors.response.use(e => e, error => {
 export class Drippy {
 
     public async validate(): Promise<void> {
-        if (!localStorage['idToken'])
+        if (!LocalStorage.has('session'))
             throw new Error('User not authenticated');
 
         await axios.get('/validate');
@@ -37,8 +45,10 @@ export class Drippy {
 
     public async login(options: object | any): Promise<LoginResponse> {
         const response = await axios.post('/login', options);
-        localStorage['idToken'] = response.data['idToken'];
-        localStorage['refreshToken'] = response.data['refreshToken'];
+        LocalStorage.set('session', {
+            idToken: response.data['idToken'],
+            refreshToken: response.data['refreshToken']
+        } as UserSession);
         return response.data as LoginResponse;
     }
 
@@ -67,7 +77,7 @@ export class Drippy {
 
     public async search(query: string) {
         const response = (await axios.post('/search', { query })).data;
-        window.sessionStorage['search_results'] = JSON.stringify(response);
+        SessionStorage.set('search_results', response);
         return response;
     }
 
@@ -112,14 +122,18 @@ export class Manager {
 
 }
 
-export declare interface LoginResponse {
+export declare interface UserSession {
+
+    readonly idToken: string
+    readonly refreshToken: string
+
+}
+
+export declare interface LoginResponse extends UserSession {
 
     readonly uid: string
     readonly email: string
     readonly displayName: string
-
-    readonly idToken: string
-    readonly refreshToken: string
 
 }
 

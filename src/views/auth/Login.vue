@@ -43,9 +43,11 @@ export default class Login extends Vue {
     private password: string = "";
 
     mounted() {
-        if (localStorage['spotify_code']) {
+        if (this.$q.localStorage.has('spotify_code')) {
             this.$q.loading.show();
-            this.$drippy.spotifyCheck(localStorage['spotify_code']).then(async data => {
+
+            const code = this.$q.localStorage.getItem('spotify_code') as string;
+            this.$drippy.spotifyCheck(code).then(async data => {
                 if (data !== undefined) {
                     await this.$drippy.login({ token: data['token'] });
                     this.$q.notify({ type: 'positive', message: data['message'], position: 'top' });
@@ -53,7 +55,7 @@ export default class Login extends Vue {
                 }
             }).finally(() => {
                 this.$q.loading.hide();
-                delete localStorage['spotify_code'];
+                this.$q.localStorage.remove('spotify_code');
             });
         }
     }

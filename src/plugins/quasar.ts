@@ -4,11 +4,11 @@ import '@/styles/quasar.scss'
 import 'quasar/dist/quasar.ie.polyfills'
 import '@quasar/extras/roboto-font/roboto-font.css'
 import '@quasar/extras/material-icons/material-icons.css'
-import { Quasar, Notify, Loading } from 'quasar'
+import { Quasar, Notify, Loading, LocalStorage, SessionStorage } from 'quasar'
 
 Vue.use(Quasar, {
     config: {
         dark: true
     },
-    plugins: [Notify, Loading]
+    plugins: [Notify, Loading, LocalStorage, SessionStorage]
 });
