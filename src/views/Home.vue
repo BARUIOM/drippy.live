@@ -16,7 +16,7 @@
             </q-scroll-area>
         </q-page-container>
 
-        <q-footer class="bg-grey-10">
+        <q-footer class="bg-grey-10" elevated>
             <q-separator />
             <Player />
         </q-footer>
@@ -43,5 +43,9 @@ export default class Home extends Vue {
 <style lang="scss" scoped>
 .q-scrollarea {
     height: calc(100vh - 122px);
+}
+
+.q-footer {
+    left: 0px !important;
 }
 </style>

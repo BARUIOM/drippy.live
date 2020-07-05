@@ -23,10 +23,18 @@ export class Player extends EventEmitter {
         this._playlist = playlist;
     }
 
+    public get position() {
+        return audio.currentTime;
+    }
+
+    public set position(value: number) {
+        audio.currentTime = value;
+    }
+
 }
 
 const player = new Player();
-audio.addEventListener('timeupdate', () => player.emit('update', audio.currentTime));
+audio.addEventListener('timeupdate', () => player.emit('update'));
 audio.addEventListener('play', () => player.emit('state', !audio.paused));
 audio.addEventListener('pause', () => player.emit('state', !audio.paused));
 audio.addEventListener('loadeddata', async () => {
