@@ -1,11 +1,16 @@
+import { AxiosInstance } from 'axios'
+
 export default class User {
 
+    private readonly _axios: AxiosInstance;
     private readonly _profile: Profile;
     private readonly _collection: Collection;
 
-    public constructor(profile: Profile) {
+    public constructor(axios: AxiosInstance, profile: Profile, playlists: any[]) {
+        this._axios = axios;
         this._profile = profile;
         this._collection = {} as Collection;
+        this._collection.playlists = playlists;
     }
 
     public get profile(): Profile {
@@ -30,6 +35,21 @@ export default class User {
 
     public set tracks(tracks: any[]) {
         this._collection.tracks = tracks;
+    }
+
+    public async getFollowing(): Promise<any[]> {
+        this.following = (await this._axios.get('/collection/artists')).data;
+        return this._collection.following;
+    }
+
+    public async getSavedAlbums(): Promise<any[]> {
+        this.albums = (await this._axios.get('/collection/albums')).data;
+        return this._collection.albums;
+    }
+
+    public async getSavedTracks(): Promise<any[]> {
+        this.tracks = (await this._axios.get('/collection/tracks')).data;
+        return this._collection.tracks;
     }
 
 }

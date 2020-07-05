@@ -105,12 +105,9 @@ export class Drippy {
 export class Manager {
 
     public static async getUser(): Promise<User> {
-        const user = new User((await axios.get('/profile')).data);
-        user.playlists = (await axios.get('/collection/playlists')).data;
-        user.following = (await axios.get('/collection/artists')).data;
-        user.albums = (await axios.get('/collection/albums')).data;
-        user.tracks = (await axios.get('/collection/tracks')).data;
-        return user;
+        const profile = (await axios.get('/profile')).data;
+        const playlists = (await axios.get('/collection/playlists')).data;
+        return new User(axios, profile, playlists);
     }
 
 }
