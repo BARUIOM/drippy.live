@@ -1,35 +1,35 @@
 <template>
-    <span v-bind:class="{ 'd-inline-flex': spacer, 'd-inline-block': !spacer }">
+    <div class="ellipsis">
         <template v-for="(artist, i) in artists">
             <span
                 v-if="i > 0"
-                v-bind:class="{ 'mx-1': spacer }"
+                v-bind:class="{ 'q-mx-xs': spacer, 'q-mr-xs': !spacer }"
                 v-text="separator"
                 :key="'s' + i"
-            ></span>
-            <span class="link" :key="'a' + i" @click.stop="open(artist.id)" v-text="artist.name"></span>
+            />
+            <span class="link" :key="'a' + i" v-text="artist.name" />
         </template>
-    </span>
+    </div>
 </template>
 
-<script>
-export default {
-    props: {
-        artists: Array,
-        spacer: {
-            type: Boolean,
-            default: false
-        },
-        separator: {
-            type: String,
-            default: ','
-        }
-    },
-    methods: {
-        open(id) {
-            this.$router.push({ name: 'index-artist-id', params: { id } });
-        }
-    }
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
+
+import Artist from '@/models/artist'
+
+@Component
+export default class ArtistHyperlink extends Vue {
+
+    @Prop({ required: true })
+    private artists!: Artist[];
+
+    @Prop({ default: ',' })
+    private separator!: string;
+
+    @Prop({ default: false })
+    private spacer!: boolean;
+
 }
 </script>
 
