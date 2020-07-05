@@ -1,11 +1,13 @@
 <template>
     <div class="player row">
         <div class="col-3">
-            <div class="flex justify-start items-center fit">
-                <q-img class="q-ma-xs shadow-2" style="width: 64px" :src="track.artwork_url" />
-                <div class="row q-px-sm">
-                    <div class="col-12 text-weight-bold" v-text="track.title" />
-                    <div class="col-12 text-grey" />
+            <div class="flex no-wrap justify-start items-center fit">
+                <q-img class="q-ma-xs shadow-2" :src="track.artwork_url" />
+                <div class="row q-px-sm ellipsis">
+                    <div class="col-12 text-weight-bold ellipsis" v-text="track.title" />
+                    <div class="col-12 text-grey">
+                        <ArtistHyperlink v-bind:artists="track.artists" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -57,12 +59,13 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
-@Component
+import Track from '@/models/track'
+import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
+
+@Component({ components: { ArtistHyperlink } })
 export default class Player extends Vue {
 
-    private track: Track = {
-        duration: 0
-    };
+    private track: Track = {} as Track;
 
     mounted() {
         this.$player.on('update', () => this.$forceUpdate());
@@ -74,19 +77,15 @@ export default class Player extends Vue {
             .replace(/[A-Z]/gi, '').trim().split(/:(.+)/, 2)[1];
     }
 }
-
-interface Track {
-
-    title?: string;
-    artists?: string[];
-    duration: number;
-    artwork_url?: string;
-
-}
 </script>
 
 <style lang="scss" scoped>
 div.player {
     min-height: 72px;
+
+    .q-img {
+        min-width: 64px;
+        max-width: 64px;
+    }
 }
 </style>
