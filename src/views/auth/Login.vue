@@ -33,13 +33,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 
-export default Vue.extend({
-    data: () => ({
-        email: "",
-        password: ""
-    }),
+@Component
+export default class Login extends Vue {
+
+    private email: string = "";
+    private password: string = "";
+
     mounted() {
         if (localStorage['spotify_code']) {
             this.$q.loading.show();
@@ -54,20 +56,21 @@ export default Vue.extend({
                 delete localStorage['spotify_code'];
             });
         }
-    },
-    methods: {
-        submit() {
-            this.$q.loading.show();
-            this.$drippy.login({ email: this.email, password: this.password })
-                .then(() => this.$router.push('/')).catch(error => {
-                    if (error.response && error.response.status == 400)
-                        this.$q.notify({ type: 'negative', message: error.response.data['message'] });
-                }).finally(() => this.$q.loading.hide());
-        },
-        open() {
-            this.$q.loading.show();
-            window.open(this.$drippy.url + '/spotify', '_self');
-        }
     }
-});
+
+    submit() {
+        this.$q.loading.show();
+        this.$drippy.login({ email: this.email, password: this.password })
+            .then(() => this.$router.push('/')).catch(error => {
+                if (error.response && error.response.status == 400)
+                    this.$q.notify({ type: 'negative', message: error.response.data['message'] });
+            }).finally(() => this.$q.loading.hide());
+    }
+
+    open() {
+        this.$q.loading.show();
+        window.open(this.$drippy.url + '/spotify', '_self');
+    }
+
+}
 </script>

@@ -44,11 +44,14 @@
 
 <script lang="ts">
 import Vue from 'vue'
-export default Vue.extend({
-    data: () => ({
-        position: 0
-    })
-});
+import { Component } from 'vue-property-decorator'
+
+@Component
+export default class Player extends Vue {
+
+    private position: number = 0;
+
+}
 </script>
 
 <style lang="scss" scoped>

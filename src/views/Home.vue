@@ -25,16 +25,19 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 
 import Drawer from '@/components/home/Drawer.vue'
 import Player from '@/components/player/Player.vue'
 
-export default Vue.extend({
-    components: { Drawer, Player },
-    data: () => ({
-        drawer: false
-    })
-});
+@Component({
+    components: { Drawer, Player }
+})
+export default class Home extends Vue {
+
+    private drawer: boolean = false;
+
+}
 </script>
 
 <style lang="scss" scoped>
