@@ -1,106 +1,43 @@
 <template>
-    <v-list v-if="song_list.length" class="pa-0" two-line>
-        <template v-for="(item, index) in song_list">
-            <div :key="'i' + index">
-                <div v-if="queue">
-                    <slot v-if="index === $data.index" name="title"></slot>
-                    <slot v-else-if="index === $data.index + 1" name="subtitle"></slot>
-                </div>
-                <TrackItem
-                    v-bind:class="{ 'disabled': disabled }"
-                    v-if="!queue || index >= $data.index"
-                    @play="play(index)"
-                    v-bind:track="item"
-                    v-bind:hide-album="hideAlbum"
-                    v-bind:hide-artwork="hideArtwork"
-                >
-                    <v-list-item @click.stop="$root.$emit('add', [item])">
-                        <v-list-item-title>Add track to playlist</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item v-if="user_playlist" @click.stop="remove(item, index)">
-                        <v-list-item-title>Remove track from this playlist</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click.stop="copy(item)">
-                        <v-list-item-title>Copy track link</v-list-item-title>
-                    </v-list-item>
-                </TrackItem>
-            </div>
+    <q-list padding>
+        <template v-for="(item, index) in track_list">
+            <q-item clickable v-ripple :key="index" @click="play(index)">
+                <q-item-section avatar>
+                    <q-icon name="music_note"></q-icon>
+                </q-item-section>
+                <q-item-section>
+                    <q-item-label class="ellipsis" v-text="item.name"></q-item-label>
+                    <q-item-label caption>
+                        <ArtistHyperlink v-bind:artists="item.artists" />
+                    </q-item-label>
+                </q-item-section>
+                <q-item-section avatar>
+                    <q-avatar class="no-border-radius shadow-4">
+                        <q-img :src="item.album.images[0].url" />
+                    </q-avatar>
+                </q-item-section>
+            </q-item>
         </template>
-    </v-list>
+    </q-list>
 </template>
 
-<script>
-import TrackItem from './TrackItem';
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 
-export default {
-    props: {
-        song_list: Array,
-        user_playlist: Boolean,
-        hideAlbum: {
-            type: Boolean,
-            default: false
-        },
-        hideArtwork: {
-            type: Boolean,
-            default: false
-        },
-        queue: {
-            type: Boolean,
-            default: false
-        },
-        disabled: {
-            type: Boolean,
-            default: false
-        }
-    },
-    components: { TrackItem },
-    data: (vm) => ({
-        index: vm.$player.index
-    }),
-    mounted() {
-        this.$player.on('playback-started', this.define);
-    },
-    beforeDestroy() {
-        this.$player.off('playback-started', this.define);
-    },
-    methods: {
-        play(index) {
-            if (this.$player.playlist !== this.song_list)
-                this.$player.playlist = this.song_list;
-            this.$player.play(index);
-        },
-        remove(track, index) {
-            this.$root.$emit('remove', { id: this.$route.params['id'] }, track);
-            this.song_list.splice(index, 1);
-        },
-        copy(track) {
-            navigator.clipboard.writeText(`${window.location.origin}/track/${track.id}`).then(() => {
-                this.$root.$emit('snackbar', 'Track link copied to clipboard!', 'success', true);
-            });
-        },
-        define(track, index) {
-            this.index = index;
-            this.$forceUpdate();
-        }
+import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
+
+@Component({ components: { ArtistHyperlink } })
+export default class TrackList extends Vue {
+
+    @Prop({ required: true })
+    private track_list!: any[];
+
+    play(index: number) {
+        if (this.$player.playlist != this.track_list)
+            this.$player.playlist = this.track_list;
+        this.$player.play(index);
     }
+
 }
 </script>
-
-<style lang="scss" scoped>
-.v-list.v-list--two-line {
-    border-color: transparent !important;
-    background-color: transparent !important;
-
-    .v-list-item {
-        height: 64px;
-    }
-
-    .v-list-item.disabled {
-        transition: opacity 0.2s linear;
-    }
-
-    .v-list-item.disabled:not(:hover) {
-        opacity: 0.4;
-    }
-}
-</style>

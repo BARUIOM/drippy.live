@@ -4,6 +4,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/auth/Login.vue'
 import Spotify from '@/views/auth/Spotify.vue'
+import Search from '@/views/home/search/Search.vue'
 
 Vue.use(VueRouter);
 
@@ -11,7 +12,13 @@ const routes: Array<RouteConfig> = [
     {
         path: '/',
         component: Home,
-        children: []
+        children: [
+            {
+                path: '',
+                name: 'search',
+                component: Search
+            }
+        ]
     },
     {
         name: 'login',
