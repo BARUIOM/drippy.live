@@ -1,7 +1,6 @@
-declare interface Artist {
+import Item from './item'
 
-    id: string;
-    name: string;
+declare interface Artist extends Item {
 
 }
 
