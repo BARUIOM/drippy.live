@@ -1,6 +1,6 @@
 <template>
     <q-layout view="lHh Lpr lFf">
-        <q-header elevated class="bg-grey-10">
+        <q-header elevated class="bg-dark">
             <q-toolbar>
                 <q-btn @click="drawer = !drawer" icon="menu" flat dense></q-btn>
             </q-toolbar>
@@ -16,7 +16,7 @@
             </q-scroll-area>
         </q-page-container>
 
-        <q-footer class="bg-grey-10" elevated>
+        <q-footer class="bg-dark" elevated>
             <q-separator />
             <Player />
         </q-footer>
