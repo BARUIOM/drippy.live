@@ -1,40 +1,55 @@
 <template>
-    <v-card flat tile>
-        <v-card-title v-if="title" class="headline font-weight-bold" v-text="title"></v-card-title>
-        <v-container class="pa-2" fluid>
-            <v-row v-bind:class="{ 'flex-nowrap': !wrap }">
-                <v-col class="pa-2" v-for="(item, i) in contents" :key="i" cols="6" sm="4" md="2">
-                    <v-card @click="open(item.id)">
-                        <div class="pa-4">
-                            <v-img
-                                aspect-ratio="1"
-                                class="elevation-10"
-                                :src="$drippy.getPicture(item, 1)"
-                            ></v-img>
-                        </div>
-                        <v-card-title class="text-truncate justify-center" v-text="item.name"></v-card-title>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
-    </v-card>
+    <div class="q-pa-sm row" v-bind:class="{ 'no-wrap': !wrap }">
+        <div class="q-pa-sm col-6 col-sm-4 col-md-2" v-for="(content, i) in contents" :key="i">
+            <q-card clickable v-ripple>
+                <q-card-section>
+                    <q-img
+                        class="shadow-8"
+                        :src="(content.images[0] || thumbnails[type]).url"
+                        :ratio="1"
+                    />
+                </q-card-section>
+
+                <q-card-section>
+                    <div class="text-h6 text-center ellipsis" v-text="content.name"></div>
+                </q-card-section>
+            </q-card>
+        </div>
+    </div>
 </template>
 
-<script>
-export default {
-    props: {
-        title: String,
-        route: String,
-        contents: Array,
-        wrap: {
-            type: Boolean,
-            default: false
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
+
+import Item from '@/models/item'
+
+@Component
+export default class Contents extends Vue {
+
+    @Prop({ required: true })
+    private contents!: Item[];
+
+    @Prop({ required: true })
+    private type!: string;
+
+    @Prop({ default: false })
+    private wrap!: boolean;
+
+    private readonly thumbnails = {
+        artist: {
+            url: require('@/assets/person_white.png')
+        },
+        collection: {
+            url: require('@/assets/library_mus_white.png')
         }
-    },
-    methods: {
-        open(id) {
-            this.$router.push({ name: this.route, params: { id } });
-        }
-    }
+    };
+
 }
 </script>
+
+<style lang="scss" scoped>
+div {
+    overflow: hidden;
+}
+</style>
