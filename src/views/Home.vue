@@ -10,8 +10,8 @@
             <Drawer />
         </q-drawer>
 
-        <q-page-container class="window-width">
-            <q-scroll-area>
+        <q-page-container class="window-width window-height">
+            <q-scroll-area class="fit">
                 <router-view />
             </q-scroll-area>
         </q-page-container>
@@ -40,9 +40,9 @@ export default class Home extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.q-scrollarea {
-    height: calc(100vh - 122px);
+<style lang="scss">
+.q-drawer {
+    padding-bottom: 72px;
 }
 
 .q-footer {
