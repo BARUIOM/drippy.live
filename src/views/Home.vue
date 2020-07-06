@@ -10,7 +10,7 @@
             <Drawer />
         </q-drawer>
 
-        <q-page-container>
+        <q-page-container class="window-width">
             <q-scroll-area>
                 <router-view />
             </q-scroll-area>
