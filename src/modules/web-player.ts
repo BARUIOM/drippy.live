@@ -5,21 +5,27 @@ const audio = new Audio();
 
 export class Player extends EventEmitter {
 
-    private _playlist: string[] = [];
+    private _index: number = 0;
+    private _playlist: any[] = [];
 
     public play(index: number): void {
         audio.pause();
-        drippy.createSession(this.playlist[index]).then(src => {
+        drippy.createSession(this.playlist[index]['id']).then(src => {
+            this._index = index;
             audio.src = src;
             audio.load();
         });
+    }
+
+    public get index() {
+        return this._index;
     }
 
     public get playlist() {
         return this._playlist;
     }
 
-    public set playlist(playlist: string[]) {
+    public set playlist(playlist: any[]) {
         this._playlist = playlist;
     }
 
@@ -33,12 +39,22 @@ export class Player extends EventEmitter {
 
 }
 
+export declare interface Player extends EventEmitter {
+
+    on(type: 'update', listener: () => void): this;
+    on(type: 'state', listener: (playing: boolean) => void): this;
+    on(type: 'playback-started', listener: (track: any, index: number) => void): this;
+
+}
+
 const player = new Player();
 audio.addEventListener('timeupdate', () => player.emit('update'));
 audio.addEventListener('play', () => player.emit('state', !audio.paused));
 audio.addEventListener('pause', () => player.emit('state', !audio.paused));
-audio.addEventListener('loadeddata', async () => {
-    await audio.play();
+audio.addEventListener('loadeddata', () => {
+    audio.play().then(() => {
+        player.emit('playback-started', player.playlist[player.index], player.index);
+    });
 });
 
 export default player;

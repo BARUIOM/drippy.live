@@ -69,7 +69,14 @@ export default class Player extends Vue {
 
     mounted() {
         this.$player.on('update', () => this.$forceUpdate());
-        this.$root.$on('metadata', (track: Track) => this.track = track);
+        this.$player.on('playback-started', track => {
+            this.track = {
+                title: track['name'],
+                artists: track['artists'],
+                duration: track['duration_ms'] / 1000,
+                artwork_url: track['album'].images[2].url
+            } as Track;
+        });
     }
 
     format(seconds: number) {
