@@ -1,7 +1,7 @@
 <template>
-    <div class="row">
+    <div class="row fit">
         <div class="col-12">
-            <q-list padding>
+            <q-list class="nav" padding>
                 <q-item clickable v-ripple to="/" exact>
                     <q-item-section avatar>
                         <q-icon name="home" />
@@ -39,3 +39,12 @@ export default class Drawer extends Vue {
 
 }
 </script>
+
+<style lang="scss" scoped>
+.q-list.nav .q-item {
+    min-height: 40px;
+    border-radius: 4px;
+    margin: 0px 8px 4px 8px;
+    padding: 0px 8px 0px 8px;
+}
+</style>
