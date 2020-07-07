@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-sm row" v-bind:class="{ 'no-wrap': !wrap }">
         <div class="q-pa-sm col-6 col-sm-4 col-md-2" v-for="(content, i) in contents" :key="i">
-            <q-card clickable v-ripple>
+            <q-card @click.stop="$emit('click', content.id)" clickable v-ripple>
                 <q-card-section>
                     <q-img
                         class="shadow-8"
@@ -10,7 +10,7 @@
                     />
                 </q-card-section>
 
-                <q-card-section>
+                <q-card-section class="non-selectable">
                     <div class="text-h6 text-center ellipsis" v-text="content.name"></div>
                 </q-card-section>
             </q-card>
