@@ -1,70 +1,35 @@
 <template>
-    <v-row dense>
-        <v-col class="pa-0" cols="12">
-            <v-card flat tile>
-                <v-container fluid>
-                    <v-row no-gutters dense>
-                        <v-col cols="auto">
-                            <v-avatar class="elevation-8" size="128" tile>
-                                <v-img
-                                    :src="$drippy.getPicture(artist, 1, '/images/account-music.png')"
-                                ></v-img>
-                            </v-avatar>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-card-title
-                                class="display-1 text-truncate font-weight-bold"
-                                v-text="artist.name"
-                            ></v-card-title>
-                            <v-spacer></v-spacer>
-                            <v-card-actions>
-                                <v-btn icon>
-                                    <v-icon>mdi-dots-horizontal</v-icon>
-                                </v-btn>
-                                <v-btn text>Follow</v-btn>
-                            </v-card-actions>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card>
-        </v-col>
-        <v-col class="pa-0" cols="12" v-if="artist.albums.length">
-            <v-card flat tile>
-                <v-card-title class="headline font-weight-bold">Albums</v-card-title>
-                <v-divider></v-divider>
-                <Albums v-bind:albums="artist.albums" />
-            </v-card>
-        </v-col>
-        <v-col class="pa-0" cols="12" v-if="artist.singles.length">
-            <v-card flat tile>
-                <v-card-title class="headline font-weight-bold">Singles & EPs</v-card-title>
-                <v-divider></v-divider>
-                <Albums v-bind:albums="artist.singles" />
-            </v-card>
-        </v-col>
-    </v-row>
+    <Container v-bind:headline="artist.name" v-bind:thumbnail="artist.images[0].url">
+        <template v-slot:actions>
+            <div class="row q-gutter-sm">
+                <q-btn icon="more_horiz" flat />
+                <q-btn flat>Follow</q-btn>
+            </div>
+        </template>
+    </Container>
 </template>
 
-<script>
-import Albums from '@/components/artist/Albums'
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 
-export default {
-    components: { Albums },
-    data: () => ({
-        artist: {
-            albums: [],
-            singles: []
-        }
-    }),
-    mounted() {
-        this.$drippy.getArtist(this.$route.params["id"])
-            .then(artist => this.artist = artist);
-    },
-    watch: {
-        $route(to, from) {
-            this.$drippy.getArtist(to.params['id'])
-                .then(artist => this.artist = artist);
-        }
+import Container from '@/components/misc/Container.vue'
+
+@Component({ components: { Container } })
+export default class Artist extends Vue {
+
+    private artist: any = {
+        name: '',
+        images: [
+            {
+                url: require('@/assets/person_white.png')
+            }
+        ]
+    };
+
+    async mounted() {
+        this.artist = await this.$drippy.getArtist(this.$route.params['id']);
     }
+
 }
 </script>

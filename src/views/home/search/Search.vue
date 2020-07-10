@@ -23,7 +23,11 @@
             <TrackList v-bind:track_list="results.tracks" />
         </Results>
         <Results title="Artists" v-if="results.artists.length">
-            <Contents type="artist" v-bind:contents="results.artists" />
+            <Contents
+                type="artist"
+                v-bind:contents="results.artists"
+                @click="open('artist', arguments[0])"
+            />
         </Results>
         <Results title="Playlists" v-if="results.playlists.length">
             <Contents type="collection" v-bind:contents="results.playlists" />
@@ -62,6 +66,10 @@ export default class Search extends Vue {
 
     search() {
         this.$drippy.search(this.query).then(result => this.results = result);
+    }
+
+    open(name: string, id: string) {
+        this.$router.push({ name, params: { id } });
     }
 
 }
