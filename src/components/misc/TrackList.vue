@@ -8,7 +8,7 @@
                 <q-item-section>
                     <q-item-label class="ellipsis" v-text="item.name"></q-item-label>
                     <q-item-label caption>
-                        <ArtistHyperlink v-bind:artists="item.artists" />
+                        <ArtistHyperlink class="text-grey" v-bind:artists="item.artists" />
                     </q-item-label>
                 </q-item-section>
                 <q-item-section avatar>
