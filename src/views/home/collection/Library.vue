@@ -1,47 +1,63 @@
 <template>
-    <v-row class="pt-12">
-        <portal to="extension">
-            <v-tabs v-model="tab" grow>
-                <v-tab>Playlists</v-tab>
-                <v-tab>Artists</v-tab>
-                <v-tab>Albums</v-tab>
-            </v-tabs>
+    <div>
+        <portal to="header">
+            <q-tabs v-model="tab" class="bg-dark" align="left">
+                <q-tab name="playlists" label="Playlists" />
+                <q-tab name="artists" label="Artists" />
+                <q-tab name="albums" label="Albums" />
+            </q-tabs>
         </portal>
-        <v-tabs-items v-model="tab">
-            <v-tab-item>
-                <Contents route="index-playlists-id" v-bind:contents="playlists" wrap />
-            </v-tab-item>
-            <v-tab-item>
-                <Contents route="index-artist-id" v-bind:contents="artists" wrap />
-            </v-tab-item>
-            <v-tab-item>
-                <Contents route="index-album-id" v-bind:contents="albums" wrap />
-            </v-tab-item>
-        </v-tabs-items>
-    </v-row>
+        <q-tab-panels class="bg-transparent" v-model="tab">
+            <q-tab-panel class="q-pa-none" name="playlists">
+                <Contents
+                    type="collection"
+                    v-bind:contents="$user.collection.playlists"
+                    :wrap="true"
+                />
+            </q-tab-panel>
+
+            <q-tab-panel class="q-pa-none" name="artists">
+                <Contents
+                    type="artist"
+                    v-bind:contents="$user.collection.following"
+                    @click="open('artist', arguments[0])"
+                    :wrap="true"
+                />
+            </q-tab-panel>
+
+            <q-tab-panel class="q-pa-none" name="albums">
+                <Contents
+                    type="collection"
+                    v-bind:contents="$user.collection.albums"
+                    @click="open('album', arguments[0])"
+                    :wrap="true"
+                />
+            </q-tab-panel>
+        </q-tab-panels>
+    </div>
 </template>
 
-<script>
-import Contents from '@/components/Contents'
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 
-export default {
-    components: { Contents },
-    data: () => ({
-        tab: 0,
-        playlists: [],
-        artists: [],
-        albums: []
-    }),
-    mounted() {
-        this.$drippy.getPlaylists().then(playlists => this.playlists = playlists);
-        this.$drippy.getFollowedArtists().then(artists => this.artists = artists);
-        this.$drippy.getSavedAlbums().then(albums => this.albums = albums);
+import Contents from '@/components/misc/Contents.vue'
+
+@Component({ components: { Contents } })
+export default class Library extends Vue {
+
+    private tab: string = 'playlists'
+
+    public async mounted(): Promise<void> {
+        if (this.$user !== undefined) {
+            await this.$user.getFollowing();
+            await this.$user.getSavedAlbums();
+        }
     }
+
+    public open(name: string, id: string): void {
+        this.$router.push({ name, params: { id } });
+    }
+
 }
 </script>
-
-<style lang="scss">
-.v-tabs-bar {
-    background-color: transparent !important;
-}
-</style>

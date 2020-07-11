@@ -4,7 +4,9 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/auth/Login.vue'
 import Spotify from '@/views/auth/Spotify.vue'
+
 import Search from '@/views/home/search/Search.vue'
+import Library from '@/views/home/collection/Library.vue'
 
 import Artist from '@/views/artist/Artist.vue'
 import Album from '@/views/albums/Album.vue'
@@ -30,6 +32,11 @@ const routes: Array<RouteConfig> = [
                 path: '/album/:id',
                 name: 'album',
                 component: Album
+            },
+            {
+                path: '/collection',
+                name: 'collection',
+                component: Library
             }
         ]
     },
