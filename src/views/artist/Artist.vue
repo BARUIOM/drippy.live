@@ -12,7 +12,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Route } from 'vue-router'
+import { Component, Watch } from 'vue-property-decorator'
 
 import Collection from '@/components/artist/Collection.vue'
 import Container from '@/components/misc/Container.vue'
@@ -35,6 +36,12 @@ export default class Artist extends Vue {
 
     public open(id: string): void {
         this.$router.push({ name: 'album', params: { id } });
+    }
+
+
+    @Watch('$route', { immediate: true, deep: true })
+    private async change(route: Route): Promise<void> {
+        this.artist = await this.$drippy.getArtist(route.params['id']);
     }
 
 }
