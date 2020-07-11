@@ -1,32 +1,32 @@
 <template>
-    <v-container fluid>
-        <v-row dense>
-            <v-col v-for="(album, i) in albums" :key="i" align="center" cols="6" md="4" lg="2">
-                <div v-ripple class="album elevation-4" @click="open(album.id)">
-                    <v-img aspect-ratio="1" :src="$drippy.getPicture(album, 1)"></v-img>
+    <div class="q-pa-sm">
+        <div class="row q-pa-xs">
+            <div v-for="(album, i) in albums" :key="i" class="q-pa-xs col-xs-6 col-md-4 col-lg-2">
+                <div class="shadow-4" @click="open(album.id)">
+                    <q-img :src="album.images[0].url" :ratio="1" />
                 </div>
-                <div class="py-3 subtitle-1 font-weight-bold" v-text="album.name"></div>
-            </v-col>
-        </v-row>
-    </v-container>
+                <div
+                    class="q-py-sm text-center text-subtitle1 text-weight-bold"
+                    v-text="album.name"
+                />
+            </div>
+        </div>
+    </div>
 </template>
 
-<script>
-export default {
-    name: 'Albums',
-    props: {
-        albums: Array
-    },
-    methods: {
-        open(id) {
-            this.$router.push({ name: 'index-album-id', params: { id } });
-        }
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
+
+@Component
+export default class Albums extends Vue {
+
+    @Prop({ required: true })
+    private albums!: any[]
+
+    public open(id: string) {
+
     }
+
 }
 </script>
-
-<style lang="scss" scoped>
-.album {
-    cursor: pointer;
-}
-</style>
