@@ -12,7 +12,7 @@
                     <div v-if="subheader" class="row">
                         <div class="text-h6" v-text="subheader" />
                     </div>
-                    <div class="row">
+                    <div class="row q-gutter-x-sm">
                         <slot name="actions" />
                     </div>
                 </div>

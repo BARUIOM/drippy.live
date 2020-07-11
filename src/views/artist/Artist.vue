@@ -1,10 +1,8 @@
 <template>
     <Container v-bind:headline="artist.name" v-bind:thumbnail="artist.images[0].url">
         <template v-slot:actions>
-            <div class="row q-gutter-sm">
-                <q-btn icon="more_horiz" flat />
-                <q-btn flat>Follow</q-btn>
-            </div>
+            <q-btn icon="more_horiz" flat />
+            <q-btn flat>Follow</q-btn>
         </template>
 
         <Collection title="Albums" v-bind:collection="artist.albums" />
