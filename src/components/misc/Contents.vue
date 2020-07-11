@@ -5,7 +5,7 @@
                 <q-card-section>
                     <q-img
                         class="shadow-8"
-                        :src="(content.images[0] || thumbnails[type]).url"
+                        :src="(content.images[0] || $drippy.thumbnails[type]).url"
                         :ratio="1"
                     />
                 </q-card-section>
@@ -35,15 +35,6 @@ export default class Contents extends Vue {
 
     @Prop({ default: false })
     private wrap!: boolean;
-
-    private readonly thumbnails = {
-        artist: {
-            url: require('@/assets/person_white.png')
-        },
-        collection: {
-            url: require('@/assets/library_mus_white.png')
-        }
-    };
 
 }
 </script>
