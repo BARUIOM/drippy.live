@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="collection && collection.length">
         <div class="q-pa-md">
             <span class="text-h5 text-weight-bold" v-text="title" />
         </div>
