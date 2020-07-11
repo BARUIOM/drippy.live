@@ -6,6 +6,9 @@
                 <q-btn flat>Follow</q-btn>
             </div>
         </template>
+
+        <Collection title="Albums" v-bind:collection="artist.albums" />
+        <Collection title="Singles & EPs" v-bind:collection="artist.singles" />
     </Container>
 </template>
 
@@ -13,9 +16,10 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+import Collection from '@/components/artist/Collection.vue'
 import Container from '@/components/misc/Container.vue'
 
-@Component({ components: { Container } })
+@Component({ components: { Collection, Container } })
 export default class Artist extends Vue {
 
     private artist: any = {
