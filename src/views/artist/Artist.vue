@@ -5,8 +5,8 @@
             <q-btn flat>Follow</q-btn>
         </template>
 
-        <Collection title="Albums" v-bind:collection="artist.albums" />
-        <Collection title="Singles & EPs" v-bind:collection="artist.singles" />
+        <Collection title="Albums" v-bind:collection="artist.albums" @click="open" />
+        <Collection title="Singles & EPs" v-bind:collection="artist.singles" @click="open" />
     </Container>
 </template>
 
@@ -24,13 +24,17 @@ export default class Artist extends Vue {
         name: '',
         images: [
             {
-                url: require('@/assets/person_white.png')
+                url: ''
             }
         ]
     };
 
-    async mounted() {
+    public async mounted(): Promise<void> {
         this.artist = await this.$drippy.getArtist(this.$route.params['id']);
+    }
+
+    public open(id: string): void {
+        this.$router.push({ name: 'album', params: { id } });
     }
 
 }

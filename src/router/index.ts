@@ -7,6 +7,7 @@ import Spotify from '@/views/auth/Spotify.vue'
 import Search from '@/views/home/search/Search.vue'
 
 import Artist from '@/views/artist/Artist.vue'
+import Album from '@/views/albums/Album.vue'
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,11 @@ const routes: Array<RouteConfig> = [
                 path: '/artist/:id',
                 name: 'artist',
                 component: Artist
+            },
+            {
+                path: '/album/:id',
+                name: 'album',
+                component: Album
             }
         ]
     },

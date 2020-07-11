@@ -1,51 +1,57 @@
 <template>
-    <Playlist
-        v-bind:name="name"
-        v-bind:artists="artists"
-        v-bind:song_list="song_list"
-        v-bind:artworks="artworks"
-        hide-album
-        hide-artwork
-    />
+    <Container v-bind:headline="name" v-bind:thumbnail="artwork" :fit="true">
+        <template v-slot:actions>
+            <q-btn icon="favorite" flat />
+            <q-btn icon="more_horiz" flat />
+        </template>
+        <template v-slot:subheader>
+            <ArtistHyperlink
+                class="text-h6 text-grey"
+                v-bind:artists="artists"
+                :spacer="true"
+                separator="•"
+            />
+        </template>
+        <TrackList v-bind:track_list="track_list" />
+    </Container>
 </template>
 
-<script>
-import Playlist from '@/components/misc/Playlist'
+<script lang="ts">
+import Vue from 'vue'
+import { Route } from 'vue-router'
+import { Component, Watch } from 'vue-property-decorator'
 
-export default {
-    components: { Playlist },
-    data: () => ({
-        name: '',
-        artists: [],
-        song_list: [],
-        artworks: []
-    }),
-    mounted() {
-        this.load(this.$route.params["id"]).then(() => {
-            if (this.$route.query['highlight']) {
-                const track = this.song_list.find(e => e['id'] === this.$route.query['highlight']);
-                if (this.$player.playlist !== this.song_list)
-                    this.$player.playlist = this.song_list;
+import Container from '@/components/misc/Container.vue'
+import TrackList from '@/components/misc/TrackList.vue'
+import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
 
-                this.$player.play(this.song_list.indexOf(track));
-                this.$router.replace({});
-            }
-        });
-    },
-    methods: {
-        async load(id) {
-            const album = await this.$drippy.getAlbum(id);
+@Component({ components: { Container, TrackList, ArtistHyperlink } })
+export default class Album extends Vue {
 
-            this.name = album.name;
-            this.artists = [...album.artists];
-            this.song_list = [...album.tracks.items];
-            this.artworks = [this.$drippy.getPicture(album, 0)];
-        }
-    },
-    watch: {
-        $route(to, from) {
-            this.load(to.params['id']);
+    private name: string = '';
+    private artists: any[] = [];
+    private track_list: any[] = [];
+    private artwork: string = '';
+
+    public async load(id: string): Promise<void> {
+        const album = await this.$drippy.getAlbum(id);
+        this.name = album.name;
+        this.artists = [...album.artists];
+        this.track_list = [...album.tracks.items];
+        this.artwork = album.images[0].url;
+    }
+
+    public async mounted() {
+        await this.load(this.$route.params["id"]);
+        if (this.$route.query['highlight']) {
+            const track = this.track_list.find(e => e['id'] === this.$route.query['highlight']);
+            if (this.$player.playlist != this.track_list)
+                this.$player.playlist = this.track_list;
+
+            this.$player.play(this.track_list.indexOf(track));
+            this.$router.replace({});
         }
     }
+
 }
 </script>

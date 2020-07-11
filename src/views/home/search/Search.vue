@@ -33,7 +33,11 @@
             <Contents type="collection" v-bind:contents="results.playlists" />
         </Results>
         <Results title="Albums" v-if="results.albums.length">
-            <Contents type="collection" v-bind:contents="results.albums" />
+            <Contents
+                type="collection"
+                v-bind:contents="results.albums"
+                @click="open('album', arguments[0])"
+            />
         </Results>
     </div>
 </template>
