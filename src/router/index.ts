@@ -10,6 +10,7 @@ import Library from '@/views/home/collection/Library.vue'
 
 import Artist from '@/views/artist/Artist.vue'
 import Album from '@/views/albums/Album.vue'
+import Playlist from '@/views/playlists/Playlist.vue'
 
 Vue.use(VueRouter);
 
@@ -32,6 +33,11 @@ const routes: Array<RouteConfig> = [
                 path: '/album/:id',
                 name: 'album',
                 component: Album
+            },
+            {
+                path: '/playlist/:id',
+                name: 'playlist',
+                component: Playlist
             },
             {
                 path: '/collection',

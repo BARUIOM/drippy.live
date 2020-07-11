@@ -30,7 +30,11 @@
             />
         </Results>
         <Results title="Playlists" v-if="results.playlists.length">
-            <Contents type="collection" v-bind:contents="results.playlists" />
+            <Contents
+                type="collection"
+                v-bind:contents="results.playlists"
+                @click="open('playlist', arguments[0])"
+            />
         </Results>
         <Results title="Albums" v-if="results.albums.length">
             <Contents

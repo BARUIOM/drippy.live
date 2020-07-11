@@ -12,6 +12,7 @@
                 <Contents
                     type="collection"
                     v-bind:contents="$user.collection.playlists"
+                    @click="open('playlist', arguments[0])"
                     :wrap="true"
                 />
             </q-tab-panel>
