@@ -7,7 +7,7 @@
                 v-text="separator"
                 :key="'s' + i"
             />
-            <span class="link" :key="'a' + i" v-text="artist.name" />
+            <span class="link" :key="'a' + i" v-text="artist.name" @click.stop="open(artist.id)" />
         </template>
     </div>
 </template>
@@ -29,6 +29,10 @@ export default class ArtistHyperlink extends Vue {
 
     @Prop({ default: false })
     private spacer!: boolean;
+
+    public open(id: string) {
+        this.$router.push({ name: 'artist', params: { id } });
+    }
 
 }
 </script>
