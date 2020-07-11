@@ -9,6 +9,7 @@ import drippy, { Manager } from '@/modules/drippy-api'
 
 import '@/plugins/quasar'
 import '@/plugins/validation-rules'
+import '@/plugins/portal'
 
 Vue.config.productionTip = false;
 Vue.prototype.$drippy = drippy;

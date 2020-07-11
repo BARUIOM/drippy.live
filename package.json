@@ -12,6 +12,7 @@
         "@quasar/extras": "^1.8.2",
         "axios": "^0.19.2",
         "core-js": "^3.6.5",
+        "portal-vue": "^2.1.7",
         "quasar": "^1.12.8",
         "vee-validate": "^3.3.7",
         "vue": "^2.6.11",
