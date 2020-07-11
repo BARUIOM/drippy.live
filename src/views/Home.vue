@@ -1,8 +1,9 @@
 <template>
     <q-layout view="lHh Lpr lFf">
         <q-header elevated class="bg-dark">
-            <q-toolbar>
+            <q-toolbar class="q-gutter-x-sm">
                 <q-btn @click="drawer = !drawer" icon="menu" flat dense></q-btn>
+                <portal-target class="fit" name="header" />
             </q-toolbar>
         </q-header>
 

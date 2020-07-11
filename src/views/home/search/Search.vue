@@ -1,7 +1,7 @@
 <template>
     <div class="q-gutter-y-md">
         <div class="row">
-            <div class="col q-pa-md">
+            <portal to="header">
                 <q-form @submit.prevent="search">
                     <q-input
                         v-model="query"
@@ -17,7 +17,7 @@
                         </template>
                     </q-input>
                 </q-form>
-            </div>
+            </portal>
         </div>
         <Results title="Tracks" v-if="results.tracks.length">
             <TrackList v-bind:track_list="results.tracks" />
