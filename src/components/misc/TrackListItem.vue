@@ -14,7 +14,7 @@
             <q-menu v-model="menu" transition-show="jump-down" transition-hide="jump-up" auto-close>
                 <q-list padding dense>
                     <q-item clickable>
-                        <q-item-section>Add track to playlist</q-item-section>
+                        <q-item-section @click="$root.$emit('add', [item])">Add track to playlist</q-item-section>
                     </q-item>
                     <q-item @click="copy" clickable>
                         <q-item-section>Copy track link</q-item-section>

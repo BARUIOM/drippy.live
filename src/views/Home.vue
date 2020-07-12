@@ -21,6 +21,8 @@
             <q-separator />
             <Player />
         </q-footer>
+
+        <Playlists />
     </q-layout>
 </template>
 
@@ -30,10 +32,9 @@ import { Component } from 'vue-property-decorator'
 
 import Drawer from '@/components/home/Drawer.vue'
 import Player from '@/components/player/Player.vue'
+import Playlists from '@/components/dialog/Playlists.vue'
 
-@Component({
-    components: { Drawer, Player }
-})
+@Component({ components: { Drawer, Player, Playlists } })
 export default class Home extends Vue {
 
     private drawer: boolean = false;

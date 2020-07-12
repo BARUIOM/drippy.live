@@ -39,7 +39,13 @@
                     </q-btn>
                 </div>
                 <div class="col-2">
-                    <q-btn class="float-right" :disable="!$player.state" flat dense>
+                    <q-btn
+                        @click="$root.$emit('add', [track])"
+                        class="float-right"
+                        :disable="!$player.state"
+                        flat
+                        dense
+                    >
                         <q-icon name="mdi-playlist-plus" />
                     </q-btn>
                 </div>
@@ -102,6 +108,7 @@ export default class Player extends Vue {
         this.$player.on('update', () => this.$forceUpdate());
         this.$player.on('playback-started', track => {
             this.track = {
+                id: track['id'],
                 title: track['name'],
                 artists: track['artists'],
                 duration: track['duration_ms'] / 1000,
