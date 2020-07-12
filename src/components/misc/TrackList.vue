@@ -1,22 +1,7 @@
 <template>
     <q-list padding>
         <template v-for="(item, index) in track_list">
-            <q-item clickable v-ripple :key="index" @click="play(index)">
-                <q-item-section avatar>
-                    <q-icon name="mdi-music-note"></q-icon>
-                </q-item-section>
-                <q-item-section>
-                    <q-item-label class="ellipsis" v-text="item.name"></q-item-label>
-                    <q-item-label caption>
-                        <ArtistHyperlink class="text-grey" v-bind:artists="item.artists" />
-                    </q-item-label>
-                </q-item-section>
-                <q-item-section avatar>
-                    <q-avatar class="no-border-radius shadow-4">
-                        <q-img :src="item.album.images[0].url" />
-                    </q-avatar>
-                </q-item-section>
-            </q-item>
+            <TrackListItem :key="index" v-bind:item="item" @click="play(index)" />
         </template>
     </q-list>
 </template>
@@ -25,9 +10,9 @@
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
 
-import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
+import TrackListItem from '@/components/misc/TrackListItem.vue'
 
-@Component({ components: { ArtistHyperlink } })
+@Component({ components: { TrackListItem } })
 export default class TrackList extends Vue {
 
     @Prop({ required: true })

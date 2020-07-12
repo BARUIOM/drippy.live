@@ -1,63 +1,64 @@
 <template>
-    <v-hover v-slot:default="{ hover }">
-        <v-list-item
-            v-bind:class="{'now-playing': track.id === $player.track.id}"
-            @contextmenu.prevent="menu = true"
-            @click="$emit('play')"
-        >
-            <v-list-item-avatar v-if="!hideArtwork" class="elevation-4" size="48" tile>
-                <v-img :src="$drippy.getPicture(track.album, 2)" />
-            </v-list-item-avatar>
-            <v-list-item-avatar v-else size="48">
-                <v-icon v-if="!hover">mdi-music-note-eighth-dotted</v-icon>
-                <v-icon v-else>mdi-play</v-icon>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-                <v-list-item-title class="ma-0 pb-1 body-1" v-text="track.name"></v-list-item-title>
-                <v-list-item-subtitle class="pt-1">
-                    <ArtistHyperlink v-bind:artists="track.artists" />
-                    <span v-if="!hideAlbum" class="mx-1">•</span>
-                    <span v-if="!hideAlbum">{{ track.album.name }}</span>
-                </v-list-item-subtitle>
-            </v-list-item-content>
-            <v-menu v-model="menu" offset-y>
-                <template v-slot:activator="{ on }">
-                    <v-btn v-on="on" icon>
-                        <v-icon v-if="menu || hover">mdi-dots-vertical</v-icon>
-                    </v-btn>
-                </template>
-                <v-list class="py-1" dense>
-                    <slot></slot>
-                </v-list>
-            </v-menu>
-        </v-list-item>
-    </v-hover>
+    <q-item clickable v-ripple @click="$emit('click')" @contextmenu.prevent="menu = true">
+        <q-item-section avatar>
+            <q-icon name="mdi-music-note"></q-icon>
+        </q-item-section>
+        <q-item-section>
+            <q-item-label class="ellipsis" v-text="item.name"></q-item-label>
+            <q-item-label caption>
+                <ArtistHyperlink class="text-grey" v-bind:artists="item.artists" />
+            </q-item-label>
+        </q-item-section>
+        <q-item-section class="menu-section" :active="menu" avatar>
+            <q-btn icon="mdi-dots-horizontal" @click.stop="menu = !menu" flat dense></q-btn>
+            <q-menu v-model="menu" transition-show="jump-down" transition-hide="jump-up" auto-close>
+                <q-list padding dense>
+                    <q-item clickable>
+                        <q-item-section>Add track to playlist</q-item-section>
+                    </q-item>
+                    <q-item @click="copy" clickable>
+                        <q-item-section>Copy track link</q-item-section>
+                    </q-item>
+                </q-list>
+            </q-menu>
+        </q-item-section>
+        <q-item-section avatar>
+            <q-avatar class="no-border-radius shadow-4">
+                <q-img :src="item.album.images[0].url" />
+            </q-avatar>
+        </q-item-section>
+    </q-item>
 </template>
 
-<script>
-import ArtistHyperlink from '../ArtistHyperlink'
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 
-export default {
-    props: {
-        track: Object,
-        hideArtwork: Boolean,
-        hideAlbum: Boolean
-    },
-    components: { ArtistHyperlink },
-    data: () => ({
-        menu: false
-    })
+import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
+
+@Component({ components: { ArtistHyperlink } })
+export default class TrackListItem extends Vue {
+
+    private menu: boolean = false;
+
+    @Prop({ required: true })
+    private readonly item!: any;
+
+    public copy(): void {
+        navigator.clipboard.writeText(`${window.location.origin}/track/${this.item['id']}`).then(() => {
+            this.$q.notify({ type: 'positive', message: 'Track link copied to clipboard!', position: 'top' });
+        });
+    }
+
 }
 </script>
 
 <style lang="scss" scoped>
-.v-list-item.now-playing {
-    opacity: 1 !important;
+.q-item:hover > .menu-section {
+    visibility: visible;
+}
 
-    .v-icon,
-    .body-1 {
-        color: orange !important;
-    }
+.q-item:not(:hover) > .menu-section:not([active]) {
+    visibility: hidden;
 }
 </style>
