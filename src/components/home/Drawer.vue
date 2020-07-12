@@ -24,7 +24,7 @@
             <div class="q-px-md flex flex-center">
                 <span class="text-subtitle2 text-grey">Playlists</span>
                 <q-space />
-                <q-btn icon="mdi-plus" flat dense></q-btn>
+                <q-btn @click="$root.$emit('create')" icon="mdi-plus" flat dense></q-btn>
             </div>
         </div>
     </div>
