@@ -17,11 +17,24 @@
                     <q-btn class="float-left" icon="mdi-thumb-up-outline" flat dense />
                 </div>
                 <div class="col-8 flex flex-center justify-evenly">
-                    <q-btn size="sm" icon="mdi-repeat" flat dense />
-                    <q-btn size="sm" icon="mdi-skip-previous" flat dense />
-                    <q-btn icon="mdi-play" flat dense />
-                    <q-btn size="sm" icon="mdi-skip-next" flat dense />
-                    <q-btn size="sm" icon="mdi-shuffle" flat dense />
+                    <q-btn @click="$player.repeat()" size="sm" flat dense>
+                        <q-icon
+                            v-bind:class="{ 'text-primary': $player.mode }"
+                            :name="mode[$player.mode]"
+                        />
+                    </q-btn>
+                    <q-btn @click="$player.play($player.index - 1)" size="sm" flat dense>
+                        <q-icon name="mdi-skip-previous" />
+                    </q-btn>
+                    <q-btn @click="$player.toggle()" flat dense>
+                        <q-icon :name="state[$player.state]" />
+                    </q-btn>
+                    <q-btn @click="$player.play($player.index + 1)" size="sm" flat dense>
+                        <q-icon name="mdi-skip-next" />
+                    </q-btn>
+                    <q-btn @click="shuffle" size="sm" flat dense>
+                        <q-icon name="mdi-shuffle" />
+                    </q-btn>
                 </div>
                 <div class="col-2">
                     <q-btn class="float-right" icon="mdi-playlist-plus" flat dense />
@@ -58,6 +71,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
+import { State, Mode } from '@/modules/web-player';
 
 import Track from '@/models/track'
 import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
@@ -67,7 +81,18 @@ export default class Player extends Vue {
 
     private track: Track = {} as Track;
 
-    mounted() {
+    private readonly state = {
+        [State.Playing]: 'mdi-pause',
+        [State.Paused]: 'mdi-play'
+    };
+
+    private readonly mode = {
+        [Mode.RepeatNone]: 'mdi-repeat-off',
+        [Mode.RepeatAll]: 'mdi-repeat',
+        [Mode.RepeatOnce]: 'mdi-repeat-once'
+    };
+
+    public mounted(): void {
         this.$player.on('update', () => this.$forceUpdate());
         this.$player.on('playback-started', track => {
             this.track = {
@@ -79,10 +104,18 @@ export default class Player extends Vue {
         });
     }
 
-    format(seconds: number) {
+    public format(seconds: number): string {
         return new Date(Math.floor(seconds * 1000)).toLocaleTimeString()
             .replace(/[A-Z]/gi, '').trim().split(/:(.+)/, 2)[1];
     }
+
+    public shuffle(): void {
+        const playlist = this.$player.playlist.map(a => ({ sort: Math.random(), value: a }))
+            .sort((a, b) => a.sort - b.sort).map(a => a.value);
+        this.$player.playlist = playlist;
+        this.$player.play(0);
+    }
+
 }
 </script>
 
