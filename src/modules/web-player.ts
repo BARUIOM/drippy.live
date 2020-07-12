@@ -5,7 +5,7 @@ const audio = new Audio();
 
 export enum State {
 
-    Paused, Playing
+    Idle, Paused, Playing
 
 }
 
@@ -21,7 +21,7 @@ export class Player extends EventEmitter {
 
     private _index: number = 0;
     private _playlist: any[] = [];
-    private _state: State = State.Paused;
+    private _state: State = State.Idle;
     private _mode: Mode = Mode.RepeatNone;
 
     private constructor() {
@@ -87,6 +87,7 @@ export class Player extends EventEmitter {
             case Mode.RepeatOnce:
                 this._mode = Mode.RepeatNone;
         }
+        this.emit('update');
     }
 
     public get index() {

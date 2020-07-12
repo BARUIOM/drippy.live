@@ -14,55 +14,58 @@
         <div class="col-6">
             <div class="row q-pa-sm">
                 <div class="col-2">
-                    <q-btn class="float-left" icon="mdi-thumb-up-outline" flat dense />
+                    <q-btn class="float-left" :disable="!$player.state" flat dense>
+                        <q-icon name="mdi-thumb-up-outline" />
+                    </q-btn>
                 </div>
                 <div class="col-8 flex flex-center justify-evenly">
-                    <q-btn @click="$player.repeat()" size="sm" flat dense>
+                    <q-btn @click="repeat" :disable="!$player.state" flat dense>
                         <q-icon
                             v-bind:class="{ 'text-primary': $player.mode }"
                             :name="mode[$player.mode]"
                         />
                     </q-btn>
-                    <q-btn @click="$player.play($player.index - 1)" size="sm" flat dense>
+                    <q-btn @click="previous" :disable="!$player.state" flat dense>
                         <q-icon name="mdi-skip-previous" />
                     </q-btn>
-                    <q-btn @click="$player.toggle()" flat dense>
+                    <q-btn @click="toggle" :disable="!$player.state" flat dense>
                         <q-icon :name="state[$player.state]" />
                     </q-btn>
-                    <q-btn @click="$player.play($player.index + 1)" size="sm" flat dense>
+                    <q-btn @click="next" :disable="!$player.state" flat dense>
                         <q-icon name="mdi-skip-next" />
                     </q-btn>
-                    <q-btn @click="shuffle" size="sm" flat dense>
+                    <q-btn @click="shuffle" :disable="!$player.state" flat dense>
                         <q-icon name="mdi-shuffle" />
                     </q-btn>
                 </div>
                 <div class="col-2">
-                    <q-btn class="float-right" icon="mdi-playlist-plus" flat dense />
+                    <q-btn class="float-right" :disable="!$player.state" flat dense>
+                        <q-icon name="mdi-playlist-plus" />
+                    </q-btn>
                 </div>
             </div>
-            <div class="row">
-                <div
-                    class="col-1 text-center text-caption text-grey"
-                    v-text="format($player.position)"
-                />
-                <div class="col-10">
+            <div class="row q-gutter-x-md no-wrap non-selectable">
+                <div class="text-center text-caption text-grey" v-text="format($player.position)" />
+                <div class="fit">
                     <q-slider
+                        :disable="!$player.state"
                         v-model="$player.position"
                         v-bind:max="track.duration"
                         v-bind:min="0"
                         dense
                     />
                 </div>
-                <div
-                    class="col-1 text-center text-caption text-grey"
-                    v-text="format(track.duration)"
-                />
+                <div class="text-center text-caption text-grey" v-text="format(track.duration)" />
             </div>
         </div>
         <div class="col-3">
             <div class="flex justify-end items-center fit q-gutter-x-lg">
-                <q-btn icon="mdi-picture-in-picture-bottom-right" flat dense />
-                <q-btn icon="mdi-volume-high" flat dense />
+                <q-btn :disable="!$player.state" flat dense>
+                    <q-icon name="mdi-picture-in-picture-bottom-right" />
+                </q-btn>
+                <q-btn :disable="!$player.state" flat dense>
+                    <q-icon name="mdi-volume-high" />
+                </q-btn>
             </div>
         </div>
     </div>
@@ -79,9 +82,12 @@ import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
 @Component({ components: { ArtistHyperlink } })
 export default class Player extends Vue {
 
-    private track: Track = {} as Track;
+    private track: Track = {
+        duration: 0
+    } as Track;
 
     private readonly state = {
+        [State.Idle]: 'mdi-play-outline',
         [State.Playing]: 'mdi-pause',
         [State.Paused]: 'mdi-play'
     };
@@ -107,6 +113,22 @@ export default class Player extends Vue {
     public format(seconds: number): string {
         return new Date(Math.floor(seconds * 1000)).toLocaleTimeString()
             .replace(/[A-Z]/gi, '').trim().split(/:(.+)/, 2)[1];
+    }
+
+    public toggle(): void {
+        this.$player.toggle();
+    }
+
+    public next(): void {
+        this.$player.play(this.$player.index + 1);
+    }
+
+    public previous(): void {
+        this.$player.play(this.$player.index - 1);
+    }
+
+    public repeat(): void {
+        this.$player.repeat();
     }
 
     public shuffle(): void {
