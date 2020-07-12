@@ -4,7 +4,7 @@
         v-bind:thumbnail="(artist.images[0] || $drippy.thumbnails['artist']).url"
     >
         <template v-slot:actions>
-            <q-btn icon="more_horiz" flat />
+            <q-btn icon="mdi-dots-horizontal" flat />
             <q-btn flat>Follow</q-btn>
         </template>
 

@@ -14,17 +14,17 @@
         <div class="col-6">
             <div class="row q-pa-sm">
                 <div class="col-2">
-                    <q-btn class="float-left" icon="thumb_up" flat dense />
+                    <q-btn class="float-left" icon="mdi-thumb-up-outline" flat dense />
                 </div>
                 <div class="col-8 flex flex-center justify-evenly">
-                    <q-btn size="sm" icon="repeat" flat dense />
-                    <q-btn size="sm" icon="skip_previous" flat dense />
-                    <q-btn icon="play_arrow" flat dense />
-                    <q-btn size="sm" icon="skip_next" flat dense />
-                    <q-btn size="sm" icon="shuffle" flat dense />
+                    <q-btn size="sm" icon="mdi-repeat" flat dense />
+                    <q-btn size="sm" icon="mdi-skip-previous" flat dense />
+                    <q-btn icon="mdi-play" flat dense />
+                    <q-btn size="sm" icon="mdi-skip-next" flat dense />
+                    <q-btn size="sm" icon="mdi-shuffle" flat dense />
                 </div>
                 <div class="col-2">
-                    <q-btn class="float-right" icon="playlist_add" flat dense />
+                    <q-btn class="float-right" icon="mdi-playlist-plus" flat dense />
                 </div>
             </div>
             <div class="row">
@@ -48,8 +48,8 @@
         </div>
         <div class="col-3">
             <div class="flex justify-end items-center fit q-gutter-x-lg">
-                <q-btn icon="picture_in_picture_alt" flat dense />
-                <q-btn icon="volume_up" flat dense />
+                <q-btn icon="mdi-picture-in-picture-bottom-right" flat dense />
+                <q-btn icon="mdi-volume-high" flat dense />
             </div>
         </div>
     </div>

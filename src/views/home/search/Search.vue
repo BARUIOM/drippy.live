@@ -5,7 +5,7 @@
                 <q-form @submit.prevent="search">
                     <q-input
                         v-model="query"
-                        clear-icon="close"
+                        clear-icon="mdi-close"
                         placeholder="Search for artists, tracks or playlists"
                         rounded
                         standout
@@ -13,7 +13,7 @@
                         dense
                     >
                         <template v-slot:prepend>
-                            <q-icon name="search" />
+                            <q-icon name="mdi-magnify" />
                         </template>
                     </q-input>
                 </q-form>

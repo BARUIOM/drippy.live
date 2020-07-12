@@ -1,8 +1,8 @@
 <template>
     <Container v-bind:headline="name" v-bind:thumbnail="artwork" :fit="true">
         <template v-slot:actions>
-            <q-btn icon="favorite" flat />
-            <q-btn icon="more_horiz" flat />
+            <q-btn icon="mdi-heart-outline" flat />
+            <q-btn icon="mdi-dots-horizontal" flat />
         </template>
         <template v-slot:subheader>
             <ArtistHyperlink

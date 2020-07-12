@@ -1,8 +1,8 @@
 <template>
     <Container v-bind:headline="name" v-bind:thumbnail="artwork" :fit="true">
         <template v-slot:actions>
-            <q-btn v-if="$user.profile.id !== author.id" icon="favorite" flat />
-            <q-btn icon="more_horiz" flat />
+            <q-btn v-if="$user.profile.id !== author.id" icon="mdi-heart-outline" flat />
+            <q-btn icon="mdi-dots-horizontal" flat />
         </template>
         <template v-slot:subheader>
             <div class="text-h6 text-grey" v-text="author.name" />

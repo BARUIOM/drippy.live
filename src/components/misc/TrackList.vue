@@ -3,7 +3,7 @@
         <template v-for="(item, index) in track_list">
             <q-item clickable v-ripple :key="index" @click="play(index)">
                 <q-item-section avatar>
-                    <q-icon name="music_note"></q-icon>
+                    <q-icon name="mdi-music-note"></q-icon>
                 </q-item-section>
                 <q-item-section>
                     <q-item-label class="ellipsis" v-text="item.name"></q-item-label>
