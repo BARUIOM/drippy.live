@@ -18,7 +18,7 @@ import Vue from 'vue'
 import { Route } from 'vue-router'
 import { Component, Watch } from 'vue-property-decorator'
 
-import Collection from '@/components/artist/Collection.vue'
+import Collection from '@/components/misc/Collection.vue'
 import Container from '@/components/misc/Container.vue'
 
 @Component({ components: { Collection, Container } })
@@ -37,8 +37,8 @@ export default class Artist extends Vue {
         this.artist = await this.$drippy.getArtist(this.$route.params['id']);
     }
 
-    public open(id: string): void {
-        this.$router.push({ name: 'album', params: { id } });
+    public open(artist: any): void {
+        this.$router.push({ name: 'album', params: { id: artist['id'] } });
     }
 
 
