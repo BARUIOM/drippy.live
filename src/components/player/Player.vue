@@ -66,6 +66,9 @@
         </div>
         <div class="col-3">
             <div class="flex justify-end items-center fit q-gutter-x-lg">
+                <q-btn @click="open" flat dense>
+                    <q-icon name="mdi-playlist-music" />
+                </q-btn>
                 <q-btn :disable="!$player.state" flat dense>
                     <q-icon name="mdi-picture-in-picture-bottom-right" />
                 </q-btn>
@@ -74,6 +77,7 @@
                 </q-btn>
             </div>
         </div>
+        <Queue ref="queue" />
     </div>
 </template>
 
@@ -83,9 +87,10 @@ import { Component } from 'vue-property-decorator'
 import { State, Mode } from '@/modules/web-player';
 
 import Track from '@/models/track'
+import Queue from '@/components/player/Queue.vue'
 import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
 
-@Component({ components: { ArtistHyperlink } })
+@Component({ components: { Queue, ArtistHyperlink } })
 export default class Player extends Vue {
 
     private track: Track = {
@@ -143,6 +148,10 @@ export default class Player extends Vue {
             .sort((a, b) => a.sort - b.sort).map(a => a.value);
         this.$player.playlist = playlist;
         this.$player.play(0);
+    }
+
+    private open() {
+        (this.$refs['queue'] as Queue).show();
     }
 
 }

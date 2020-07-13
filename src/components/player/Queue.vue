@@ -1,60 +1,64 @@
 <template>
-    <v-dialog v-model="visible" transition="dialog-bottom-transition" fullscreen scrollable>
-        <v-card flat tile>
-            <v-toolbar dark>
-                <v-btn @click.stop="visible = false" icon>
-                    <v-icon>mdi-chevron-down</v-icon>
-                </v-btn>
-                <v-toolbar-title>Play Queue</v-toolbar-title>
-            </v-toolbar>
-
-            <v-card-text class="pa-0">
-                <Tracklist v-bind:song_list="playlist" queue disabled>
-                    <template v-slot:title>
-                        <v-card-title>Now playing</v-card-title>
+    <q-dialog
+        v-model="visible"
+        transition-show="slide-up"
+        transition-hide="slide-down"
+        persistent
+        maximized
+    >
+        <q-card>
+            <q-toolbar class="bg-dark">
+                <q-btn icon="mdi-chevron-down" flat round dense v-close-popup />
+                <q-toolbar-title>
+                    <span class="text-weight-bold">Play Queue</span>
+                </q-toolbar-title>
+            </q-toolbar>
+            <q-scroll-area>
+                <TrackList v-bind:track_list="$player.playlist" v-bind:start="$player.index">
+                    <template v-bind:slot="$player.index">
+                        <div class="q-pa-md text-h6">Now playing</div>
                     </template>
-                    <template v-slot:subtitle>
-                        <v-card-title>Next</v-card-title>
+                    <template v-bind:slot="$player.index + 1">
+                        <div class="q-pa-md text-h6">Next</div>
                     </template>
-                </Tracklist>
-            </v-card-text>
-        </v-card>
-    </v-dialog>
+                </TrackList>
+            </q-scroll-area>
+        </q-card>
+    </q-dialog>
 </template>
 
-<script>
-import Tracklist from '../misc/Tracklist'
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 
-export default {
-    components: { Tracklist },
-    data: () => ({
-        visible: false,
-        playlist: []
-    }),
-    mounted() {
-        this.$root.$on('queue', () => {
-            this.visible = true;
-            this.playlist = JSON.parse(JSON.stringify(this.$player.playlist));
-        });
-    },
-    watch: {
-        $route(to, from) {
-            this.visible = false;
-        }
+import TrackList from '@/components/misc/TrackList.vue'
+
+@Component({ components: { TrackList } })
+export default class Queue extends Vue {
+
+    private visible: boolean = false;
+
+    public mounted(): void {
+        this.$player.on('playback-started', () => this.$forceUpdate());
     }
+
+    public show(): void {
+        this.visible = true;
+    }
+
 }
 </script>
 
-<style lang="scss">
-.v-dialog__content > .v-dialog.v-dialog--fullscreen {
+<style lang="scss" scoped>
+.q-card {
     background-color: #121212;
-}
 
-.v-card .v-toolbar {
-    max-height: 56px;
+    .q-toolbar {
+        box-shadow: inherit;
+    }
 
-    > div {
-        max-height: inherit;
+    .q-scrollarea {
+        height: calc(100vh - 50px);
     }
 }
 </style>
