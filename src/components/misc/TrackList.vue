@@ -1,7 +1,10 @@
 <template>
     <q-list padding>
-        <template v-for="(item, index) in track_list">
-            <TrackListItem :key="index" v-bind:item="item" @click="play(index)" />
+        <template v-for="(item, i) in track_list">
+            <slot v-bind:name="i" />
+            <div v-if="i >= start" :key="i">
+                <TrackListItem v-bind:item="item" @click="play(i)" />
+            </div>
         </template>
     </q-list>
 </template>
@@ -18,7 +21,10 @@ export default class TrackList extends Vue {
     @Prop({ required: true })
     private track_list!: any[];
 
-    play(index: number) {
+    @Prop({ default: 0 })
+    private start!: number;
+
+    private play(index: number): void {
         if (this.$player.playlist != this.track_list)
             this.$player.playlist = this.track_list;
         this.$player.play(index);
