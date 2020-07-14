@@ -1,10 +1,8 @@
 <template>
     <q-list padding>
-        <template v-for="(item, i) in track_list">
+        <template v-for="(item, i) in filter(track_list)">
             <slot v-bind:name="i" />
-            <div v-if="i >= start" :key="i">
-                <TrackListItem v-bind:item="item" @click="play(i)" />
-            </div>
+            <TrackListItem :key="i" v-bind:item="item" @click="play(i + start)" />
         </template>
     </q-list>
 </template>
@@ -30,5 +28,21 @@ export default class TrackList extends Vue {
         this.$player.play(index);
     }
 
+    private filter(array: any[]): any[] {
+        return array.filter((e, i) => i > this.start - 1);
+    }
+
 }
 </script>
+
+<style lang="scss" scoped>
+div.queue {
+    ~ .q-item {
+        transition: opacity 0.2s linear;
+    }
+
+    ~ .q-item:not(:hover) {
+        opacity: 0.4;
+    }
+}
+</style>

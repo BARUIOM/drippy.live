@@ -15,11 +15,11 @@
             </q-toolbar>
             <q-scroll-area>
                 <TrackList v-bind:track_list="$player.playlist" v-bind:start="$player.index">
-                    <template v-bind:slot="$player.index">
+                    <template v-slot:0>
                         <div class="q-pa-md text-h6">Now playing</div>
                     </template>
-                    <template v-bind:slot="$player.index + 1">
-                        <div class="q-pa-md text-h6">Next</div>
+                    <template v-slot:1>
+                        <div class="queue q-pa-md text-h6">Next</div>
                     </template>
                 </TrackList>
             </q-scroll-area>
