@@ -3,6 +3,31 @@ import drippy from '@/modules/drippy-api'
 
 const audio = new Audio();
 
+const canvas = document.createElement('canvas');
+canvas.width = canvas.height = 512;
+
+const context = canvas.getContext('2d');
+const video = document.createElement('video');
+video.muted = true;
+
+function getArtworks(track: any): MediaImage[] {
+    return track['album'].images.map((e: any) => ({
+        src: e['url'],
+        sizes: `${e['width']}x${e['height']}`,
+        type: 'image/jpg'
+    }));
+}
+
+class Thumbnail extends Image {
+
+    constructor(media: MediaImage) {
+        super();
+        this.crossOrigin = 'true';
+        this.src = media.src;
+    }
+
+}
+
 export enum State {
 
     Idle, Paused, Playing
@@ -41,8 +66,31 @@ export class Player extends EventEmitter {
         });
 
         audio.addEventListener('loadeddata', () => {
-            audio.play().then(() => {
-                Player.Instance.emit('playback-started', Player.Instance.playlist[Player.Instance.index], Player.Instance.index);
+            audio.play().then(async () => {
+                const track = Player.Instance.playlist[Player.Instance.index];
+                Player.Instance.emit('playback-started', track, Player.Instance.index);
+
+                if (navigator.mediaSession && context) {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: track['name'],
+                        artist: track['artists'][0].name,
+                        album: track['album'].name,
+                        artwork: getArtworks(track)
+                    });
+
+                    navigator.mediaSession.setActionHandler('play', () => audio.play());
+                    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+                    navigator.mediaSession.setActionHandler('previoustrack', () => Player.Instance.play(Player.Instance.index - 1));
+                    navigator.mediaSession.setActionHandler('nexttrack', () => Player.Instance.play(Player.Instance.index + 1));
+
+                    if (!video.readyState)
+                        video.srcObject = (canvas as any).captureStream();
+
+                    const image = new Thumbnail(navigator.mediaSession.metadata.artwork[0]);
+                    await image.decode();
+
+                    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                }
             });
         });
 
@@ -88,6 +136,10 @@ export class Player extends EventEmitter {
                 this._mode = Mode.RepeatNone;
         }
         this.emit('update');
+    }
+
+    public display(): void {
+        video.play().then(() => (video as any).requestPictureInPicture());
     }
 
     public get index() {

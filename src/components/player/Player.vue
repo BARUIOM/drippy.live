@@ -66,10 +66,10 @@
         </div>
         <div class="col-3">
             <div class="flex justify-end items-center fit q-gutter-x-lg">
-                <q-btn @click="open" flat dense>
+                <q-btn :disable="!$player.state" @click="open" flat dense>
                     <q-icon name="mdi-playlist-music" />
                 </q-btn>
-                <q-btn :disable="!$player.state" flat dense>
+                <q-btn :disable="!$player.state" @click="$player.display()" flat dense>
                     <q-icon name="mdi-picture-in-picture-bottom-right" />
                 </q-btn>
                 <q-btn :disable="!$player.state" flat dense>

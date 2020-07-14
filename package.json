@@ -20,6 +20,7 @@
     },
     "devDependencies": {
         "@types/events": "^3.0.0",
+        "@types/wicg-mediasession": "^1.0.4",
         "@vue/cli-plugin-babel": "~4.4.0",
         "@vue/cli-plugin-router": "~4.4.0",
         "@vue/cli-plugin-typescript": "~4.4.0",
