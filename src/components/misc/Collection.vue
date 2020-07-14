@@ -9,7 +9,7 @@
         <div class="q-pa-sm">
             <div class="row q-pa-xs">
                 <template v-for="(item, i) in collection">
-                    <div :key="i" class="q-pa-xs col-xs-6 col-md-4 col-lg-2">
+                    <div :key="i" class="q-pa-xs col-xs-6 col-sm-3 col-md-2">
                         <div class="shadow-4 bg-grey-10" @click="$emit('click', item)">
                             <q-img
                                 :src="(item.images[0] || $drippy.thumbnails['collection']).url"
