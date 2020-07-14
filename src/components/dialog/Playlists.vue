@@ -1,29 +1,31 @@
 <template>
     <div>
         <q-dialog v-model="visible" persistent maximized>
-            <div class="row flex-center">
-                <div class="col-12 q-gutter-y-lg">
-                    <div class="row justify-center">
-                        <q-btn @click="visible = false" size="lg" icon="mdi-close" round flat />
+            <q-scroll-area class="fit">
+                <div class="row flex-center">
+                    <div class="q-pa-md col-12 q-gutter-y-lg">
+                        <div class="row justify-center">
+                            <q-btn @click="visible = false" size="lg" icon="mdi-close" round flat />
+                        </div>
+                        <div class="row justify-center">
+                            <span class="text-h3 text-weight-bold">Add to playlist</span>
+                        </div>
+                        <div class="row justify-center">
+                            <q-btn
+                                @click="$root.$emit('create')"
+                                color="primary"
+                                rounded
+                            >Create playlist</q-btn>
+                        </div>
                     </div>
-                    <div class="row justify-center">
-                        <span class="text-h3 text-weight-bold">Add to playlist</span>
-                    </div>
-                    <div class="row justify-center">
-                        <q-btn
-                            @click="$root.$emit('create')"
-                            color="primary"
-                            rounded
-                        >Create playlist</q-btn>
+                    <div class="col-12">
+                        <Collection
+                            v-bind:collection="external($user.collection.playlists)"
+                            @click="add"
+                        />
                     </div>
                 </div>
-                <div class="col-12">
-                    <Collection
-                        v-bind:collection="external($user.collection.playlists)"
-                        @click="add"
-                    />
-                </div>
-            </div>
+            </q-scroll-area>
         </q-dialog>
 
         <CreatePlaylist ref="manager" />

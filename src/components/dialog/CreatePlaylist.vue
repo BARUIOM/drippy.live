@@ -7,7 +7,7 @@
                 </div>
                 <q-form ref="form" class="q-gutter-y-md" @reset="reset" @submit.prevent="submit">
                     <div class="row justify-center">
-                        <div class="col-4">
+                        <div class="col-xs-10 col-md-6">
                             <q-input v-model="name" :placeholder="placeholder" standout dense />
                         </div>
                     </div>
