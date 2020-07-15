@@ -7,7 +7,7 @@
             </q-toolbar>
         </q-header>
 
-        <q-drawer v-model="drawer" :width="256" :breakpoint="500" show-if-above bordered>
+        <q-drawer v-model="drawer" :width="256" show-if-above bordered>
             <Drawer />
         </q-drawer>
 
@@ -43,8 +43,10 @@ export default class Home extends Vue {
 </script>
 
 <style lang="scss">
-.q-drawer {
-    padding-bottom: 72px;
+@media screen and (min-width: 1024px) {
+    .q-drawer {
+        padding-bottom: 72px;
+    }
 }
 
 .q-footer {

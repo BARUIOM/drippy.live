@@ -27,6 +27,23 @@
                 <q-btn @click="$root.$emit('create')" icon="mdi-plus" flat dense></q-btn>
             </div>
         </div>
+        <div class="col-12 playlists">
+            <q-scroll-area class="fit">
+                <q-list padding>
+                    <template v-for="(item, i) in $user.collection.playlists">
+                        <q-item
+                            dense
+                            clickable
+                            v-ripple
+                            :key="i"
+                            :to="{ name: 'playlist', params: { id: item.id } }"
+                        >
+                            <q-item-section v-text="item.name"></q-item-section>
+                        </q-item>
+                    </template>
+                </q-list>
+            </q-scroll-area>
+        </div>
     </div>
 </template>
 
@@ -41,10 +58,17 @@ export default class Drawer extends Vue {
 </script>
 
 <style lang="scss" scoped>
+div.row {
+    > div:nth-child(1) {
+        height: 170px;
+    }
+
+    > div:nth-child(2) {
+        height: calc(100% - 170px);
+    }
+}
+
 .q-list.nav .q-item {
     min-height: 40px;
-    border-radius: 4px;
-    margin: 0px 8px 4px 8px;
-    padding: 0px 8px 0px 8px;
 }
 </style>

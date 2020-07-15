@@ -172,6 +172,7 @@ export default class Player extends Vue {
 <style lang="scss" scoped>
 div.player {
     min-height: 72px;
+    max-height: 72px;
 
     .q-img {
         min-width: 64px;
