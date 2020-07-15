@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 
 import TrackList from '@/components/misc/TrackList.vue'
 
@@ -44,6 +44,11 @@ export default class Queue extends Vue {
 
     public show(): void {
         this.visible = true;
+    }
+
+    @Watch('$route', { immediate: true, deep: true })
+    private change(): void {
+        this.visible = false;
     }
 
 }
