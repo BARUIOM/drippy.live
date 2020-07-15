@@ -10,7 +10,7 @@ const thumbnails = {
         url: require('@/assets/person_white.png')
     },
     collection: {
-        url: require('@/assets/library_mus_white.png')
+        url: require('@/assets/library_music.png')
     }
 };
 

@@ -35,7 +35,7 @@ export default class Playlist extends Vue {
             name: playlist.owner.display_name
         };
         this.track_list = [...playlist.tracks.items.map((e: any) => e.track)];
-        this.artwork = playlist.images[0].url;
+        this.artwork = (playlist.images[0] || this.$drippy.thumbnails['collection']).url;
     }
 
     public async mounted(): Promise<void> {
