@@ -11,6 +11,7 @@ import Tracks from '@/views/home/collection/Tracks.vue'
 
 import Artist from '@/views/artist/Artist.vue'
 import Album from '@/views/albums/Album.vue'
+import Track from '@/views/tracks/Track.vue'
 import Playlist from '@/views/playlists/Playlist.vue'
 
 Vue.use(VueRouter);
@@ -34,6 +35,11 @@ const routes: Array<RouteConfig> = [
                 path: '/album/:id',
                 name: 'album',
                 component: Album
+            },
+            {
+                path: '/track/:id',
+                name: 'track',
+                component: Track
             },
             {
                 path: '/playlist/:id',
