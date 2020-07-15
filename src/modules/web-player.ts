@@ -40,6 +40,12 @@ export enum Mode {
 
 }
 
+export enum Volume {
+
+    VolumeHigh, VolumeMedium, VolumeLow, Muted
+
+}
+
 export class Player extends EventEmitter {
 
     public static readonly Instance = new Player();
@@ -48,6 +54,7 @@ export class Player extends EventEmitter {
     private _playlist: any[] = [];
     private _state: State = State.Idle;
     private _mode: Mode = Mode.RepeatNone;
+    private _volume: Volume = Volume.VolumeHigh;
 
     private constructor() {
         super();
@@ -168,6 +175,27 @@ export class Player extends EventEmitter {
 
     public get mode() {
         return this._mode;
+    }
+
+    get volume() {
+        return audio.volume * 100.0;
+    }
+
+    set volume(value) {
+        audio.volume = value / 100.0;
+        if (audio.volume == 0) {
+            this._volume = Volume.Muted;
+        } else if (audio.volume <= 0.25) {
+            this._volume = Volume.VolumeLow;
+        } else if (audio.volume <= 0.5) {
+            this._volume = Volume.VolumeMedium;
+        } else {
+            this._volume = Volume.VolumeHigh;
+        }
+    }
+
+    get Volume(): Volume {
+        return this._volume;
     }
 
 }

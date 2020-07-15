@@ -73,7 +73,12 @@
                     <q-icon name="mdi-picture-in-picture-bottom-right" />
                 </q-btn>
                 <q-btn :disable="!$player.state" flat dense>
-                    <q-icon name="mdi-volume-high" />
+                    <q-icon :name="volume[$player.Volume]" />
+                    <q-menu>
+                        <div class="q-py-md q-px-sm">
+                            <q-slider v-model="$player.volume" reverse vertical dense />
+                        </div>
+                    </q-menu>
                 </q-btn>
             </div>
         </div>
@@ -84,7 +89,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { State, Mode } from '@/modules/web-player';
+import { State, Mode, Volume } from '@/modules/web-player';
 
 import Track from '@/models/track'
 import Queue from '@/components/player/Queue.vue'
@@ -107,6 +112,13 @@ export default class Player extends Vue {
         [Mode.RepeatNone]: 'mdi-repeat-off',
         [Mode.RepeatAll]: 'mdi-repeat',
         [Mode.RepeatOnce]: 'mdi-repeat-once'
+    };
+
+    private readonly volume = {
+        [Volume.Muted]: 'mdi-volume-mute',
+        [Volume.VolumeLow]: 'mdi-volume-low',
+        [Volume.VolumeMedium]: 'mdi-volume-medium',
+        [Volume.VolumeHigh]: 'mdi-volume-high'
     };
 
     public mounted(): void {
