@@ -78,6 +78,15 @@ export class Player extends EventEmitter {
                 Player.Instance.emit('playback-started', track, Player.Instance.index);
 
                 if (navigator.mediaSession && context) {
+                    const duration = Math.floor(track['duration_ms'] / 1000);
+                    function updatePositionState() {
+                        (navigator.mediaSession as any).setPositionState({
+                            position: audio.currentTime,
+                            playbackRate: audio.playbackRate,
+                            duration
+                        });
+                    }
+
                     navigator.mediaSession.metadata = new MediaMetadata({
                         title: track['name'],
                         artist: track['artists'][0].name,
@@ -85,10 +94,37 @@ export class Player extends EventEmitter {
                         artwork: getArtworks(track)
                     });
 
+                    updatePositionState();
                     navigator.mediaSession.setActionHandler('play', () => audio.play());
                     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-                    navigator.mediaSession.setActionHandler('previoustrack', () => Player.Instance.play(Player.Instance.index - 1));
-                    navigator.mediaSession.setActionHandler('nexttrack', () => Player.Instance.play(Player.Instance.index + 1));
+
+                    navigator.mediaSession.setActionHandler('previoustrack', () => {
+                        Player.Instance.play(Player.Instance.index - 1)
+                    });
+
+                    navigator.mediaSession.setActionHandler('nexttrack', () => {
+                        Player.Instance.play(Player.Instance.index + 1)
+                    });
+
+                    navigator.mediaSession.setActionHandler('seekbackward', () => {
+                        audio.currentTime = Math.max(audio.currentTime - 10, 0);
+                        updatePositionState();
+                    });
+
+                    navigator.mediaSession.setActionHandler('seekforward', () => {
+                        audio.currentTime = Math.min(audio.currentTime + 10, duration);
+                        updatePositionState();
+                    });
+
+                    (navigator.mediaSession as any).setActionHandler('seekto', (event: any) => {
+                        if (event.fastSeek && "fastSeek" in audio) {
+                            audio.fastSeek(event.seekTime);
+                        } else {
+                            audio.currentTime = event.seekTime;
+                        }
+                        updatePositionState();
+                    });
+
 
                     if (!video.readyState)
                         video.srcObject = (canvas as any).captureStream();
