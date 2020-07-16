@@ -18,6 +18,9 @@ Vue.prototype.$player = player;
 Loading.show();
 drippy.validate().then(async () => {
     Vue.prototype.$user = await Manager.getUser();
+}).catch(() => {
+    if (!window.location.pathname.startsWith('/auth'))
+        router.push({ name: 'login' })
 }).finally(() => {
     new Vue({ router, render: h => h(App) }).$mount('#app');
     Loading.hide();

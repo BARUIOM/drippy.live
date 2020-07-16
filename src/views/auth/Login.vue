@@ -35,6 +35,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
+import { Manager } from '@/modules/drippy-api';
 
 @Component
 export default class Login extends Vue {
@@ -50,6 +51,7 @@ export default class Login extends Vue {
             this.$drippy.spotifyCheck(code).then(async data => {
                 if (data !== undefined) {
                     await this.$drippy.login({ token: data['token'] });
+                    Vue.prototype.$user = await Manager.getUser();
                     this.$q.notify({ type: 'positive', message: data['message'], position: 'top' });
                     this.$router.push('/');
                 }
