@@ -1,6 +1,6 @@
 <template>
     <div class="player row">
-        <div class="col-3">
+        <div class="col-xs-10 col-md-3">
             <div class="flex no-wrap justify-start items-center fit">
                 <q-img class="q-ma-xs shadow-2" :src="track.artwork_url" />
                 <div class="row q-px-sm ellipsis">
@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="gt-sm col-6">
             <div class="row q-pa-sm">
                 <div class="col-2">
                     <q-btn class="float-left" :disable="!$player.state" flat dense>
@@ -64,7 +64,7 @@
                 <div class="text-center text-caption text-grey" v-text="format(track.duration)" />
             </div>
         </div>
-        <div class="col-3">
+        <div class="gt-sm col-3">
             <div class="flex justify-end items-center fit q-gutter-x-lg">
                 <q-btn :disable="!$player.state" @click="open" flat dense>
                     <q-icon name="mdi-playlist-music" />
@@ -79,6 +79,13 @@
                             <q-slider v-model="$player.volume" reverse vertical dense />
                         </div>
                     </q-menu>
+                </q-btn>
+            </div>
+        </div>
+        <div class="lt-md col">
+            <div class="flex flex-center fit">
+                <q-btn @click="toggle" :disable="!$player.state" flat dense>
+                    <q-icon :name="state[$player.state]" />
                 </q-btn>
             </div>
         </div>
