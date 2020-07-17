@@ -21,11 +21,8 @@ import TrackList from '@/components/misc/TrackList.vue'
 @Component({ components: { Container, TrackList } })
 export default class Tracks extends Vue {
 
-    public async mounted(): Promise<void> {
-        if (this.$user !== undefined) {
-            await this.$user.getSavedTracks();
-            this.$forceUpdate();
-        }
+    public mounted(): void {
+        this.$user.getSavedTracks().then(() => this.$forceUpdate());
     }
 
 }

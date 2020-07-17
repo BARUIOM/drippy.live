@@ -26,8 +26,6 @@ import Vue from 'vue'
 import { QForm } from 'quasar'
 import { Component } from 'vue-property-decorator'
 
-import User from '@/modules/drippy-user';
-
 @Component
 export default class CreatePlaylist extends Vue {
 
@@ -41,7 +39,7 @@ export default class CreatePlaylist extends Vue {
     }
 
     private submit(): void {
-        this.$drippy.createPlaylist(this.name.trim() || this.placeholder, this.$user as User).then(playlist => {
+        this.$drippy.createPlaylist(this.name.trim() || this.placeholder, this.$user).then(playlist => {
             this.$q.notify({ type: 'positive', message: `Playlist '${playlist['name']}' created!`, position: 'top' });
             (this.$refs['form'] as QForm).reset();
         }).finally(() => {

@@ -64,7 +64,7 @@ export default class PlaylistDialog extends Vue {
 
     public external(playlists: any[]): any[] {
         return playlists.filter(e =>
-            e['owner'].id === this.$user?.profile.id
+            e['owner'].id === this.$user.profile.id
         );
     }
 
