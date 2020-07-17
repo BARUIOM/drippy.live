@@ -51,7 +51,7 @@ export default class Login extends Vue {
             this.$drippy.spotifyCheck(code).then(async data => {
                 if (data !== undefined) {
                     await this.$drippy.login({ token: data['token'] });
-                    Vue.prototype.$user = await Manager.getUser();
+                    this.$user = await Manager.getUser();
                     this.$q.notify({ type: 'positive', message: data['message'], position: 'top' });
                     this.$router.push('/');
                 }
@@ -65,7 +65,10 @@ export default class Login extends Vue {
     submit() {
         this.$q.loading.show();
         this.$drippy.login({ email: this.email, password: this.password })
-            .then(() => this.$router.push('/')).catch(error => {
+            .then(async () => {
+                this.$user = await Manager.getUser();
+                this.$router.push('/');
+            }).catch(error => {
                 if (error.response && error.response.status == 400)
                     this.$q.notify({ type: 'negative', message: error.response.data['message'] });
             }).finally(() => this.$q.loading.hide());

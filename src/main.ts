@@ -15,9 +15,22 @@ Vue.config.productionTip = false;
 Vue.prototype.$drippy = drippy;
 Vue.prototype.$player = player;
 
+const vm = new Vue({
+    data: { $user: {} }
+});
+
+Vue.mixin({
+    computed: {
+        $user: {
+            get: () => vm.$data.$user,
+            set: (user) => vm.$data.$user = user
+        }
+    }
+});
+
 Loading.show();
 drippy.validate().then(async () => {
-    Vue.prototype.$user = await Manager.getUser();
+    vm.$data.$user = await Manager.getUser();
 }).catch(() => {
     if (!window.location.pathname.startsWith('/auth'))
         router.push({ name: 'login' })

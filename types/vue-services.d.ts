@@ -8,7 +8,7 @@ declare module 'vue/types/vue' {
 
     interface Vue {
 
-        readonly $user?: User;
+        $user: User;
         readonly $drippy: Drippy;
         readonly $player: Player;
 
