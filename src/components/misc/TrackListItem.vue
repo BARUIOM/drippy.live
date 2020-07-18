@@ -13,6 +13,7 @@
             <q-btn icon="mdi-dots-horizontal" @click.stop="menu = !menu" flat dense></q-btn>
             <q-menu v-model="menu" transition-show="jump-down" transition-hide="jump-up" auto-close>
                 <q-list padding dense>
+                    <slot></slot>
                     <q-item clickable>
                         <q-item-section @click="$root.$emit('add', [item])">Add track to playlist</q-item-section>
                     </q-item>

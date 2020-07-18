@@ -2,7 +2,9 @@
     <q-list padding>
         <template v-for="(item, i) in filter(track_list)">
             <slot v-bind:name="i" />
-            <TrackListItem :key="i" v-bind:item="item" @click="play(i + start)" />
+            <TrackListItem :key="i" v-bind:item="item" @click="play(i + start)">
+                <slot name="menu" v-bind:index="i" v-bind:item="item" />
+            </TrackListItem>
         </template>
     </q-list>
 </template>
