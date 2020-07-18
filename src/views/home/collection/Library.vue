@@ -1,11 +1,13 @@
 <template>
     <div>
         <portal to="header">
-            <q-tabs v-model="tab" class="bg-dark" align="left">
-                <q-tab name="playlists" label="Playlists" />
-                <q-tab name="artists" label="Artists" />
-                <q-tab name="albums" label="Albums" />
-            </q-tabs>
+            <q-toolbar class="q-pa-none" inset>
+                <q-tabs v-model="tab" class="bg-dark fit" align="justify">
+                    <q-tab name="playlists" label="Playlists" />
+                    <q-tab name="artists" label="Artists" />
+                    <q-tab name="albums" label="Albums" />
+                </q-tabs>
+            </q-toolbar>
         </portal>
         <q-tab-panels class="bg-transparent" v-model="tab">
             <q-tab-panel class="q-pa-none" name="playlists">

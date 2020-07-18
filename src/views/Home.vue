@@ -1,10 +1,10 @@
 <template>
     <q-layout view="lHh Lpr lFf">
         <q-header elevated class="bg-dark">
-            <q-toolbar class="q-gutter-x-sm">
+            <q-toolbar>
                 <q-btn @click="drawer = !drawer" icon="mdi-menu" flat dense></q-btn>
-                <portal-target class="fit" name="header" />
             </q-toolbar>
+            <portal-target class="fit" name="header" />
         </q-header>
 
         <q-drawer v-model="drawer" :width="256" show-if-above bordered>

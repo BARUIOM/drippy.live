@@ -1,48 +1,46 @@
 <template>
-    <div class="q-gutter-y-md">
-        <div class="row">
-            <portal to="header">
-                <q-form @submit.prevent="search">
-                    <q-input
-                        v-model="query"
-                        clear-icon="mdi-close"
-                        placeholder="Search for artists, tracks or playlists"
-                        rounded
-                        standout
-                        clearable
-                        dense
-                    >
-                        <template v-slot:prepend>
-                            <q-icon name="mdi-magnify" />
-                        </template>
-                    </q-input>
-                </q-form>
-            </portal>
+    <div>
+        <q-form class="q-pa-sm" @submit.prevent="search">
+            <q-input
+                v-model="query"
+                clear-icon="mdi-close"
+                placeholder="Search for artists, tracks or playlists"
+                rounded
+                standout
+                clearable
+                dense
+            >
+                <template v-slot:prepend>
+                    <q-icon name="mdi-magnify" />
+                </template>
+            </q-input>
+        </q-form>
+        <div class="q-gutter-y-md">
+            <Results title="Tracks" v-if="results.tracks.length">
+                <TrackList v-bind:track_list="results.tracks" />
+            </Results>
+            <Results title="Artists" v-if="results.artists.length">
+                <Contents
+                    type="artist"
+                    v-bind:contents="results.artists"
+                    @click="open('artist', arguments[0])"
+                />
+            </Results>
+            <Results title="Playlists" v-if="results.playlists.length">
+                <Contents
+                    type="collection"
+                    v-bind:contents="results.playlists"
+                    @click="open('playlist', arguments[0])"
+                />
+            </Results>
+            <Results title="Albums" v-if="results.albums.length">
+                <Contents
+                    type="collection"
+                    v-bind:contents="results.albums"
+                    @click="open('album', arguments[0])"
+                />
+            </Results>
         </div>
-        <Results title="Tracks" v-if="results.tracks.length">
-            <TrackList v-bind:track_list="results.tracks" />
-        </Results>
-        <Results title="Artists" v-if="results.artists.length">
-            <Contents
-                type="artist"
-                v-bind:contents="results.artists"
-                @click="open('artist', arguments[0])"
-            />
-        </Results>
-        <Results title="Playlists" v-if="results.playlists.length">
-            <Contents
-                type="collection"
-                v-bind:contents="results.playlists"
-                @click="open('playlist', arguments[0])"
-            />
-        </Results>
-        <Results title="Albums" v-if="results.albums.length">
-            <Contents
-                type="collection"
-                v-bind:contents="results.albums"
-                @click="open('album', arguments[0])"
-            />
-        </Results>
     </div>
 </template>
 
