@@ -35,7 +35,13 @@
         <template v-slot:subheader>
             <div class="text-h6 text-grey" v-text="playlist.owner.display_name" />
         </template>
-        <TrackList v-bind:track_list="playlist.tracks" />
+        <TrackList v-bind:track_list="playlist.tracks">
+            <template v-if="$user.profile.id === playlist.owner.id" v-slot:menu="{ index, item }">
+                <q-item @click="removeTrack(index, item)" clickable>
+                    <q-item-section>Remove track from this playlist</q-item-section>
+                </q-item>
+            </template>
+        </TrackList>
     </Container>
 </template>
 
@@ -90,6 +96,12 @@ export default class Playlist extends Vue {
 
     private remove(): void {
         this.unfollow().then(() => this.$router.push({ name: 'collection' }));
+    }
+
+    private removeTrack(index: number, track: any): void {
+        this.$drippy.removeTrackFromPlaylist(this.playlist.id, track).then(() => {
+            this.playlist.tracks.splice(index, 1);
+        });
     }
 
     private copy(): void {
