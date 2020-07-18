@@ -7,7 +7,7 @@
         <template v-slot:subheader>
             <div class="text-h6 text-grey" v-text="$user.profile.name" />
         </template>
-        <TrackList v-bind:track_list="$user.collection.tracks || []" />
+        <TrackList v-bind:track_list="$user.collection.tracks" />
     </Container>
 </template>
 
@@ -22,7 +22,7 @@ import TrackList from '@/components/misc/TrackList.vue'
 export default class Tracks extends Vue {
 
     public mounted(): void {
-        this.$user.getSavedTracks().then(() => this.$forceUpdate());
+        this.$user.on('ready', () => this.$forceUpdate());
     }
 
 }

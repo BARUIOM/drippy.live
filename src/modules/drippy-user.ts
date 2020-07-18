@@ -1,16 +1,32 @@
 import { AxiosInstance } from 'axios'
+import { EventEmitter } from 'events'
 
-export default class User {
+import Container from '@/models/container'
 
-    private readonly _axios: AxiosInstance;
+export default class User extends EventEmitter {
+
     private readonly _profile: Profile;
-    private readonly _collection: Collection;
+    private readonly _collection: Collection = new Collection();
 
-    public constructor(axios: AxiosInstance, profile: Profile, playlists: any[]) {
-        this._axios = axios;
+    public constructor(axios: AxiosInstance, profile: Profile) {
+        super();
         this._profile = profile;
-        this._collection = {} as Collection;
-        this._collection.playlists = playlists;
+        axios.get('/collection/playlists').then(response => {
+            this._collection.playlists = response.data;
+            this.emit('ready');
+        });
+        axios.get('/collection/artists').then(response => {
+            this._collection.following = response.data;
+            this.emit('ready');
+        });
+        axios.get('/collection/albums').then(response => {
+            this._collection.albums = response.data;
+            this.emit('ready');
+        });
+        axios.get('/collection/tracks').then(response => {
+            this._collection.tracks = response.data;
+            this.emit('ready');
+        });
     }
 
     public get profile(): Profile {
@@ -19,37 +35,6 @@ export default class User {
 
     public get collection(): Collection {
         return this._collection;
-    }
-
-    public set playlists(playlists: any[]) {
-        this._collection.playlists = playlists;
-    }
-
-    public set following(following: any[]) {
-        this._collection.following = following;
-    }
-
-    public set albums(albums: any[]) {
-        this._collection.albums = albums;
-    }
-
-    public set tracks(tracks: any[]) {
-        this._collection.tracks = tracks;
-    }
-
-    public async getFollowing(): Promise<any[]> {
-        this.following = (await this._axios.get('/collection/artists')).data;
-        return this._collection.following;
-    }
-
-    public async getSavedAlbums(): Promise<any[]> {
-        this.albums = (await this._axios.get('/collection/albums')).data;
-        return this._collection.albums;
-    }
-
-    public async getSavedTracks(): Promise<any[]> {
-        this.tracks = (await this._axios.get('/collection/tracks')).data;
-        return this._collection.tracks;
     }
 
 }
@@ -62,11 +47,43 @@ export declare interface Profile {
 
 }
 
-export declare interface Collection {
+export class Collection {
 
-    playlists: any[]
-    following: any[]
-    albums: any[]
-    tracks: any[]
+    public readonly _playlists: Container<any> = new Container();
+    public readonly _following: Container<any> = new Container();
+    public readonly _albums: Container<any> = new Container();
+    public readonly _tracks: Container<any> = new Container();
+
+    get playlists(): any[] {
+        return this._playlists.collection;
+    }
+
+    set playlists(values: any[]) {
+        this._playlists.collection = values;
+    }
+
+    get following(): any[] {
+        return this._following.collection;
+    }
+
+    set following(values: any[]) {
+        this._following.collection = values;
+    }
+
+    get albums(): any[] {
+        return this._albums.collection;
+    }
+
+    set albums(values: any[]) {
+        this._albums.collection = values;
+    }
+
+    get tracks(): any[] {
+        return this._tracks.collection;
+    }
+
+    set tracks(values: any[]) {
+        this._tracks.collection = values;
+    }
 
 }

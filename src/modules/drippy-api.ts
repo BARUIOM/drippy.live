@@ -79,7 +79,7 @@ export class Drippy {
 
     public async createPlaylist(name: string, user: User) {
         const playlist = (await axios.post('/collection/playlists', { name })).data;
-        user.collection.playlists.unshift(playlist);
+        user.collection._playlists.unshift(playlist);
         return playlist;
     }
 
@@ -127,9 +127,7 @@ export class Drippy {
 export class Manager {
 
     public static async getUser(): Promise<User> {
-        const profile = (await axios.get('/profile')).data;
-        const playlists = (await axios.get('/collection/playlists')).data;
-        return new User(axios, profile, playlists);
+        return new User(axios, (await axios.get('/profile')).data);
     }
 
 }

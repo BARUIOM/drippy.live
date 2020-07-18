@@ -54,6 +54,10 @@ import { Component } from 'vue-property-decorator'
 @Component
 export default class Drawer extends Vue {
 
+    public mounted(): void {
+        this.$user.on('ready', () => this.$forceUpdate());
+    }
+
 }
 </script>
 

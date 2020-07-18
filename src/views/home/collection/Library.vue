@@ -49,9 +49,8 @@ export default class Library extends Vue {
 
     private tab: string = 'playlists'
 
-    public async mounted(): Promise<void> {
-        await this.$user.getFollowing();
-        await this.$user.getSavedAlbums();
+    public mounted(): void {
+        this.$user.on('ready', () => this.$forceUpdate());
     }
 
     public open(name: string, id: string): void {
