@@ -69,6 +69,16 @@ export class Drippy {
         return (await axios.get(`/playlist/${playlist_id}`)).data;
     }
 
+    public async followPlaylist(playlist: any, user: User) {
+        await axios.put(`/collection/playlists/${playlist['id']}`);
+        user.collection._playlists.unshift(playlist);
+    }
+
+    public async unfollowPlaylist(playlist_id: string, user: User) {
+        await axios.delete(`/collection/playlists/${playlist_id}`);
+        user.collection._playlists.remove(playlist_id);
+    }
+
     public async addTracksToPlaylist(playlist_id: string, tracks: any[]) {
         await axios.post(`/playlist/${playlist_id}/tracks`, { tracks: tracks.map(e => e['id']) });
     }
