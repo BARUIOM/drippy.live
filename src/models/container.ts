@@ -29,8 +29,7 @@ export default class Container<T extends Item> {
     }
 
     public get collection(): T[] {
-        return [...this._collection.values()]
-            .sort((a, b) => this._data.indexOf(a.id) - this._data.indexOf(b.id));
+        return this._data.map(e => this._collection.get(e) as T);
     }
 
     public set collection(collection: T[]) {
