@@ -128,6 +128,10 @@ export class Drippy {
 
     public async getAudio(id: string): Promise<string> {
         const response = await axios.get(`/stream/${id}`);
+
+        if ('session' in response.data) {
+            return `${api_url}/audio/${response.data['session']}`;
+        }
         return response.data['uri'];
     }
 
