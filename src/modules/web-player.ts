@@ -155,7 +155,7 @@ export class Player extends EventEmitter {
     public play(index: number): void {
         if (this.playlist[index] !== undefined) {
             audio.pause();
-            drippy.createSession(this.playlist[index]['id']).then(src => {
+            drippy.getAudio(this.playlist[index]['id']).then(src => {
                 this._index = index;
                 audio.src = src;
                 audio.load();

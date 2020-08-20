@@ -119,9 +119,16 @@ export class Drippy {
             return response.data as SpotifyAuthResponse;
     }
 
+    /* discontinued
     public async createSession(id: string): Promise<string> {
         const response = await axios.get(`/stream/${id}`);
         return `${api_url}/audio/${response.data['digest']}`;
+    }
+    */
+
+    public async getAudio(id: string): Promise<string> {
+        const response = await axios.get(`/stream/${id}`);
+        return response.data['uri'];
     }
 
     public get url() {
