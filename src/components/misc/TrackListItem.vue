@@ -6,7 +6,11 @@
         <q-item-section>
             <q-item-label class="ellipsis" v-text="item.name"></q-item-label>
             <q-item-label caption>
-                <ArtistHyperlink class="text-grey" v-bind:artists="item.artists" />
+                <ArtistHyperlink
+                    class="text-grey"
+                    v-bind:artists="item.artists"
+                    :disabled="$q.screen.lt.md"
+                />
             </q-item-label>
         </q-item-section>
         <q-item-section class="menu-section" :active="menu" avatar>

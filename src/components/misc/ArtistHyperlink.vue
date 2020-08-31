@@ -7,7 +7,12 @@
                 v-text="separator"
                 :key="'s' + i"
             />
-            <span class="link" :key="'a' + i" v-text="artist.name" @click.stop="open(artist.id)" />
+            <span
+                :key="'a' + i"
+                v-bind:class="{ 'link': !disabled }"
+                v-text="artist.name"
+                @click="open(arguments[0], artist.id)"
+            />
         </template>
     </div>
 </template>
@@ -30,8 +35,14 @@ export default class ArtistHyperlink extends Vue {
     @Prop({ default: false })
     private spacer!: boolean;
 
-    public open(id: string) {
-        this.$router.push({ name: 'artist', params: { id } });
+    @Prop({ default: false })
+    private disabled!: boolean;
+
+    public open(event: Event, id: string) {
+        if (!this.disabled) {
+            event.stopPropagation();
+            this.$router.push({ name: 'artist', params: { id } });
+        }
     }
 
 }
