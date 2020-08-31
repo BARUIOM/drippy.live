@@ -34,7 +34,8 @@ export default class Artist extends Vue {
     };
 
     public async mounted(): Promise<void> {
-        this.artist = await this.$drippy.getArtist(this.$route.params['id']);
+        const artist = await this.$drippy.getArtist(this.$route.params['id']);
+        this.artist = Object.freeze(artist);
     }
 
     public open(artist: any): void {

@@ -66,12 +66,15 @@ export default class Search extends Vue {
 
     mounted() {
         if (this.$q.sessionStorage.has('search_results')) {
-            this.results = this.$q.sessionStorage.getItem('search_results') as SearchResults;
+            const results = this.$q.sessionStorage.getItem('search_results') as SearchResults;
+            this.results = Object.freeze(results);
         }
     }
 
     search() {
-        this.$drippy.search(this.query).then(result => this.results = result);
+        this.$drippy.search(this.query).then(result => {
+            this.results = Object.freeze(result);
+        });
     }
 
     open(name: string, id: string) {

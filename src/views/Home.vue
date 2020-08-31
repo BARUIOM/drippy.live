@@ -12,7 +12,7 @@
         </q-drawer>
 
         <q-page-container class="window-width window-height">
-            <q-scroll-area class="fit">
+            <q-scroll-area class="fit" id="page-container">
                 <router-view />
             </q-scroll-area>
         </q-page-container>

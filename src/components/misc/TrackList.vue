@@ -1,11 +1,16 @@
 <template>
     <q-list padding>
-        <template v-for="(item, i) in filter(track_list)">
-            <slot v-bind:name="i" />
-            <TrackListItem :key="i" v-bind:item="item" @click="play(i + start)">
-                <slot name="menu" v-bind:index="i" v-bind:item="item" />
-            </TrackListItem>
-        </template>
+        <q-virtual-scroll
+            scroll-target="#page-container > .scroll"
+            :items="Object.freeze(filter(track_list))"
+            :virtual-scroll-item-size="56"
+        >
+            <template v-slot="{ item, index }">
+                <TrackListItem :key="index" v-bind:item="item" @click="play(index + start)">
+                    <slot name="menu" v-bind:index="index" v-bind:item="item" />
+                </TrackListItem>
+            </template>
+        </q-virtual-scroll>
     </q-list>
 </template>
 
