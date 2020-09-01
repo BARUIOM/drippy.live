@@ -59,17 +59,17 @@ export class Player extends EventEmitter {
     private constructor() {
         super();
         audio.addEventListener('timeupdate', () => {
-            Player.Instance.emit('update');
+            Player.Instance.emit('update-time', audio.currentTime);
         });
 
         audio.addEventListener('play', () => {
             Player.Instance._state = State.Playing;
-            Player.Instance.emit('update');
+            Player.Instance.emit('update-state');
         });
 
         audio.addEventListener('pause', () => {
             Player.Instance._state = State.Paused;
-            Player.Instance.emit('update');
+            Player.Instance.emit('update-state');
         });
 
         audio.addEventListener('loadeddata', () => {
@@ -178,7 +178,7 @@ export class Player extends EventEmitter {
             case Mode.RepeatOnce:
                 this._mode = Mode.RepeatNone;
         }
-        this.emit('update');
+        this.emit('update-state');
     }
 
     public display(): void {
@@ -238,7 +238,8 @@ export class Player extends EventEmitter {
 
 export declare interface Player extends EventEmitter {
 
-    on(type: 'update', listener: () => void): this;
+    on(type: 'update-state', listener: () => void): this;
+    on(type: 'update-time', listener: (time: number) => void): this;
     on(type: 'playback-started', listener: (track: any, index: number) => void): this;
 
 }
