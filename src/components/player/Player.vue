@@ -1,8 +1,9 @@
 <template>
     <div class="player row">
-        <div class="col-xs-10 col-md-3">
-            <div class="flex no-wrap justify-start items-center fit">
-                <q-img class="q-ma-xs shadow-2" :src="track.artwork_url" />
+        <div @click="mobile" class="lt-md absolute fit"></div>
+        <div class="col-xs-9 col-md-3">
+            <div v-if="$player.state" class="flex no-wrap justify-start items-center fit">
+                <q-img class="q-ma-xs shadow-2" :src="track.images[2].url" />
                 <div class="row q-px-sm ellipsis">
                     <div class="col-12 text-weight-bold ellipsis" v-text="track.title" />
                     <div class="col-12 text-grey">
@@ -18,25 +19,8 @@
                         <q-icon name="mdi-thumb-up-outline" />
                     </q-btn>
                 </div>
-                <div class="col-8 flex flex-center justify-evenly">
-                    <q-btn @click="repeat" :disable="!$player.state" flat dense>
-                        <q-icon
-                            v-bind:class="{ 'text-primary': $player.mode }"
-                            :name="mode[$player.mode]"
-                        />
-                    </q-btn>
-                    <q-btn @click="previous" :disable="!$player.state" flat dense>
-                        <q-icon name="mdi-skip-previous" />
-                    </q-btn>
-                    <q-btn @click="toggle" :disable="!$player.state" flat dense>
-                        <q-icon :name="state[$player.state]" />
-                    </q-btn>
-                    <q-btn @click="next" :disable="!$player.state" flat dense>
-                        <q-icon name="mdi-skip-next" />
-                    </q-btn>
-                    <q-btn @click="shuffle" :disable="!$player.state" flat dense>
-                        <q-icon name="mdi-shuffle" />
-                    </q-btn>
+                <div class="col-8">
+                    <Controls class="flex flex-center justify-evenly" />
                 </div>
                 <div class="col-2">
                     <q-btn
@@ -50,19 +34,7 @@
                     </q-btn>
                 </div>
             </div>
-            <div class="row q-gutter-x-md no-wrap non-selectable">
-                <div class="text-center text-caption text-grey" v-text="format($player.position)" />
-                <div class="fit">
-                    <q-slider
-                        :disable="!$player.state"
-                        v-model="$player.position"
-                        v-bind:max="track.duration"
-                        v-bind:min="0"
-                        dense
-                    />
-                </div>
-                <div class="text-center text-caption text-grey" v-text="format(track.duration)" />
-            </div>
+            <SeekBar v-bind:duration="track.duration" />
         </div>
         <div class="gt-sm col-3">
             <div class="flex justify-end items-center fit q-gutter-x-lg">
@@ -83,13 +55,15 @@
             </div>
         </div>
         <div class="lt-md col">
-            <div class="flex flex-center fit">
-                <q-btn @click="toggle" :disable="!$player.state" flat dense>
-                    <q-icon :name="state[$player.state]" />
+            <div class="row flex-center fit q-gutter-x-sm">
+                <q-btn @click="mobile" flat dense>
+                    <q-icon name="mdi-chevron-up"></q-icon>
                 </q-btn>
+                <ToggleButton />
             </div>
         </div>
         <Queue ref="queue" />
+        <MobilePlayer ref="mobile" v-bind:track="track" />
     </div>
 </template>
 
@@ -99,27 +73,20 @@ import { Component } from 'vue-property-decorator'
 import { State, Mode, Volume } from '@/modules/web-player';
 
 import Track from '@/models/track'
+
 import Queue from '@/components/player/Queue.vue'
+import SeekBar from '@/components/player/SeekBar.vue'
+import Controls from '@/components/player/Controls.vue'
+import ToggleButton from '@/components/player/ToggleButton.vue'
+import MobilePlayer from '@/components/player/MobilePlayer.vue'
 import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
 
-@Component({ components: { Queue, ArtistHyperlink } })
+@Component({
+    components: { Queue, SeekBar, Controls, ToggleButton, MobilePlayer, ArtistHyperlink }
+})
 export default class Player extends Vue {
 
-    private track: Track = {
-        duration: 0
-    } as Track;
-
-    private readonly state = {
-        [State.Idle]: 'mdi-play-outline',
-        [State.Playing]: 'mdi-pause',
-        [State.Paused]: 'mdi-play'
-    };
-
-    private readonly mode = {
-        [Mode.RepeatNone]: 'mdi-repeat-off',
-        [Mode.RepeatAll]: 'mdi-repeat',
-        [Mode.RepeatOnce]: 'mdi-repeat-once'
-    };
+    private track: Track = {} as Track;
 
     private readonly volume = {
         [Volume.Muted]: 'mdi-volume-mute',
@@ -129,37 +96,16 @@ export default class Player extends Vue {
     };
 
     public mounted(): void {
-        this.$player.on('update', () => this.$forceUpdate());
         this.$player.on('playback-started', track => {
             this.track = {
                 id: track['id'],
                 title: track['name'],
+                album: track['album'],
                 artists: track['artists'],
                 duration: track['duration_ms'] / 1000,
-                artwork_url: track['album'].images[2].url
+                images: track['album'].images
             } as Track;
         });
-    }
-
-    public format(seconds: number): string {
-        return new Date(Math.floor(seconds * 1000)).toLocaleTimeString()
-            .replace(/[A-Z]/gi, '').trim().split(/:(.+)/, 2)[1];
-    }
-
-    public toggle(): void {
-        this.$player.toggle();
-    }
-
-    public next(): void {
-        this.$player.play(this.$player.index + 1);
-    }
-
-    public previous(): void {
-        this.$player.play(this.$player.index - 1);
-    }
-
-    public repeat(): void {
-        this.$player.repeat();
     }
 
     public shuffle(): void {
@@ -173,6 +119,10 @@ export default class Player extends Vue {
         (this.$refs['queue'] as Queue).show();
     }
 
+    private mobile() {
+        (this.$refs['mobile'] as MobilePlayer).show();
+    }
+
 }
 </script>
 
@@ -182,6 +132,7 @@ div.player {
     max-height: 72px;
 
     .q-img {
+        z-index: -1;
         min-width: 64px;
         max-width: 64px;
     }
