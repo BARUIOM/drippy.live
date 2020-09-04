@@ -55,8 +55,8 @@
             </div>
         </div>
         <div class="lt-md col">
-            <div class="row flex-center fit q-gutter-x-sm">
-                <q-btn @click="mobile" flat dense>
+            <div class="row flex-center fit">
+                <q-btn class="q-mr-sm" @click="mobile" :disable="!$player.state" flat dense>
                     <q-icon name="mdi-chevron-up"></q-icon>
                 </q-btn>
                 <ToggleButton />
@@ -120,7 +120,9 @@ export default class Player extends Vue {
     }
 
     private mobile() {
-        (this.$refs['mobile'] as MobilePlayer).show();
+        if (this.$player.state) {
+            (this.$refs['mobile'] as MobilePlayer).show();
+        }
     }
 
 }

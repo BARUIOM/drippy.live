@@ -23,7 +23,7 @@
                         </q-img>
                     </div>
                     <div class="col-12">
-                        <div class="row flex-center fit">
+                        <div class="row flex-center fit non-selectable">
                             <div
                                 class="col-12 text-center text-weight-bold ellipsis"
                                 v-text="track.title"

@@ -3,7 +3,7 @@
         <q-item-section avatar>
             <q-icon name="mdi-music-note"></q-icon>
         </q-item-section>
-        <q-item-section>
+        <q-item-section class="non-selectable">
             <q-item-label class="ellipsis" v-text="item.name"></q-item-label>
             <q-item-label caption>
                 <ArtistHyperlink
