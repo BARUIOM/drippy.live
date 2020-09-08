@@ -31,9 +31,11 @@ Vue.mixin({
 Loading.show();
 drippy.validate().then(async () => {
     vm.$data.$user = await Manager.getUser();
-}).catch(() => {
-    if (!window.location.pathname.startsWith('/auth'))
-        router.push({ name: 'login' })
+}).catch((error) => {
+    if (error.response) {
+        if (!window.location.pathname.startsWith('/auth'))
+            router.push({ name: 'login' })
+    }
 }).finally(() => {
     new Vue({ router, render: h => h(App) }).$mount('#app');
     Loading.hide();
