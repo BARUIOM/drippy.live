@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import { LocalStorage, SessionStorage } from 'quasar'
 
-import User from './drippy-user'
+import User, { Profile } from './drippy-user'
 
 const api_url = '' || 'https://api.drippy.live';
 const axios = Axios.create({ baseURL: api_url });
@@ -148,7 +148,16 @@ export class Drippy {
 export class Manager {
 
     public static async getUser(): Promise<User> {
-        return new User(axios, (await axios.get('/profile')).data);
+        const profile = await (async (): Promise<Profile> => {
+            if (!LocalStorage.has('profile')) {
+                LocalStorage.set('profile',
+                    (await axios.get('/profile')).data);
+            }
+
+            return LocalStorage.getItem('profile') as Profile;
+        })();
+
+        return new User(axios, profile);
     }
 
 }
