@@ -32,7 +32,7 @@ Loading.show();
 drippy.validate().then(async () => {
     vm.$data.$user = await Manager.getUser();
 }).catch((error) => {
-    if (error.response) {
+    if (error.response || error.message === 'User not authenticated') {
         if (!window.location.pathname.startsWith('/auth'))
             router.push({ name: 'login' })
     }
