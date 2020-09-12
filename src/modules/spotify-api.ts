@@ -7,14 +7,13 @@ const axios = Axios.create({
 export default class SpotifyClient {
 
     private accessToken?: string;
-    private user?: SpotifyUser;
+
+    private readonly authprovider: () => Promise<string>;
 
     constructor(authprovider: () => Promise<string>) {
-        axios.interceptors.request.use(async config => {
-            if (!this.accessToken) {
-                this.accessToken = await authprovider();
-            }
+        this.authprovider = authprovider;
 
+        axios.interceptors.request.use(async config => {
             config.headers['Authorization'] = `Bearer ${this.accessToken}`;
             return config;
         });
@@ -31,9 +30,12 @@ export default class SpotifyClient {
         });
     }
 
+    public async initialize(): Promise<void> {
+        this.accessToken = await this.authprovider();
+    }
+
     public async getUser(): Promise<SpotifyUser> {
-        const response = await axios.get('/me');
-        return this.user = response.data;
+        return (await axios.get('/me')).data;
     }
 
     public async getTrack(track_id: string) {
@@ -93,14 +95,9 @@ export default class SpotifyClient {
         });
     }
 
-    public async createPlaylist(name: string, user?: SpotifyUser) {
-        const data = this.user || user;
-        if (data !== undefined) {
-            const response = await axios.post(`/users/${data.id}/playlists`, { name });
-            return response.data;
-        }
-
-        throw new Error('User not found');
+    public async createPlaylist(name: string, user_id: string) {
+        const response = await axios.post(`/users/${user_id}/playlists`, { name });
+        return response.data;
     }
 
     public async search(query: string, types: string[] = [], limit: number = 20) {

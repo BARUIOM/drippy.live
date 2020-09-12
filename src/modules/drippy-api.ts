@@ -100,7 +100,8 @@ export class Drippy {
     }
 
     public async createPlaylist(name: string, user: User) {
-        const playlist = await spotify.createPlaylist(name);
+        const playlist = await spotify.createPlaylist(name,
+            Manager.user.profile.id);
         user.collection._playlists.unshift(playlist);
         return playlist;
     }
@@ -214,16 +215,30 @@ export declare interface SearchResults {
 
 export class Manager {
 
-    public static async getUser(): Promise<User> {
-        const user = await spotify.getUser();
-        const profile = {
-            id: user.id,
-            name: user.display_name,
-            photo: ((user.images[0] || { url: null }) as any)['url']
-        }
+    private static _user: User;
 
-        LocalStorage.set('profile', profile);
-        return new User(spotify, profile);
+    public static async getUser(): Promise<User> {
+        await spotify.initialize();
+        const profile = await (async (): Promise<Profile> => {
+            if (!LocalStorage.has('profile')) {
+                const user = await spotify.getUser();
+                const profile = {
+                    id: user.id,
+                    name: user.display_name,
+                    photo: ((user.images[0] || { url: null }) as any)['url']
+                };
+
+                LocalStorage.set('profile', profile);
+            }
+
+            return LocalStorage.getItem('profile') as Profile;
+        })();
+
+        return Manager._user = new User(spotify, profile);
+    }
+
+    public static get user() {
+        return Manager._user;
     }
 
 }
