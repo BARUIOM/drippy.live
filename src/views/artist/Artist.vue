@@ -33,11 +33,6 @@ export default class Artist extends Vue {
         ]
     };
 
-    public async mounted(): Promise<void> {
-        const artist = await this.$drippy.getArtist(this.$route.params['id']);
-        this.artist = Object.freeze(artist);
-    }
-
     public open(artist: any): void {
         this.$router.push({ name: 'album', params: { id: artist['id'] } });
     }
@@ -45,7 +40,8 @@ export default class Artist extends Vue {
 
     @Watch('$route', { immediate: true, deep: true })
     private async change(route: Route): Promise<void> {
-        this.artist = await this.$drippy.getArtist(route.params['id']);
+        const artist = await this.$drippy.getArtist(route.params['id']);
+        this.artist = Object.freeze(artist);
     }
 
 }

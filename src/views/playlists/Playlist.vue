@@ -66,22 +66,6 @@ export default class Playlist extends Vue {
 
     private following: boolean = false;
 
-    public async load(id: string): Promise<void> {
-        const playlist = await this.$drippy.getPlaylist(id);
-        if (!playlist.images.length) {
-            playlist.images[0] = this.$drippy.thumbnails['collection'];
-        }
-
-        playlist.tracks = [...playlist.tracks.items.map((e: any) => e.track)];
-        this.playlist = playlist;
-    }
-
-    public async mounted(): Promise<void> {
-        await this.load(this.$route.params["id"]);
-        this.following = this.$user.collection._playlists
-            .contains(this.playlist.id);
-    }
-
     private async follow(): Promise<void> {
         await this.$drippy.followPlaylist(this.playlist, this.$user);
         this.$q.notify({ type: 'positive', message: `Playlist '${this.playlist.name}' added to your collection!`, position: 'top' });
@@ -112,7 +96,16 @@ export default class Playlist extends Vue {
 
     @Watch('$route', { immediate: true, deep: true })
     private async change(route: Route): Promise<void> {
-        await this.load(route.params['id']);
+        const playlist = await this.$drippy.getPlaylist(route.params['id']);
+        if (!playlist.images.length) {
+            playlist.images[0] = this.$drippy.thumbnails['collection'];
+        }
+
+        playlist.tracks = [...playlist.tracks.items.map((e: any) => e.track)];
+        this.playlist = playlist;
+
+        this.following = this.$user.collection._playlists
+            .contains(this.playlist.id);
     }
 
 }
