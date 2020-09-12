@@ -62,12 +62,14 @@ export default class User extends EventEmitter {
 
         (async function list(offset: number = 0) {
             const items = new Array();
-            const response = await client.getSavedTracks(offset);
-            (response['items'] as Array<any>).forEach(e => items.push(e));
+            const data = await client.getSavedTracks(offset);
+            (data['items'] as Array<any>).forEach(e =>
+                items.push(e['track'])
+            );
 
-            if (response['next']) {
+            if (data['next']) {
                 (await list(offset + items.length))
-                    .forEach(e => items.push(e));
+                    .forEach(e => items.push(e['track']));
             }
 
             return items;
