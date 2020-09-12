@@ -1,30 +1,78 @@
-import { AxiosInstance } from 'axios'
 import { EventEmitter } from 'events'
 
 import Container from '@/models/container'
+import SpotifyClient from './spotify-api';
 
 export default class User extends EventEmitter {
 
     private readonly _profile: Profile;
     private readonly _collection: Collection = new Collection();
 
-    public constructor(axios: AxiosInstance, profile: Profile) {
+    public constructor(client: SpotifyClient, profile: Profile) {
         super();
         this._profile = profile;
-        axios.get('/collection/playlists').then(response => {
-            this._collection.playlists = response.data;
+
+        (async function list(offset: number = 0) {
+            const items = new Array();
+            const response = await client.getUserPlaylists(offset);
+            (response['items'] as Array<any>).forEach(e => items.push(e));
+
+            if (response['next']) {
+                (await list(offset + items.length))
+                    .forEach(e => items.push(e));
+            }
+
+            return items;
+        })().then(playlists => {
+            this._collection.playlists = playlists;
             this.emit('ready');
         });
-        axios.get('/collection/artists').then(response => {
-            this._collection.following = response.data;
+
+        (async function list(after?: string) {
+            const items = new Array();
+            const response = await client.getFollowedArtists(after);
+            (response['items'] as Array<any>).forEach(e => items.push(e));
+
+            if (response['next']) {
+                (await list(items[items.length - 1]['id']))
+                    .forEach(e => items.push(e));
+            }
+
+            return items;
+        })().then(artists => {
+            this._collection.following = artists;
             this.emit('ready');
         });
-        axios.get('/collection/albums').then(response => {
-            this._collection.albums = response.data;
+
+        (async function list(offset: number = 0) {
+            const items = new Array();
+            const response = await client.getSavedAlbums(offset);
+            (response['items'] as Array<any>).forEach(e => items.push(e));
+
+            if (response['next']) {
+                (await list(offset + items.length))
+                    .forEach(e => items.push(e));
+            }
+
+            return items;
+        })().then(albums => {
+            this._collection.albums = albums;
             this.emit('ready');
         });
-        axios.get('/collection/tracks').then(response => {
-            this._collection.tracks = response.data;
+
+        (async function list(offset: number = 0) {
+            const items = new Array();
+            const response = await client.getSavedTracks(offset);
+            (response['items'] as Array<any>).forEach(e => items.push(e));
+
+            if (response['next']) {
+                (await list(offset + items.length))
+                    .forEach(e => items.push(e));
+            }
+
+            return items;
+        })().then(tracks => {
+            this._collection.tracks = tracks;
             this.emit('ready');
         });
     }

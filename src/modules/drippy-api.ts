@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import { LocalStorage, SessionStorage } from 'quasar'
 
+import SpotifyClient from './spotify-api'
 import User, { Profile } from './drippy-user'
 
 const api_url = '' || 'https://api.drippy.live';
@@ -37,7 +38,18 @@ axios.interceptors.response.use(e => e, error => {
     throw error;
 });
 
+const spotify = new SpotifyClient(async () => {
+    const data = (await axios.get('/token')).data;
+    return data['token'];
+});
+
 export class Drippy {
+
+    private static collect(data: any[], key: string): any[] {
+        const map = new Map<string, any>();
+        data.forEach(e => map.set(String(e[key]).toLowerCase().trim(), e));
+        return Array.from(map.values());
+    }
 
     public async validate(): Promise<void> {
         if (!LocalStorage.has('session'))
@@ -66,51 +78,97 @@ export class Drippy {
     }
 
     public async getPlaylist(playlist_id: string) {
-        return (await axios.get(`/playlist/${playlist_id}`)).data;
+        return await spotify.getPlaylist(playlist_id);
     }
 
     public async followPlaylist(playlist: any, user: User) {
-        await axios.put(`/collection/playlists/${playlist['id']}`);
+        await spotify.followPlaylist(playlist['id']);
         user.collection._playlists.unshift(playlist);
     }
 
     public async unfollowPlaylist(playlist_id: string, user: User) {
-        await axios.delete(`/collection/playlists/${playlist_id}`);
+        await spotify.unfollowPlaylist(playlist_id);
         user.collection._playlists.remove(playlist_id);
     }
 
     public async addTracksToPlaylist(playlist_id: string, tracks: any[]) {
-        await axios.post(`/playlist/${playlist_id}/tracks`, { tracks: tracks.map(e => e['id']) });
+        await spotify.addTracksToPlaylist(playlist_id, tracks.map(e => e['id']));
     }
 
     public async removeTrackFromPlaylist(playlist_id: string, track: any) {
-        await axios.delete(`/playlist/${playlist_id}/tracks`, { data: { tracks: [track.id] } });
+        await spotify.removeTracksFromPlaylist(playlist_id, [track.id]);
     }
 
     public async createPlaylist(name: string, user: User) {
-        const playlist = (await axios.post('/collection/playlists', { name })).data;
+        const playlist = await spotify.createPlaylist(name);
         user.collection._playlists.unshift(playlist);
         return playlist;
     }
 
-    public async search(query: string) {
-        const response = (await axios.post('/search', { query })).data;
-        SessionStorage.set('search_results', response);
-        return response;
+    public async search(query: string): Promise<SearchResults> {
+        const results = new Map<string, Array<any>>();
+        const response = await spotify.search(query,
+            ['artist', 'track', 'playlist', 'album'], 10);
+
+        for (let key of Object.keys(response))
+            results.set(key, response[key].items);
+
+        if (results.has('albums') && results.has('tracks')) {
+            const singles = (results.get('albums')?.filter(e => e['album_type'] == 'single')
+                .map(e => e['name']) as string[]).filter(e => results.get('tracks')?.find(t => t['name'] === e));
+            results.set('albums', results.get('albums')?.filter(e => !singles.includes(e['name'])) as any[]);
+        }
+
+        if (results.has('tracks')) {
+            const tracks = Drippy.collect(results.get('tracks') as any[], 'name');
+            results.set('tracks', tracks);
+        }
+
+        const data = Array.from(results).reduce((obj, [key, value]) =>
+            Object.assign(obj, { [key]: value }), {});
+        SessionStorage.set('search_results', data);
+        return data as SearchResults;
     }
 
     public async getArtist(artist_id: string) {
-        return (await axios.get(`/artists/${artist_id}`)).data;
+        const artist = await spotify.getArtist(artist_id);
+        const collection = await (async function list(offset: number = 0) {
+            const items = new Array();
+            const albums = await spotify.getArtistAlbums(artist_id, ['album', 'single'], 50, offset);
+            (albums.items as Array<any>).forEach(e => items.push(e));
+
+            if (albums.next) {
+                (await list(offset + albums.items.length))
+                    .forEach(e => items.push(e));
+            }
+
+            return items;
+        })();
+
+        const albums = Drippy.collect(collection.filter(e => e['album_type'] === 'album'), 'name')
+            .map(e => Object.assign(e, { release_date: Date.parse(e['release_date']) }));
+        const singles = Drippy.collect(collection.filter(e => e['album_type'] === 'single'), 'name')
+            .map(e => Object.assign(e, { release_date: Date.parse(e['release_date']) }));
+
+        artist['albums'] = albums.sort((a, b) => b['release_date'] - a['release_date']);
+        artist['singles'] = singles.sort((a, b) => b['release_date'] - a['release_date']);
+        return artist;
     }
 
     public async getAlbum(album_id: string) {
-        const album = (await axios.get(`/albums/${album_id}`)).data;
-        (album.tracks.items as any[]).forEach(e => e['album'] = { id: album.id, name: album.name, images: album.images });
+        const album = await spotify.getAlbum(album_id);
+        (album.tracks.items as any[]).forEach(e =>
+            e['album'] = {
+                id: album.id,
+                name: album.name,
+                images: album.images
+            }
+        );
         return album;
     }
 
     public async getTrack(track_id: string) {
-        return (await axios.get(`/track/${track_id}`)).data;
+        return await spotify.getTrack(track_id);
     }
 
     public async spotifyCheck(code: string): Promise<SpotifyAuthResponse | undefined> {
@@ -145,19 +203,27 @@ export class Drippy {
 
 }
 
+export declare interface SearchResults {
+
+    readonly tracks: any[];
+    readonly artists: any[];
+    readonly playlists: any[];
+    readonly albums: any[];
+
+}
+
 export class Manager {
 
     public static async getUser(): Promise<User> {
-        const profile = await (async (): Promise<Profile> => {
-            if (!LocalStorage.has('profile')) {
-                LocalStorage.set('profile',
-                    (await axios.get('/profile')).data);
-            }
+        const user = await spotify.getUser();
+        const profile = {
+            id: user.id,
+            name: user.display_name,
+            photo: ((user.images[0] || { url: null }) as any)['url']
+        }
 
-            return LocalStorage.getItem('profile') as Profile;
-        })();
-
-        return new User(axios, profile);
+        LocalStorage.set('profile', profile);
+        return new User(spotify, profile);
     }
 
 }

@@ -52,6 +52,7 @@ import TrackList from '@/components/misc/TrackList.vue'
 import Contents from '@/components/misc/Contents.vue'
 
 import Results from './Results.vue'
+import { SearchResults } from '@/modules/drippy-api'
 
 @Component({ components: { Results, TrackList, Contents } })
 export default class Search extends Vue {
@@ -66,8 +67,8 @@ export default class Search extends Vue {
 
     mounted() {
         if (this.$q.sessionStorage.has('search_results')) {
-            const results = this.$q.sessionStorage.getItem('search_results') as SearchResults;
-            this.results = Object.freeze(results);
+            const results = this.$q.sessionStorage.getItem('search_results');
+            this.results = Object.freeze(results) as SearchResults;
         }
     }
 
@@ -80,15 +81,6 @@ export default class Search extends Vue {
     open(name: string, id: string) {
         this.$router.push({ name, params: { id } });
     }
-
-}
-
-interface SearchResults {
-
-    tracks: any[];
-    artists: any[];
-    playlists: any[];
-    albums: any[];
 
 }
 </script>
