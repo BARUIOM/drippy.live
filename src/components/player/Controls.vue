@@ -10,8 +10,11 @@
         <q-btn @click="next" :disable="!$player.state" flat dense>
             <q-icon name="mdi-skip-next" />
         </q-btn>
-        <q-btn :disable="!$player.state" flat dense>
-            <q-icon name="mdi-shuffle" />
+        <q-btn @click="shuffle" :disable="!$player.state" flat dense>
+            <q-icon
+                v-bind:class="{ 'text-primary': $player.shuffle_mode }"
+                :name="shuffle_mode[$player.shuffle_mode]"
+            />
         </q-btn>
     </div>
 </template>
@@ -20,7 +23,7 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
-import { Mode } from '@/modules/web-player';
+import { Mode, ShuffleMode } from '@/modules/web-player';
 import ToggleButton from '@/components/player/ToggleButton.vue'
 
 @Component({ components: { ToggleButton } })
@@ -32,6 +35,11 @@ export default class Controls extends Vue {
         [Mode.RepeatOnce]: 'mdi-repeat-once'
     };
 
+    private readonly shuffle_mode = {
+        [ShuffleMode.ShuffleOff]: 'mdi-shuffle-disabled',
+        [ShuffleMode.ShuffleOn]: 'mdi-shuffle'
+    }
+
     private mounted(): void {
         this.$player.on('update-state', this.update);
     }
@@ -42,6 +50,10 @@ export default class Controls extends Vue {
 
     public repeat(): void {
         this.$player.repeat();
+    }
+
+    public shuffle(): void {
+        this.$player.shuffle();
     }
 
     public previous(): void {

@@ -40,6 +40,12 @@ export enum Mode {
 
 }
 
+export enum ShuffleMode {
+
+    ShuffleOff = 0, ShuffleOn = 1
+
+}
+
 export enum Volume {
 
     VolumeHigh, VolumeMedium, VolumeLow, Muted
@@ -54,6 +60,7 @@ export class Player extends EventEmitter {
     private _playlist: any[] = [];
     private _state: State = State.Idle;
     private _mode: Mode = Mode.RepeatNone;
+    private _shuffle: ShuffleMode = ShuffleMode.ShuffleOff;
     private _volume: Volume = Volume.VolumeHigh;
 
     private constructor() {
@@ -181,6 +188,18 @@ export class Player extends EventEmitter {
         this.emit('update-state');
     }
 
+    public shuffle(): void {
+        switch (this._shuffle) {
+            case ShuffleMode.ShuffleOff:
+                this._shuffle = ShuffleMode.ShuffleOn;
+                break;
+            case ShuffleMode.ShuffleOn:
+                this._shuffle = ShuffleMode.ShuffleOff;
+                break;
+        }
+        this.emit('update-state');
+    }
+
     public display(): void {
         video.play().then(() => (video as any).requestPictureInPicture());
     }
@@ -211,6 +230,10 @@ export class Player extends EventEmitter {
 
     public get mode() {
         return this._mode;
+    }
+
+    public get shuffle_mode() {
+        return this._shuffle;
     }
 
     get volume() {
