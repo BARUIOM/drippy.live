@@ -18,6 +18,19 @@ function getArtworks(track: any): MediaImage[] {
     }));
 }
 
+function random(index: number, max: number, exclude: number[]): number {
+    if (max < exclude.length) {
+        return -1;
+    }
+
+    const value = Math.floor(Math.random() * (+max + 1));
+    if (exclude.includes(value) || (value === index + 1 && max !== exclude.length)) {
+        return random(index, max, exclude);
+    }
+
+    return value;
+}
+
 class Thumbnail extends Image {
 
     constructor(media: MediaImage) {
@@ -58,6 +71,7 @@ export class Player extends EventEmitter {
 
     private _index: number = 0;
     private _playlist: any[] = [];
+    private _indexes: number[] = [];
     private _state: State = State.Idle;
     private _mode: Mode = Mode.RepeatNone;
     private _shuffle: ShuffleMode = ShuffleMode.ShuffleOff;
@@ -150,17 +164,37 @@ export class Player extends EventEmitter {
                 return Player.Instance.play(Player.Instance._index);
             }
 
-            if (Player.Instance._mode == Mode.RepeatAll && (Player.Instance._index + 1) == Player.Instance._playlist.length) {
-                Player.Instance._mode = Mode.RepeatNone;
-                return Player.Instance.play(0);
+            const index: number = (() => {
+                if (Player.Instance._shuffle == ShuffleMode.ShuffleOff) {
+                    return Player.Instance._index + 1;
+                }
+
+                return random(
+                    Player.Instance._index,
+                    Player.Instance._playlist.length - 1,
+                    Player.Instance._indexes
+                );
+            })();
+
+            if (Player.Instance._mode == Mode.RepeatAll && index > -1) {
+                if (index === Player.Instance._playlist.length) {
+                    Player.Instance._mode = Mode.RepeatNone;
+                    return Player.Instance.play(0);
+                }
+            } else if (index === -1 || index === Player.Instance._playlist.length) {
+                return Player.Instance._indexes = [];
             }
 
-            Player.Instance.play(Player.Instance._index + 1);
+            Player.Instance.play(index);
         });
     }
 
     public play(index: number): void {
         if (this.playlist[index] !== undefined) {
+            if (!this._indexes.includes(index)) {
+                this._indexes.push(index);
+            }
+
             audio.pause();
             drippy.getAudio(this.playlist[index]['id']).then(src => {
                 this._index = index;
@@ -213,6 +247,7 @@ export class Player extends EventEmitter {
     }
 
     public set playlist(playlist: any[]) {
+        this._indexes = [];
         this._playlist = playlist;
     }
 
