@@ -18,19 +18,6 @@ function getArtworks(track: any): MediaImage[] {
     }));
 }
 
-function random(index: number, max: number, exclude: number[]): number {
-    if (max < exclude.length) {
-        return -1;
-    }
-
-    const value = Math.floor(Math.random() * (+max + 1));
-    if (exclude.includes(value) || (value === index + 1 && max !== exclude.length)) {
-        return random(index, max, exclude);
-    }
-
-    return value;
-}
-
 class Thumbnail extends Image {
 
     constructor(media: MediaImage) {
@@ -164,10 +151,8 @@ export class Player extends EventEmitter {
                 return Player.Instance.play(Player.Instance._index);
             }
 
-            const index: number = Player.Instance.sort();
+            const index: number = Player.Instance.next();
             if (index === -1 || index === Player.Instance._playlist.length) {
-                Player.Instance._indexes = [];
-
                 if (Player.Instance._mode == Mode.RepeatAll) {
                     Player.Instance._mode = Mode.RepeatNone;
                     Player.Instance.play(Player.Instance.sort(0));
@@ -180,10 +165,6 @@ export class Player extends EventEmitter {
 
     public play(index: number): void {
         if (this.playlist[index] !== undefined) {
-            if (!this._indexes.includes(index)) {
-                this._indexes.push(index);
-            }
-
             audio.pause();
             drippy.getAudio(this.playlist[index]['id']).then(src => {
                 this._index = index;
@@ -195,6 +176,32 @@ export class Player extends EventEmitter {
 
     public toggle(): void {
         this._state == State.Playing ? audio.pause() : audio.play();
+    }
+
+    public next(): number {
+        if (this._shuffle == ShuffleMode.ShuffleOff) {
+            return this._index + 1;
+        }
+
+        const i = this._indexes.indexOf(this._index) + 1;
+        if (this._indexes[i] !== undefined) {
+            return this._indexes[i];
+        }
+
+        return -1;
+    }
+
+    public previous(): number {
+        if (this._shuffle == ShuffleMode.ShuffleOff) {
+            return this._index - 1;
+        }
+
+        const i = this._indexes.indexOf(this._index) - 1;
+        if (this._indexes[i] !== undefined) {
+            return this._indexes[i];
+        }
+
+        return -1;
     }
 
     public repeat(): void {
@@ -214,9 +221,21 @@ export class Player extends EventEmitter {
     public shuffle(): void {
         switch (this._shuffle) {
             case ShuffleMode.ShuffleOff:
+                this._playlist.forEach((v, i) => {
+                    if (i !== this._index) {
+                        this._indexes.push(i);
+                    }
+                });
+
+                this._indexes = this._indexes
+                    .map(a => ({ sort: Math.random(), value: a }))
+                    .sort((a, b) => a.sort - b.sort).map(a => a.value);
+                this._indexes.unshift(this._index);
+
                 this._shuffle = ShuffleMode.ShuffleOn;
                 break;
             case ShuffleMode.ShuffleOn:
+                this._indexes = [];
                 this._shuffle = ShuffleMode.ShuffleOff;
                 break;
         }
@@ -227,16 +246,12 @@ export class Player extends EventEmitter {
         video.play().then(() => (video as any).requestPictureInPicture());
     }
 
-    private sort(index: number = this._index + 1): number {
+    private sort(index: number): number {
         if (this._shuffle == ShuffleMode.ShuffleOff) {
             return index;
         }
 
-        return random(
-            this._index,
-            this._playlist.length - 1,
-            this._indexes
-        );
+        return this._indexes[index];
     }
 
     public get index() {

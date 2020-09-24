@@ -1,7 +1,10 @@
 <template>
     <div>
         <q-btn @click="repeat" :disable="!$player.state" flat dense>
-            <q-icon v-bind:class="{ 'text-primary': $player.mode }" :name="mode[$player.mode]" />
+            <q-icon
+                v-bind:class="{ 'text-primary': $player.mode }"
+                :name="mode[$player.mode]"
+            />
         </q-btn>
         <q-btn @click="previous" :disable="!$player.state" flat dense>
             <q-icon name="mdi-skip-previous" />
@@ -57,11 +60,11 @@ export default class Controls extends Vue {
     }
 
     public previous(): void {
-        this.$player.play(this.$player.index - 1);
+        this.$player.play(this.$player.previous());
     }
 
     public next(): void {
-        this.$player.play(this.$player.index + 1);
+        this.$player.play(this.$player.next());
     }
 
     private update(): void {
