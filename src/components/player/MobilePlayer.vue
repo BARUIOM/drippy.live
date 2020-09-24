@@ -15,7 +15,7 @@
                 </q-toolbar>
             </q-header>
 
-            <q-page-container class="window-width window-height">
+            <q-page-container class="window-width window-height overflow-hidden">
                 <div class="row fit">
                     <div class="col-12">
                         <q-img :src="track.images[0].url">
