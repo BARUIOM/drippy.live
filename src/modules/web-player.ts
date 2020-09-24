@@ -170,7 +170,7 @@ export class Player extends EventEmitter {
 
                 if (Player.Instance._mode == Mode.RepeatAll) {
                     Player.Instance._mode = Mode.RepeatNone;
-                    Player.Instance.play(Player.Instance.sort());
+                    Player.Instance.play(Player.Instance.sort(0));
                 }
             } else {
                 Player.Instance.play(index);
@@ -227,9 +227,9 @@ export class Player extends EventEmitter {
         video.play().then(() => (video as any).requestPictureInPicture());
     }
 
-    private sort(): number {
+    private sort(index: number = this._index + 1): number {
         if (this._shuffle == ShuffleMode.ShuffleOff) {
-            return this._index + 1;
+            return index;
         }
 
         return random(
