@@ -164,28 +164,17 @@ export class Player extends EventEmitter {
                 return Player.Instance.play(Player.Instance._index);
             }
 
-            const index: number = (() => {
-                if (Player.Instance._shuffle == ShuffleMode.ShuffleOff) {
-                    return Player.Instance._index + 1;
-                }
+            const index: number = Player.Instance.sort();
+            if (index === -1 || index === Player.Instance._playlist.length) {
+                Player.Instance._indexes = [];
 
-                return random(
-                    Player.Instance._index,
-                    Player.Instance._playlist.length - 1,
-                    Player.Instance._indexes
-                );
-            })();
-
-            if (Player.Instance._mode == Mode.RepeatAll && index > -1) {
-                if (index === Player.Instance._playlist.length) {
+                if (Player.Instance._mode == Mode.RepeatAll) {
                     Player.Instance._mode = Mode.RepeatNone;
-                    return Player.Instance.play(0);
+                    Player.Instance.play(Player.Instance.sort());
                 }
-            } else if (index === -1 || index === Player.Instance._playlist.length) {
-                return Player.Instance._indexes = [];
+            } else {
+                Player.Instance.play(index);
             }
-
-            Player.Instance.play(index);
         });
     }
 
@@ -236,6 +225,18 @@ export class Player extends EventEmitter {
 
     public display(): void {
         video.play().then(() => (video as any).requestPictureInPicture());
+    }
+
+    private sort(): number {
+        if (this._shuffle == ShuffleMode.ShuffleOff) {
+            return this._index + 1;
+        }
+
+        return random(
+            this._index,
+            this._playlist.length - 1,
+            this._indexes
+        );
     }
 
     public get index() {
