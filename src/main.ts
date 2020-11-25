@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { Loading } from 'quasar'
 
 import App from '@/App.vue'
 import router from '@/router'
@@ -7,9 +6,8 @@ import router from '@/router'
 import player from '@/modules/web-player'
 import drippy, { Manager } from '@/modules/drippy-api'
 
-import '@/plugins/quasar'
 import '@/plugins/validation-rules'
-import '@/plugins/portal'
+import '@/styles/drippy.scss'
 
 Vue.config.productionTip = false;
 Vue.prototype.$drippy = drippy;
@@ -28,7 +26,7 @@ Vue.mixin({
     }
 });
 
-Loading.show();
+//Loading.show();
 drippy.validate().then(async () => {
     vm.$data.$user = await Manager.getUser();
 }).catch((error) => {
@@ -38,5 +36,5 @@ drippy.validate().then(async () => {
     }
 }).finally(() => {
     new Vue({ router, render: h => h(App) }).$mount('#app');
-    Loading.hide();
+    //Loading.hide();
 });
