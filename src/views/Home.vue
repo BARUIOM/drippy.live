@@ -1,29 +1,18 @@
 <template>
-    <q-layout view="lHh Lpr lFf">
-        <q-header elevated class="bg-dark">
-            <q-toolbar>
-                <q-btn @click="drawer = !drawer" icon="mdi-menu" flat dense></q-btn>
-            </q-toolbar>
-            <portal-target class="fit" name="header" />
-        </q-header>
-
-        <q-drawer v-model="drawer" :width="256" show-if-above bordered>
-            <Drawer />
-        </q-drawer>
-
-        <q-page-container class="window-width window-height">
-            <q-scroll-area class="fit" id="page-container">
-                <router-view />
-            </q-scroll-area>
-        </q-page-container>
-
-        <q-footer class="bg-dark" elevated>
-            <q-separator />
-            <Player />
-        </q-footer>
-
-        <Playlists />
-    </q-layout>
+    <div class="flex flex-col h-screen">
+        <header class="h-16 dark:bg-dark"></header>
+        <main
+            class="grid grid-cols-1 gap-4 p-4 h-full dark:bg-body dark:text-light overflow-auto"
+        >
+            <div class="row-span-1">
+                <span class="text-xl font-bold">Artists</span>
+            </div>
+            <div class="row-span-2">
+                <span class="text-xl font-bold">Playlists</span>
+            </div>
+        </main>
+        <footer class="h-20 dark:bg-dark"></footer>
+    </div>
 </template>
 
 <script lang="ts">
