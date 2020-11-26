@@ -1,5 +1,8 @@
 <template>
-    <div class="shadow rounded p-4 bg-accent-light dark:bg-accent-dark">
+    <div
+        @click="$emit('click')"
+        class="transition-shadow cursor-pointer shadow rounded p-4 bg-accent-light dark:bg-accent-dark hover:shadow-xl"
+    >
         <div class="shadow cover" :style="`background-image: url(${cover})`" />
         <div
             class="text-xl text-center font-bold truncate pt-4"

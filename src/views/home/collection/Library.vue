@@ -11,6 +11,7 @@
                         <ContentCard
                             :title="playlist.name"
                             :cover="playlist.images[0].url"
+                            @click="open('playlist', playlist.id)"
                         />
                     </div>
                 </template>
