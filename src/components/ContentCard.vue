@@ -1,5 +1,5 @@
 <template>
-    <div class="shadow rounded p-4 dark:bg-dark">
+    <div class="shadow rounded p-4 bg-accent-light dark:bg-accent-dark">
         <div class="shadow cover" :style="`background-image: url(${cover})`" />
         <div
             class="text-xl text-center font-bold truncate pt-4"
