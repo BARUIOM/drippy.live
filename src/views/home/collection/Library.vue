@@ -1,42 +1,21 @@
 <template>
     <div>
-        <portal to="header">
-            <q-toolbar class="q-pa-none" inset>
-                <q-tabs v-model="tab" class="bg-dark fit" align="justify">
-                    <q-tab name="playlists" label="Playlists" />
-                    <q-tab name="artists" label="Artists" />
-                    <q-tab name="albums" label="Albums" />
-                </q-tabs>
-            </q-toolbar>
-        </portal>
-        <q-tab-panels class="bg-transparent" v-model="tab">
-            <q-tab-panel class="q-pa-none" name="playlists">
-                <Contents
-                    type="collection"
-                    v-bind:contents="$user.collection.playlists"
-                    @click="open('playlist', arguments[0])"
-                    :wrap="true"
-                />
-            </q-tab-panel>
-
-            <q-tab-panel class="q-pa-none" name="artists">
-                <Contents
-                    type="artist"
-                    v-bind:contents="$user.collection.following"
-                    @click="open('artist', arguments[0])"
-                    :wrap="true"
-                />
-            </q-tab-panel>
-
-            <q-tab-panel class="q-pa-none" name="albums">
-                <Contents
-                    type="collection"
-                    v-bind:contents="$user.collection.albums"
-                    @click="open('album', arguments[0])"
-                    :wrap="true"
-                />
-            </q-tab-panel>
-        </q-tab-panels>
+        <div class="w-full">
+            <div class="p-2 text-xl font-bold">Artists</div>
+        </div>
+        <div class="w-full">
+            <div class="p-2 text-xl font-bold">Playlists</div>
+            <div class="flex flex-wrap">
+                <template v-for="(playlist, i) in $user.collection.playlists">
+                    <div :key="i" class="p-2 w-1/2 sm:w-1/4 lg:w-1/6 xl:w-1/8">
+                        <ContentCard
+                            :title="playlist.name"
+                            :cover="playlist.images[0].url"
+                        />
+                    </div>
+                </template>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -44,12 +23,10 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
-import Contents from '@/components/misc/Contents.vue'
+import ContentCard from '@/components/ContentCard.vue'
 
-@Component({ components: { Contents } })
+@Component({ components: { ContentCard } })
 export default class Library extends Vue {
-
-    private tab: string = 'playlists'
 
     public mounted(): void {
         this.$user.on('ready', () => this.$forceUpdate());

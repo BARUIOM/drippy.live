@@ -23,8 +23,8 @@ const routes: Array<RouteConfig> = [
         children: [
             {
                 path: '',
-                name: 'search',
-                component: Search
+                name: 'library',
+                component: Library
             },
             {
                 path: '/artist/:id',
@@ -45,11 +45,6 @@ const routes: Array<RouteConfig> = [
                 path: '/playlist/:id',
                 name: 'playlist',
                 component: Playlist
-            },
-            {
-                path: '/collection',
-                name: 'collection',
-                component: Library
             },
             {
                 path: '/collection/tracks',
