@@ -4,7 +4,7 @@
             class="shadow-md h-16 bg-accent-light dark:bg-accent-dark"
         ></header>
         <main
-            class="flex flex-wrap p-2 h-full bg-main-light text-black dark:bg-main-dark dark:text-white overflow-auto"
+            class="flex flex-wrap h-full bg-main-light text-black dark:bg-main-dark dark:text-white overflow-auto"
         >
             <router-view />
         </main>

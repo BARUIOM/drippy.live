@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="p-2">
         <div class="w-full">
             <div class="p-2 text-xl font-bold">Artists</div>
         </div>
