@@ -8,6 +8,38 @@ export interface Element {
 
 }
 
+export class LocalStorage {
+
+    public static has(key: string): boolean {
+        return localStorage.getItem(key) !== null;
+    }
+
+    public static get(key: string): any {
+        return JSON.parse(localStorage.getItem(key) as string);
+    }
+
+    public static set(key: string, value: any): void {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+
+}
+
+export class SessionStorage {
+
+    public static has(key: string): boolean {
+        return sessionStorage.getItem(key) !== null;
+    }
+
+    public static get(key: string): any {
+        return JSON.parse(sessionStorage.getItem(key) as string);
+    }
+
+    public static set(key: string, value: any): void {
+        sessionStorage.setItem(key, JSON.stringify(value));
+    }
+
+}
+
 export default class Utils {
 
     public static format(ms: number): string {
@@ -25,6 +57,12 @@ export default class Utils {
         } as Element));
 
         return Object.freeze(elements);
+    }
+
+    public static collect(data: any[], key: string): any[] {
+        const map = new Map<string, any>();
+        data.forEach(e => map.set(String(e[key]).toLowerCase().trim(), e));
+        return Array.from(map.values());
     }
 
 }

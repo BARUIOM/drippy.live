@@ -1,6 +1,6 @@
 import Axios from 'axios'
-import { LocalStorage, SessionStorage } from 'quasar'
 
+import Utils, { LocalStorage, SessionStorage } from './utils';
 import SpotifyClient from './spotify-api'
 import User, { Profile } from './drippy-user'
 
@@ -17,7 +17,7 @@ const thumbnails = {
 
 axios.interceptors.request.use(config => {
     if (LocalStorage.has('session')) {
-        const session = LocalStorage.getItem('session') as UserSession;
+        const session = LocalStorage.get('session') as UserSession;
         config.headers['User-Token'] = session.idToken;
     }
     return config;
@@ -25,7 +25,7 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(e => e, error => {
     if (error.config && error.response && error.response.status === 401) {
-        const session = LocalStorage.getItem('session') as UserSession;
+        const session = LocalStorage.get('session') as UserSession;
         return axios.post('/refresh', { refresh_token: session.refreshToken }).then(response => {
             error.config.headers['User-Token'] = response.data['id_token'];
             LocalStorage.set('session', {
@@ -44,12 +44,6 @@ const spotify = new SpotifyClient(async () => {
 });
 
 export class Drippy {
-
-    private static collect(data: any[], key: string): any[] {
-        const map = new Map<string, any>();
-        data.forEach(e => map.set(String(e[key]).toLowerCase().trim(), e));
-        return Array.from(map.values());
-    }
 
     public async validate(): Promise<void> {
         if (!LocalStorage.has('session'))
@@ -121,7 +115,7 @@ export class Drippy {
         }
 
         if (results.has('tracks')) {
-            const tracks = Drippy.collect(results.get('tracks') as any[], 'name');
+            const tracks = Utils.collect(results.get('tracks') as any[], 'name');
             results.set('tracks', tracks);
         }
 
@@ -131,11 +125,14 @@ export class Drippy {
         return data as SearchResults;
     }
 
-    public async getArtist(artist_id: string) {
-        const artist = await spotify.getArtist(artist_id);
+    public getArtist(artist_id: string): Promise<any> {
+        return spotify.getArtist(artist_id);
+    }
+
+    public async getCollection(artist_id: string, type: 'album' | 'single' | 'appears_on' | 'compilation'): Promise<any> {
         const collection = await (async function list(offset: number = 0) {
             const items = new Array();
-            const albums = await spotify.getArtistAlbums(artist_id, ['album', 'single'], 50, offset);
+            const albums = await spotify.getArtistAlbums(artist_id, [type], 50, offset);
             (albums.items as Array<any>).forEach(e => items.push(e));
 
             if (albums.next) {
@@ -146,14 +143,11 @@ export class Drippy {
             return items;
         })();
 
-        const albums = Drippy.collect(collection.filter(e => e['album_type'] === 'album'), 'name')
-            .map(e => Object.assign(e, { release_date: Date.parse(e['release_date']) }));
-        const singles = Drippy.collect(collection.filter(e => e['album_type'] === 'single'), 'name')
-            .map(e => Object.assign(e, { release_date: Date.parse(e['release_date']) }));
-
-        artist['albums'] = albums.sort((a, b) => b['release_date'] - a['release_date']);
-        artist['singles'] = singles.sort((a, b) => b['release_date'] - a['release_date']);
-        return artist;
+        return Utils.collect(collection, 'name').map(e =>
+            Object.assign(e, {
+                release_date: Date.parse(e['release_date'])
+            })
+        ).sort((a, b) => b['release_date'] - a['release_date']);;
     }
 
     public async getAlbum(album_id: string) {
@@ -231,7 +225,7 @@ export class Manager {
                 LocalStorage.set('profile', profile);
             }
 
-            return LocalStorage.getItem('profile') as Profile;
+            return LocalStorage.get('profile') as Profile;
         })();
 
         return Manager._user = new User(spotify, profile);
