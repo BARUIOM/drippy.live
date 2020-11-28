@@ -1,28 +1,16 @@
 <template>
-    <div v-if="collection && collection.length">
-        <div v-if="title">
-            <div class="q-pa-md">
-                <span class="text-h5 text-weight-bold" v-text="title" />
-            </div>
-            <q-separator />
-        </div>
-        <div class="q-pa-sm">
-            <div class="row q-pa-xs">
-                <template v-for="(item, i) in collection">
-                    <div :key="i" class="q-pa-xs col-xs-6 col-sm-3 col-md-2">
-                        <div class="shadow-4 bg-grey-10" @click="$emit('click', item)">
-                            <q-img
-                                :src="(item.images[0] || $drippy.thumbnails['collection']).url"
-                                :ratio="1"
-                            />
-                        </div>
-                        <div
-                            class="q-py-sm text-center text-subtitle1 text-weight-bold"
-                            v-text="item.name"
-                        />
-                    </div>
-                </template>
-            </div>
+    <div v-if="collection && collection.length" class="w-full">
+        <div v-if="title" class="p-2 text-xl font-bold" v-text="title" />
+        <div class="flex flex-wrap">
+            <template v-for="(item, i) in collection">
+                <div :key="i" class="p-2 w-1/2 sm:w-1/4 lg:w-1/6 xl:w-1/8">
+                    <ContentCard
+                        :title="item.name"
+                        :cover="item.images[0].url"
+                        @click="$emit('click', item)"
+                    />
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -31,7 +19,9 @@
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
 
-@Component
+import ContentCard from '@/components/ContentCard.vue'
+
+@Component({ components: { ContentCard } })
 export default class Collection extends Vue {
 
     @Prop()
