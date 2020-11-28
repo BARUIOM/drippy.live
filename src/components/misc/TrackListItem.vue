@@ -2,24 +2,40 @@
     <div
         @click="$emit('click')"
         @contextmenu.prevent="menu = true"
-        class="flex w-full p-2 cursor-pointer select-none hover:bg-opacity-10 hover:bg-white"
+        class="item flex w-full p-2 cursor-pointer select-none hover:bg-opacity-10 hover:bg-white"
         style="height: 64px"
     >
         <div class="w-20 m-auto">
-            <span class="mx-4 float-right" v-text="index + 1" />
+            <span
+                class="mdi mdi-play mdi-24px inline-block w-full px-4 text-right"
+            ></span>
+            <span
+                class="inline-block w-full px-4 text-right"
+                v-text="index + 1"
+            />
         </div>
-        <div class="w-full md:w-2/4 m-auto">
+        <div class="w-3/4 md:w-2/4 m-auto">
             <div v-text="item.name" />
             <div
-                class="text-opacity-30 text-white"
+                class="text-opacity-40 text-white"
                 v-text="item.artists[0].name"
             />
         </div>
         <div class="w-2/4 m-auto hidden md:block">
-            <span v-text="item.album.name" />
+            <span class="text-opacity-40 text-white" v-text="item.album.name" />
+        </div>
+        <div class="menu-section m-auto">
+            <button
+                class="w-8 mx-4 select-none leading-none align-middle rounded hover:bg-opacity-10 hover:bg-white"
+            >
+                <span class="mdi mdi-dots-horizontal mdi-24px"></span>
+            </button>
         </div>
         <div class="m-auto hidden md:block">
-            <span class="mx-4" v-text="Utils.format(item.duration_ms)" />
+            <span
+                class="mx-4 text-opacity-40 text-white"
+                v-text="Utils.format(item.duration_ms)"
+            />
         </div>
         <div>
             <Cover width="48px" height="48px" :url="item.album.images[2].url" />
@@ -55,11 +71,23 @@ export default class TrackListItem extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.q-item:hover > .menu-section {
-    visibility: visible;
+div.item:not(:hover) {
+    .mdi {
+        display: none;
+    }
+
+    > .menu-section:not([active]) {
+        visibility: hidden;
+    }
 }
 
-.q-item:not(:hover) > .menu-section:not([active]) {
-    visibility: hidden;
+div.item:hover {
+    .mdi + span {
+        display: none;
+    }
+
+    > .menu-section {
+        visibility: visible;
+    }
 }
 </style>
