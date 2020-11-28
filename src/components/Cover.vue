@@ -1,5 +1,8 @@
 <template>
-    <div class="cover" :style="`background-image: url(${url})`" />
+    <div
+        class="cover"
+        :style="`background-image: url(${url}); width: ${width}; height: ${height}`"
+    />
 </template>
 
 <script lang="ts">
@@ -11,6 +14,12 @@ export default class Cover extends Vue {
 
     @Prop({ required: true })
     private readonly url!: string;
+
+    @Prop({ default: 'initial' })
+    private readonly width!: string;
+
+    @Prop({ default: 'initial' })
+    private readonly height!: string;
 
 }
 </script>
