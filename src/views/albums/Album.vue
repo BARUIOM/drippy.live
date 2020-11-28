@@ -5,11 +5,9 @@
             <q-btn icon="mdi-dots-horizontal" flat />
         </template>
         <template v-slot:subheader>
-            <ArtistHyperlink
-                class="text-h6 text-grey"
-                v-bind:artists="artists"
-                :spacer="true"
-                separator="•"
+            <HyperLink
+                class="font-bold text-xl"
+                :elements="Utils.map(artists, 'artist')"
             />
         </template>
         <TrackList v-bind:track_list="track_list" />
@@ -23,9 +21,9 @@ import { Component, Watch } from 'vue-property-decorator'
 
 import Container from '@/components/misc/Container.vue'
 import TrackList from '@/components/misc/TrackList.vue'
-import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
+import HyperLink from '@/components/HyperLink.vue'
 
-@Component({ components: { Container, TrackList, ArtistHyperlink } })
+@Component({ components: { Container, TrackList, HyperLink } })
 export default class Album extends Vue {
 
     private name: string = '';

@@ -15,16 +15,10 @@
         </div>
         <div class="w-3/4 md:w-2/4 m-auto">
             <div v-text="item.name" />
-            <HyperLink
-                class="text-opacity-40 text-black dark:text-white"
-                :elements="map(item.artists, 'artist')"
-            />
+            <HyperLink :elements="Utils.map(item.artists, 'artist')" />
         </div>
         <div class="w-2/4 m-auto hidden md:block">
-            <HyperLink
-                class="text-opacity-40 text-black dark:text-white"
-                :elements="map([item.album], 'album')"
-            />
+            <HyperLink :elements="Utils.map([item.album], 'album')" />
         </div>
         <div class="menu-section m-auto">
             <button
@@ -55,7 +49,7 @@ import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
 
 import Cover from '@/components/Cover.vue'
-import HyperLink, { Element } from '@/components/HyperLink.vue'
+import HyperLink from '@/components/HyperLink.vue'
 
 @Component({ components: { Cover, HyperLink } })
 export default class TrackListItem extends Vue {
@@ -72,16 +66,6 @@ export default class TrackListItem extends Vue {
         navigator.clipboard.writeText(`${window.location.origin}/track/${this.item['id']}`).then(() => {
             //this.$q.notify({ type: 'positive', message: 'Track link copied to clipboard!', position: 'top' });
         });
-    }
-
-    private map(array: any[], route: string): readonly Element[] {
-        const elements = array.map(e => ({
-            text: e.name,
-            param: e.id,
-            route
-        } as Element));
-
-        return Object.freeze(elements);
     }
 
 }
