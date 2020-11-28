@@ -1,26 +1,15 @@
 <template>
-    <div>
-        <div class="q-pa-sm fit">
-            <div class="q-pa-xs row">
-                <div
-                    class="col-xs-4 col-sm-3 col-md-1"
-                    v-bind:class="{ 'col-xs-12': fit, 'col-md-2': fit }"
-                >
-                    <q-img class="shadow-8" :src="thumbnail" :ratio="1" />
-                </div>
-                <div class="q-pa-md col">
-                    <div class="row">
-                        <div class="text-h4 text-weight-bold ellipsis" v-text="headline" />
-                    </div>
-                    <div class="row">
-                        <slot name="subheader" />
-                    </div>
-                    <div class="row q-mt-sm q-gutter-x-sm">
-                        <slot name="actions" />
-                    </div>
-                </div>
+    <div class="w-full">
+        <div class="flex flex-wrap sm:p-8 z-20">
+            <div class="w-full sm:w-2/6 md:w-2/8 xl:w-1/6">
+                <Cover class="shadow-xl" :url="thumbnail" />
+            </div>
+            <div class="w-full p-4 sm:w-4/6 md:w-6/8 xl:w-5/6">
+                <div class="headline font-bold truncate" v-text="headline" />
+                <slot name="subheader" />
             </div>
         </div>
+
         <slot />
     </div>
 </template>
@@ -29,7 +18,9 @@
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
 
-@Component
+import Cover from '@/components/Cover.vue'
+
+@Component({ components: { Cover } })
 export default class Container extends Vue {
 
     @Prop({ required: true })
@@ -43,3 +34,9 @@ export default class Container extends Vue {
 
 }
 </script>
+
+<style lang="scss" scoped>
+div.headline {
+    font-size: 4vw;
+}
+</style>
