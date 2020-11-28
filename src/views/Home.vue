@@ -9,7 +9,7 @@
             <router-view />
         </main>
         <footer
-            class="shadow-md h-20 bg-accent-light dark:bg-accent-dark"
+            class="border-t border-opacity-10 border-black dark:border-white shadow-md h-20 bg-accent-light dark:bg-accent-dark"
         ></footer>
     </div>
 </template>

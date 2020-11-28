@@ -2,7 +2,7 @@
     <div
         @click="$emit('click')"
         @contextmenu.prevent="menu = true"
-        class="item flex w-full p-2 cursor-pointer select-none hover:bg-opacity-10 hover:bg-white"
+        class="item flex w-full p-2 cursor-pointer select-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
         style="height: 64px"
     >
         <div class="w-20 m-auto">
@@ -17,12 +17,15 @@
         <div class="w-3/4 md:w-2/4 m-auto">
             <div v-text="item.name" />
             <div
-                class="text-opacity-40 text-white"
+                class="text-opacity-40 text-black dark:text-white"
                 v-text="item.artists[0].name"
             />
         </div>
         <div class="w-2/4 m-auto hidden md:block">
-            <span class="text-opacity-40 text-white" v-text="item.album.name" />
+            <span
+                class="text-opacity-40 text-black dark:text-white"
+                v-text="item.album.name"
+            />
         </div>
         <div class="menu-section m-auto">
             <button
@@ -33,12 +36,17 @@
         </div>
         <div class="m-auto hidden md:block">
             <span
-                class="mx-4 text-opacity-40 text-white"
+                class="mx-4 text-opacity-40 text-black dark:text-white"
                 v-text="Utils.format(item.duration_ms)"
             />
         </div>
         <div>
-            <Cover width="48px" height="48px" :url="item.album.images[2].url" />
+            <Cover
+                class="shadow-md"
+                width="48px"
+                height="48px"
+                :url="item.album.images[2].url"
+            />
         </div>
     </div>
 </template>
