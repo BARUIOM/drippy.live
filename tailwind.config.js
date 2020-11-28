@@ -27,5 +27,12 @@ module.exports = {
     variants: {
         extend: {}
     },
-    plugins: []
+    plugins: [],
+    purge: {
+        enabled: process.env.NODE_ENV === 'production',
+        content: [
+            'src/components/**/*.vue',
+            'src/views/**/*.vue'
+        ]
+    }
 }
