@@ -1,9 +1,9 @@
 {
     "name": "drippy",
     "version": "3.0.0",
+    "private": true,
     "description": "Music streaming service",
     "author": "Vitor Macedo",
-    "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build"
@@ -19,18 +19,20 @@
         "vue-router": "^3.4.9"
     },
     "devDependencies": {
+        "@fullhuman/postcss-purgecss": "^3.0.0",
+        "@fullhuman/vue-cli-plugin-purgecss": "~3.0.1",
         "@types/events": "^3.0.0",
         "@types/wicg-mediasession": "^1.1.0",
         "@vue/cli-plugin-babel": "~4.5.9",
         "@vue/cli-plugin-router": "~4.5.9",
         "@vue/cli-plugin-typescript": "~4.5.9",
         "@vue/cli-service": "~4.5.9",
-        "babel-plugin-transform-imports": "2.0.0",
         "autoprefixer": "^9.8.6",
+        "babel-plugin-transform-imports": "2.0.0",
         "node-sass": "^5.0.0",
-        "sass-loader": "^10.1.0",
         "postcss": "^8.1.10",
         "postcss-loader": "^4.1.0",
+        "sass-loader": "^10.1.0",
         "tailwindcss": "^2.0.1",
         "typescript": "~4.1.2",
         "vue-template-compiler": "^2.6.12"
