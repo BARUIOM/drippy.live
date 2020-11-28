@@ -1,15 +1,32 @@
 <template>
     <Container
         v-bind:headline="artist.name"
-        v-bind:thumbnail="(artist.images[0] || $drippy.thumbnails['artist']).url"
+        v-bind:thumbnail="
+            (artist.images[0] || $drippy.thumbnails['artist']).url
+        "
     >
-        <template v-slot:actions>
-            <q-btn icon="mdi-dots-horizontal" flat />
-            <q-btn flat>Follow</q-btn>
-        </template>
-
-        <Collection title="Albums" v-bind:collection="artist.albums" @click="open" />
-        <Collection title="Singles & EPs" v-bind:collection="artist.singles" @click="open" />
+        <div class="p-2">
+            <Collection
+                title="Albums"
+                v-bind:collection="albums"
+                @click="open"
+            />
+            <Collection
+                title="Singles &amp; EPs"
+                v-bind:collection="singles"
+                @click="open"
+            />
+            <Collection
+                title="Compilations"
+                v-bind:collection="compilations"
+                @click="open"
+            />
+            <Collection
+                title="Appears on"
+                v-bind:collection="related"
+                @click="open"
+            />
+        </div>
     </Container>
 </template>
 
@@ -26,22 +43,45 @@ export default class Artist extends Vue {
 
     private artist: any = {
         name: '',
-        images: [
-            {
-                url: ''
-            }
-        ]
+        images: [{ url: '' }]
     };
+
+    private albums: any[] = [];
+    private singles: any[] = [];
+    private compilations: any[] = [];
+    private related: any[] = [];
 
     public open(artist: any): void {
         this.$router.push({ name: 'album', params: { id: artist['id'] } });
     }
 
-
     @Watch('$route', { immediate: true, deep: true })
-    private async change(route: Route): Promise<void> {
-        const artist = await this.$drippy.getArtist(route.params['id']);
-        this.artist = Object.freeze(artist);
+    private change(route: Route): void {
+        const artist_id = route.params['id'];
+        this.$drippy.getArtist(artist_id)
+            .then(artist =>
+                this.artist = Object.freeze(artist)
+            );
+
+        this.$drippy.getCollection(artist_id, 'album')
+            .then(albums =>
+                this.albums = Object.freeze(albums)
+            );
+
+        this.$drippy.getCollection(artist_id, 'single')
+            .then(singles =>
+                this.singles = Object.freeze(singles)
+            );
+
+        this.$drippy.getCollection(artist_id, 'compilation')
+            .then(compilations =>
+                this.compilations = Object.freeze(compilations)
+            );
+
+        this.$drippy.getCollection(artist_id, 'appears_on')
+            .then(related =>
+                this.related = Object.freeze(related)
+            );
     }
 
 }
