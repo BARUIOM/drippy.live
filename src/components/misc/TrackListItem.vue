@@ -16,15 +16,15 @@
         </div>
         <div class="w-3/4 md:w-2/4 m-auto">
             <div v-text="item.name" />
-            <div
+            <HyperLink
                 class="text-opacity-40 text-black dark:text-white"
-                v-text="item.artists[0].name"
+                :elements="map(item.artists, 'artist')"
             />
         </div>
         <div class="w-2/4 m-auto hidden md:block">
-            <span
+            <HyperLink
                 class="text-opacity-40 text-black dark:text-white"
-                v-text="item.album.name"
+                :elements="map([item.album], 'album')"
             />
         </div>
         <div class="menu-section m-auto">
@@ -56,9 +56,9 @@ import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
 
 import Cover from '@/components/Cover.vue'
-//import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
+import HyperLink, { Element } from '@/components/HyperLink.vue'
 
-@Component({ components: { Cover } })
+@Component({ components: { Cover, HyperLink } })
 export default class TrackListItem extends Vue {
 
     private menu: boolean = false;
@@ -73,6 +73,16 @@ export default class TrackListItem extends Vue {
         navigator.clipboard.writeText(`${window.location.origin}/track/${this.item['id']}`).then(() => {
             //this.$q.notify({ type: 'positive', message: 'Track link copied to clipboard!', position: 'top' });
         });
+    }
+
+    private map(array: any[], route: string): readonly Element[] {
+        const elements = array.map(e => ({
+            text: e.name,
+            param: e.id,
+            route
+        } as Element));
+
+        return Object.freeze(elements);
     }
 
 }
