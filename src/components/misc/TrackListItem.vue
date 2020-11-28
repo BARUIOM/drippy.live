@@ -5,14 +5,13 @@
         class="item flex w-full p-2 cursor-pointer select-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
         style="height: 64px"
     >
-        <div class="w-20 m-auto">
-            <span
-                class="mdi mdi-play mdi-24px inline-block w-full px-4 text-right"
-            ></span>
-            <span
-                class="inline-block w-full px-4 text-right"
-                v-text="index + 1"
-            />
+        <div class="relative w-20">
+            <div
+                class="absolute w-full h-full inline-flex justify-end items-center px-4"
+            >
+                <span class="mdi mdi-play mdi-24px"></span>
+                <span v-text="index + 1" />
+            </div>
         </div>
         <div class="w-3/4 md:w-2/4 m-auto">
             <div v-text="item.name" />
