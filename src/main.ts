@@ -3,6 +3,7 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from '@/router'
 
+import Utils from '@/modules/utils'
 import player from '@/modules/web-player'
 import drippy, { Manager } from '@/modules/drippy-api'
 
@@ -18,6 +19,7 @@ const vm = new Vue({
 });
 
 Vue.mixin({
+    data: () => ({ Utils }),
     computed: {
         $user: {
             get: () => vm.$data.$user,
