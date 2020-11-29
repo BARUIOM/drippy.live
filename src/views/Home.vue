@@ -6,7 +6,12 @@
         >
             <router-view />
         </main>
-        <footer class="bg-accent-light dark:bg-accent-dark"></footer>
+        <footer
+            v-if="$player.state"
+            class="bg-accent-light dark:bg-accent-dark"
+        >
+            <Player />
+        </footer>
     </div>
 </template>
 
@@ -14,8 +19,16 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+import Player from '@/components/player/Player.vue'
+
+@Component({ components: { Player } })
 export default class Home extends Vue {
 
+    private mounted(): void {
+        this.$player.on('playback-started', () =>
+            this.$forceUpdate()
+        );
+    }
 }
 </script>
 

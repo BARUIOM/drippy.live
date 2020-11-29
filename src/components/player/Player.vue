@@ -1,69 +1,90 @@
 <template>
-    <div class="player row">
-        <div @click="mobile" class="lt-md absolute fit"></div>
-        <div class="col-xs-9 col-md-3">
-            <div v-if="$player.state" class="flex no-wrap justify-start items-center fit">
-                <q-img class="q-ma-xs shadow-2" :src="track.images[2].url" />
-                <div class="row q-px-sm ellipsis">
-                    <div class="col-12 text-weight-bold ellipsis" v-text="track.title" />
-                    <div class="col-12 text-grey">
-                        <ArtistHyperlink v-bind:artists="track.artists" />
-                    </div>
+    <div class="flex flex-wrap w-full h-full select-none items-center">
+        <div class="hidden md:flex md:w-2/12 items-center p-2">
+            <Button @click="previous" class="m-2" size="2rem">
+                <span class="mdi mdi-skip-previous mdi-24px" />
+            </Button>
+            <ToggleButton />
+            <Button @click="next" class="m-2" size="2rem">
+                <span class="mdi mdi-skip-next mdi-24px" />
+            </Button>
+        </div>
+        <div class="hidden md:flex w-6/12 h-full items-center">
+            <div class="pt-6 px-4 text-xs">
+                <span
+                    class="text-opacity-60 text-black dark:text-white"
+                    v-text="Utils.format($player.position * 1000)"
+                />
+            </div>
+            <div class="w-full">
+                <div class="flex justify-between">
+                    <div
+                        class="truncate w-full"
+                        v-text="$player.current.name"
+                    />
+                    <HyperLink
+                        class="w-2/4 text-right"
+                        :elements="Utils.map($player.current.artists, 'artist')"
+                    />
                 </div>
+
+                <Slider
+                    v-model="$player.position"
+                    v-bind:max="$player.current.duration_ms / 1000"
+                />
+            </div>
+            <div class="pt-6 px-4 text-xs">
+                <span
+                    class="text-opacity-60 text-black dark:text-white"
+                    v-text="Utils.format($player.current.duration_ms)"
+                />
             </div>
         </div>
-        <div class="gt-sm col-6">
-            <div class="row q-pa-sm">
-                <div class="col-2">
-                    <q-btn class="float-left" :disable="!$player.state" flat dense>
-                        <q-icon name="mdi-thumb-up-outline" />
-                    </q-btn>
-                </div>
-                <div class="col-8">
-                    <Controls class="flex flex-center justify-evenly" />
-                </div>
-                <div class="col-2">
-                    <q-btn
-                        @click="$root.$emit('add', [track])"
-                        class="float-right"
-                        :disable="!$player.state"
-                        flat
-                        dense
-                    >
-                        <q-icon name="mdi-playlist-plus" />
-                    </q-btn>
-                </div>
+        <div class="flex w-7/8 md:w-1/12 items-center">
+            <div class="p-2">
+                <Cover
+                    size="56px"
+                    class="shadow"
+                    :url="$player.current.album.images[2].url"
+                />
             </div>
-            <SeekBar v-bind:duration="track.duration" />
-        </div>
-        <div class="gt-sm col-3">
-            <div class="flex justify-end items-center fit q-gutter-x-lg">
-                <q-btn :disable="!$player.state" @click="open" flat dense>
-                    <q-icon name="mdi-playlist-music" />
-                </q-btn>
-                <q-btn :disable="!$player.state" @click="$player.display()" flat dense>
-                    <q-icon name="mdi-picture-in-picture-bottom-right" />
-                </q-btn>
-                <q-btn :disable="!$player.state" flat dense>
-                    <q-icon :name="volume[$player.Volume]" />
-                    <q-menu>
-                        <div class="q-py-md q-px-sm">
-                            <q-slider v-model="$player.volume" reverse vertical dense />
-                        </div>
-                    </q-menu>
-                </q-btn>
+            <div class="w-full md:hidden p-2">
+                <div class="truncate font-bold" v-text="$player.current.name" />
+                <HyperLink
+                    :elements="Utils.map($player.current.artists, 'artist')"
+                />
+            </div>
+            <div class="hidden md:flex flex-col p-1">
+                <Button class="m-1" size="1.5rem">
+                    <span class="mdi mdi-thumb-up" />
+                </Button>
+                <Button class="m-1" size="1.5rem">
+                    <span class="mdi mdi-plus" />
+                </Button>
             </div>
         </div>
-        <div class="lt-md col">
-            <div class="row flex-center fit">
-                <q-btn class="q-mr-sm" @click="mobile" :disable="!$player.state" flat dense>
-                    <q-icon name="mdi-chevron-up"></q-icon>
-                </q-btn>
-                <ToggleButton />
-            </div>
+        <div class="hidden md:flex md:w-3/12 justify-end p-2">
+            <Button class="m-2" size="2rem">
+                <span
+                    class="mdi mdi-picture-in-picture-bottom-right mdi-24px"
+                />
+            </Button>
+            <Button class="m-2" size="2rem">
+                <span class="mdi mdi-repeat mdi-24px" />
+            </Button>
+            <Button class="m-2" size="2rem">
+                <span class="mdi mdi-shuffle mdi-24px" />
+            </Button>
+            <Button class="m-2" size="2rem">
+                <span
+                    class="mdi mdi-24px"
+                    v-bind:class="volume[$player.Volume]"
+                />
+            </Button>
         </div>
-        <Queue ref="queue" />
-        <MobilePlayer ref="mobile" v-bind:track="track" />
+        <div class="w-1/8 md:hidden">
+            <ToggleButton />
+        </div>
     </div>
 </template>
 
@@ -74,19 +95,17 @@ import { State, Mode, Volume } from '@/modules/web-player';
 
 import Track from '@/models/track'
 
-import Queue from '@/components/player/Queue.vue'
-import SeekBar from '@/components/player/SeekBar.vue'
-import Controls from '@/components/player/Controls.vue'
+import Cover from '@/components/Cover.vue'
+import Slider from '@/components/Slider.vue'
+import Button from '@/components/Button.vue'
+import HyperLink from '@/components/HyperLink.vue'
+
 import ToggleButton from '@/components/player/ToggleButton.vue'
-import MobilePlayer from '@/components/player/MobilePlayer.vue'
-import ArtistHyperlink from '@/components/misc/ArtistHyperlink.vue'
 
 @Component({
-    components: { Queue, SeekBar, Controls, ToggleButton, MobilePlayer, ArtistHyperlink }
+    components: { Cover, Slider, Button, HyperLink, ToggleButton }
 })
 export default class Player extends Vue {
-
-    private track: Track = {} as Track;
 
     private readonly volume = {
         [Volume.Muted]: 'mdi-volume-mute',
@@ -96,47 +115,21 @@ export default class Player extends Vue {
     };
 
     public mounted(): void {
-        this.$player.on('playback-started', track => {
-            this.track = {
-                id: track['id'],
-                title: track['name'],
-                album: track['album'],
-                artists: track['artists'],
-                duration: track['duration_ms'] / 1000,
-                images: track['album'].images
-            } as Track;
-        });
+        this.$player.on('update-time', () =>
+            this.$forceUpdate()
+        );
     }
 
-    public shuffle(): void {
-        const playlist = this.$player.playlist.map(a => ({ sort: Math.random(), value: a }))
-            .sort((a, b) => a.sort - b.sort).map(a => a.value);
-        this.$player.playlist = playlist;
-        this.$player.play(0);
+    public previous(): void {
+        this.$player.play(this.$player.previous());
     }
 
-    private open() {
-        (this.$refs['queue'] as Queue).show();
-    }
-
-    private mobile() {
-        if (this.$player.state) {
-            (this.$refs['mobile'] as MobilePlayer).show();
-        }
+    public next(): void {
+        this.$player.play(this.$player.next());
     }
 
 }
 </script>
 
 <style lang="scss" scoped>
-div.player {
-    min-height: 72px;
-    max-height: 72px;
-
-    .q-img {
-        z-index: -1;
-        min-width: 64px;
-        max-width: 64px;
-    }
-}
 </style>

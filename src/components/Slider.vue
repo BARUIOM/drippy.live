@@ -48,6 +48,12 @@ export default class Slider extends Vue {
 </script>
 
 <style lang="scss" scoped>
+* {
+    transition: none;
+    -moz-transition: none;
+    -webkit-transition: none;
+}
+
 div.slider:not(:hover) {
     div.thumb {
         visibility: hidden;

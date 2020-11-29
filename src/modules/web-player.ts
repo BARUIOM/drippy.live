@@ -254,6 +254,10 @@ export class Player extends EventEmitter {
         return this._indexes[index];
     }
 
+    public get current() {
+        return this._playlist[this._index];
+    }
+
     public get index() {
         return this._index;
     }
