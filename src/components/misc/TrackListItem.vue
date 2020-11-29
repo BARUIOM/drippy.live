@@ -9,7 +9,7 @@
             <div
                 class="absolute w-full h-full inline-flex justify-end items-center px-4"
             >
-                <span class="mdi mdi-play mdi-24px"></span>
+                <span class="mdi mdi-play mdi-24px" />
                 <span v-text="index + 1" />
             </div>
         </div>
@@ -21,11 +21,9 @@
             <HyperLink :elements="Utils.map([item.album], 'album')" />
         </div>
         <div class="menu-section m-auto">
-            <button
-                class="w-8 mx-4 select-none leading-none align-middle rounded hover:bg-opacity-10 hover:bg-white"
-            >
-                <span class="mdi mdi-dots-horizontal mdi-24px"></span>
-            </button>
+            <Button class="w-8 mx-4">
+                <span class="mdi mdi-dots-horizontal mdi-24px" />
+            </Button>
         </div>
         <div class="m-auto hidden md:block">
             <span
@@ -49,9 +47,10 @@ import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
 
 import Cover from '@/components/Cover.vue'
+import Button from '@/components/Button.vue'
 import HyperLink from '@/components/HyperLink.vue'
 
-@Component({ components: { Cover, HyperLink } })
+@Component({ components: { Cover, Button, HyperLink } })
 export default class TrackListItem extends Vue {
 
     private menu: boolean = false;
