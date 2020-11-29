@@ -1,16 +1,12 @@
 <template>
-    <div class="flex flex-col h-screen">
-        <header
-            class="shadow-md h-16 bg-accent-light dark:bg-accent-dark"
-        ></header>
+    <div class="flex flex-col h-screen text-black dark:text-white">
+        <header class="shadow-md bg-accent-light dark:bg-accent-dark"></header>
         <main
-            class="flex flex-wrap h-full bg-main-light text-black dark:bg-main-dark dark:text-white overflow-x-hidden overflow-y-auto"
+            class="flex flex-wrap h-full bg-main-light dark:bg-main-dark overflow-x-hidden overflow-y-auto"
         >
             <router-view />
         </main>
-        <footer
-            class="border-t border-opacity-10 border-black dark:border-white shadow-md h-20 bg-accent-light dark:bg-accent-dark"
-        ></footer>
+        <footer class="shadow-md bg-accent-light dark:bg-accent-dark"></footer>
     </div>
 </template>
 
@@ -18,20 +14,17 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
-@Component
 export default class Home extends Vue {
 
 }
 </script>
 
 <style lang="scss">
-@media screen and (min-width: 1024px) {
-    .q-drawer {
-        padding-bottom: 72px;
-    }
+header {
+    flex: 0 0 54px;
 }
 
-.q-footer {
-    left: 0px !important;
+footer {
+    flex: 0 0 72px;
 }
 </style>
