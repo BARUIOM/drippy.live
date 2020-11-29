@@ -2,37 +2,43 @@
     <div
         @click="$emit('click')"
         @contextmenu.prevent="menu = true"
-        class="item flex w-full p-2 cursor-pointer select-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
+        class="item flex w-full cursor-pointer select-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white p-2"
         style="height: 64px"
     >
-        <div class="relative w-20">
+        <div class="flex w-10/12 md:w-6/12 h-full items-center">
             <div
-                class="absolute w-full h-full inline-flex justify-end items-center px-4"
+                class="flex w-2/12 md:w-1/12 h-full justify-end items-center px-4"
             >
                 <span class="mdi mdi-play mdi-24px" />
                 <span v-text="index + 1" />
             </div>
+            <div class="w-10/12 md:w-11/12">
+                <div class="truncate" v-text="item.name" />
+                <HyperLink :elements="Utils.map(item.artists, 'artist')" />
+            </div>
         </div>
-        <div class="w-3/4 md:w-2/4 m-auto">
-            <div v-text="item.name" />
-            <HyperLink :elements="Utils.map(item.artists, 'artist')" />
-        </div>
-        <div class="w-2/4 m-auto hidden md:block">
+        <div class="hidden md:flex w-4/12 items-center">
             <HyperLink :elements="Utils.map([item.album], 'album')" />
         </div>
-        <div class="menu-section m-auto">
-            <Button class="w-8 mx-4">
-                <span class="mdi mdi-dots-horizontal mdi-24px" />
-            </Button>
-        </div>
-        <div class="m-auto hidden md:block">
-            <span
-                class="mx-4 text-opacity-40 text-black dark:text-white"
-                v-text="Utils.format(item.duration_ms)"
-            />
-        </div>
-        <div>
-            <Cover class="shadow" size="48px" :url="item.album.images[2].url" />
+        <div class="flex w-2/12 justify-end items-center">
+            <div class="menu-section mx-4">
+                <Button size="2rem">
+                    <span class="mdi mdi-dots-horizontal mdi-24px" />
+                </Button>
+            </div>
+            <div class="hidden md:block mx-4">
+                <span
+                    class="text-opacity-40 text-black dark:text-white"
+                    v-text="Utils.format(item.duration_ms)"
+                />
+            </div>
+            <div>
+                <Cover
+                    class="shadow"
+                    size="48px"
+                    :url="item.album.images[2].url"
+                />
+            </div>
         </div>
     </div>
 </template>
