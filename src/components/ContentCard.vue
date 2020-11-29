@@ -3,7 +3,7 @@
         @click="$emit('click')"
         class="transition-shadow duration-300 shadow hover:shadow-lg cursor-pointer rounded p-4 bg-accent-light dark:bg-accent-dark"
     >
-        <Cover class="shadow" :url="cover" />
+        <Cover class="shadow" :url="cover" :responsive="true" />
         <div
             class="text-xl text-center font-bold truncate pt-4"
             v-text="title"
