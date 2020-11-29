@@ -11,7 +11,8 @@ module.exports = {
                 accent: {
                     dark: '#181818',
                     light: '#ffffff'
-                }
+                },
+                'primary': 'orange'
             },
             width: {
                 '1/8': '12.5%',
