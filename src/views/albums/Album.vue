@@ -10,7 +10,7 @@
                 :elements="Utils.map(artists, 'artist')"
             />
         </template>
-        <TrackList v-bind:track_list="track_list" />
+        <TrackList v-bind:track_list="track_list" :album="true" />
     </Container>
 </template>
 

@@ -5,6 +5,7 @@
                 :key="index"
                 :item="item"
                 :index="index"
+                :album="album"
                 @click="play(index + start)"
             >
             </TrackListItem>
@@ -26,6 +27,9 @@ export default class TrackList extends Vue {
 
     @Prop({ default: 0 })
     private start!: number;
+
+    @Prop({ default: false })
+    private readonly album!: boolean;
 
     private play(index: number): void {
         if (this.$player.playlist != this.track_list)

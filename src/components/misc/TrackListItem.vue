@@ -17,10 +17,13 @@
                 <HyperLink :elements="Utils.map(item.artists, 'artist')" />
             </div>
         </div>
-        <div class="hidden md:flex w-4/12 items-center">
+        <div v-if="!album" class="hidden md:flex w-4/12 items-center">
             <HyperLink :elements="Utils.map([item.album], 'album')" />
         </div>
-        <div class="flex w-2/12 justify-end items-center">
+        <div
+            v-bind:class="{ 'md:w-6/12': album }"
+            class="flex w-2/12 justify-end items-center"
+        >
             <div class="menu-section mx-4">
                 <Button size="2rem">
                     <span class="mdi mdi-dots-horizontal mdi-24px" />
@@ -32,7 +35,7 @@
                     v-text="Utils.format(item.duration_ms)"
                 />
             </div>
-            <div>
+            <div v-if="!album">
                 <Cover
                     class="shadow"
                     size="48px"
@@ -61,6 +64,9 @@ export default class TrackListItem extends Vue {
 
     @Prop({ required: true })
     private readonly item!: any;
+
+    @Prop({ default: false })
+    private readonly album!: boolean;
 
     public copy(): void {
         navigator.clipboard.writeText(`${window.location.origin}/track/${this.item['id']}`).then(() => {
