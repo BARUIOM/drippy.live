@@ -1,7 +1,7 @@
 <template>
     <button
         @click="$emit('click')"
-        class="select-none leading-none align-middle rounded hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
+        class="select-none leading-none align-middle rounded focus:outline-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
     >
         <div>
             <slot />
