@@ -32,12 +32,7 @@
             />
         </div>
         <div>
-            <Cover
-                class="shadow-md"
-                width="48px"
-                height="48px"
-                :url="item.album.images[2].url"
-            />
+            <Cover class="shadow" size="48px" :url="item.album.images[2].url" />
         </div>
     </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
     <div
         class="cover"
-        :style="`background-image: url(${url}); width: ${width}; height: ${height}`"
+        :style="`background-image: url(${url}); width: ${size}; height: ${size}`"
     />
 </template>
 
@@ -16,10 +16,7 @@ export default class Cover extends Vue {
     private readonly url!: string;
 
     @Prop({ default: 'initial' })
-    private readonly width!: string;
-
-    @Prop({ default: 'initial' })
-    private readonly height!: string;
+    private readonly size!: string;
 
 }
 </script>
