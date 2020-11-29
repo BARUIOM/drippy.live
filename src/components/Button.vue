@@ -1,7 +1,8 @@
 <template>
     <button
         @click="$emit('click')"
-        class="select-none leading-none align-middle rounded focus:outline-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
+        class="select-none leading-none rounded focus:outline-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
+        :style="`width: ${width}; height: ${height};`"
     >
         <div>
             <slot />
@@ -11,17 +12,16 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Component, Prop } from 'vue-property-decorator';
 
 @Component
 export default class Button extends Vue {
 
+    @Prop({ default: 'initial' })
+    private readonly width!: string;
+
+    @Prop({ default: 'initial' })
+    private readonly height!: string;
+
 }
 </script>
-
-<style lang="scss" scoped>
-div > span {
-    display: inline-block;
-    height: 100%;
-}
-</style>
