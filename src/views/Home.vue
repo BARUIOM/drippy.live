@@ -2,7 +2,7 @@
     <div class="flex flex-col h-screen text-black dark:text-white">
         <header class="bg-accent-light dark:bg-accent-dark"></header>
         <main
-            class="flex flex-wrap h-full bg-main-light dark:bg-main-dark overflow-x-hidden overflow-y-auto"
+            class="h-full bg-main-light dark:bg-main-dark overflow-x-hidden overflow-y-auto"
         >
             <router-view />
         </main>
