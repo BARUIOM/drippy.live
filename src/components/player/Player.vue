@@ -9,7 +9,10 @@
                 <span class="mdi mdi-skip-next mdi-24px" />
             </Button>
         </div>
-        <div class="hidden md:flex w-6/12 h-full items-center">
+        <div
+            v-if="Utils.$breakpoints.$md"
+            class="hidden md:flex w-6/12 h-full items-center"
+        >
             <div class="pt-6 px-4 text-xs">
                 <span
                     class="text-opacity-60 text-black dark:text-white"

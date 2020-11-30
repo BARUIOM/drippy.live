@@ -40,6 +40,24 @@ export class SessionStorage {
 
 }
 
+const breakpoints = {
+    '$sm': false,
+    '$md': false,
+    '$lg': false,
+    '$xl': false
+}
+
+window.addEventListener('resize', (event: UIEvent) => {
+    const width = window.innerWidth;
+
+    breakpoints['$sm'] = width >= 640;
+    breakpoints['$md'] = width >= 768;
+    breakpoints['$lg'] = width >= 1024;
+    breakpoints['$xl'] = width >= 1280;
+});
+
+window.dispatchEvent(new Event('resize'));
+
 export default class Utils {
 
     public static format(ms: number): string {
@@ -63,6 +81,10 @@ export default class Utils {
         const map = new Map<string, any>();
         data.forEach(e => map.set(String(e[key]).toLowerCase().trim(), e));
         return Array.from(map.values());
+    }
+
+    public static get $breakpoints() {
+        return breakpoints;
     }
 
 }
