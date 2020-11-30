@@ -1,13 +1,13 @@
 <template>
-    <div class="slider relative my-2.5">
+    <div class="slider flex items-center relative">
         <input
             type="range"
             @input.stop="input"
             v-bind:value="value"
             v-bind:max="max"
-            class="absolute appearance-none z-20 h-1 w-full opacity-0 cursor-pointer"
+            class="absolute appearance-none z-20 h-full w-full opacity-0 cursor-pointer"
         />
-        <div class="relative h-1">
+        <div class="relative">
             <div
                 :style="`width: ${(value / max) * 100}%`"
                 class="track absolute z-10 top-0 bottom-0 rounded-md bg-primary"
@@ -17,7 +17,7 @@
             ></div>
             <div
                 :style="`left: ${(value / max) * 100}%`"
-                class="thumb absolute z-10 w-3 h-3 top-0 left-0 bg-black dark:bg-white rounded-full -mt-1 -ml-1.5"
+                class="thumb shadow absolute z-10 top-0 left-0 bg-black dark:bg-white rounded-full"
             ></div>
         </div>
     </div>
@@ -54,13 +54,30 @@ export default class Slider extends Vue {
     -webkit-transition: none;
 }
 
-div.slider:not(:hover) {
-    div.thumb {
-        visibility: hidden;
-    }
+div.slider {
+    height: 24px;
 
-    div.track {
-        background-color: rgba($color: #ffffff, $alpha: 0.4);
+    > div.relative {
+        width: 100%;
+        height: 4px;
+
+        div.thumb {
+            width: 12px;
+            height: 12px;
+            margin: -4px 0 0 -4px;
+        }
+    }
+}
+
+div.slider:not(:hover) {
+    > div.relative {
+        div.thumb {
+            visibility: hidden;
+        }
+
+        div.track {
+            background-color: rgba($color: #ffffff, $alpha: 0.4);
+        }
     }
 }
 </style>
