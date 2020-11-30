@@ -1,14 +1,14 @@
 <template>
-    <div class="flex flex-col h-screen text-black dark:text-white">
-        <header class="bg-accent-light dark:bg-accent-dark"></header>
-        <main
-            class="h-full bg-main-light dark:bg-main-dark overflow-x-hidden overflow-y-auto"
-        >
+    <div
+        class="flex flex-col h-screen text-black dark:text-white bg-main-light dark:bg-main-dark"
+    >
+        <header class="z-10 bg-accent-light dark:bg-accent-dark"></header>
+        <main class="mb-auto overflow-x-hidden overflow-y-auto">
             <router-view />
         </main>
         <footer
             v-if="$player.state"
-            class="bg-accent-light dark:bg-accent-dark"
+            class="z-10 bg-accent-light dark:bg-accent-dark"
         >
             <Player />
         </footer>
@@ -45,14 +45,10 @@ $shadow-2: 0 0 10px
     );
 
 header {
-    z-index: 10;
-    flex: 0 0 54px;
     box-shadow: $shadow-1, $shadow-2;
 }
 
 footer {
-    z-index: 10;
-    flex: 0 0 72px;
     box-shadow: $shadow-1, $shadow-2;
 }
 </style>
