@@ -40,7 +40,7 @@
                 />
             </div>
         </div>
-        <div class="flex w-7/8 md:w-1/12 items-center">
+        <div class="flex w-10/12 md:w-1/12 items-center">
             <div class="p-2">
                 <Cover
                     size="56px"
@@ -82,8 +82,8 @@
                 />
             </Button>
         </div>
-        <div class="w-1/8 md:hidden">
-            <ToggleButton />
+        <div class="w-2/12 md:hidden px-2">
+            <ToggleButton class="float-right" />
         </div>
     </div>
 </template>
