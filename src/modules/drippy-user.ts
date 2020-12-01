@@ -1,82 +1,76 @@
-import { EventEmitter } from 'events'
-
 import Container from '@/models/container'
 import SpotifyClient from './spotify-api';
 
-export default class User extends EventEmitter {
+export default class User {
+
+    private _ready: boolean = false;
 
     private readonly _profile: Profile;
     private readonly _collection: Collection = new Collection();
 
     public constructor(client: SpotifyClient, profile: Profile) {
-        super();
         this._profile = profile;
 
-        (async function list(offset: number = 0) {
-            const items = new Array();
-            const response = await client.getUserPlaylists(offset);
-            (response['items'] as Array<any>).forEach(e => items.push(e));
+        Promise.all([
+            (async function list(offset: number = 0) {
+                const items = new Array();
+                const response = await client.getUserPlaylists(offset);
+                (response['items'] as Array<any>).forEach(e => items.push(e));
 
-            if (response['next']) {
-                (await list(offset + items.length))
-                    .forEach(e => items.push(e));
-            }
+                if (response['next']) {
+                    (await list(offset + items.length))
+                        .forEach(e => items.push(e));
+                }
 
-            return items;
-        })().then(playlists => {
-            this._collection.playlists = playlists;
-            this.emit('ready');
-        });
+                return items;
+            })().then(playlists =>
+                this._collection.playlists = playlists
+            ),
+            (async function list(after?: string) {
+                const items = new Array();
+                const response = await client.getFollowedArtists(after);
+                (response['items'] as Array<any>).forEach(e => items.push(e));
 
-        (async function list(after?: string) {
-            const items = new Array();
-            const response = await client.getFollowedArtists(after);
-            (response['items'] as Array<any>).forEach(e => items.push(e));
+                if (response['next']) {
+                    (await list(items[items.length - 1]['id']))
+                        .forEach(e => items.push(e));
+                }
 
-            if (response['next']) {
-                (await list(items[items.length - 1]['id']))
-                    .forEach(e => items.push(e));
-            }
+                return items;
+            })().then(artists =>
+                this._collection.following = artists
+            ),
+            (async function list(offset: number = 0) {
+                const items = new Array();
+                const response = await client.getSavedAlbums(offset);
+                (response['items'] as Array<any>).forEach(e => items.push(e));
 
-            return items;
-        })().then(artists => {
-            this._collection.following = artists;
-            this.emit('ready');
-        });
+                if (response['next']) {
+                    (await list(offset + items.length))
+                        .forEach(e => items.push(e));
+                }
 
-        (async function list(offset: number = 0) {
-            const items = new Array();
-            const response = await client.getSavedAlbums(offset);
-            (response['items'] as Array<any>).forEach(e => items.push(e));
+                return items;
+            })().then(albums =>
+                this._collection.albums = albums
+            ),
+            (async function list(offset: number = 0) {
+                const items = new Array();
+                const data = await client.getSavedTracks(offset);
+                (data['items'] as Array<any>).forEach(e =>
+                    items.push(e['track'])
+                );
 
-            if (response['next']) {
-                (await list(offset + items.length))
-                    .forEach(e => items.push(e));
-            }
+                if (data['next']) {
+                    (await list(offset + items.length))
+                        .forEach(e => items.push(e['track']));
+                }
 
-            return items;
-        })().then(albums => {
-            this._collection.albums = albums;
-            this.emit('ready');
-        });
-
-        (async function list(offset: number = 0) {
-            const items = new Array();
-            const data = await client.getSavedTracks(offset);
-            (data['items'] as Array<any>).forEach(e =>
-                items.push(e['track'])
-            );
-
-            if (data['next']) {
-                (await list(offset + items.length))
-                    .forEach(e => items.push(e['track']));
-            }
-
-            return items;
-        })().then(tracks => {
-            this._collection.tracks = tracks;
-            this.emit('ready');
-        });
+                return items;
+            })().then(tracks =>
+                this._collection.tracks = tracks
+            )
+        ]).then(() => this._ready = true);
     }
 
     public get profile(): Profile {
@@ -85,6 +79,10 @@ export default class User extends EventEmitter {
 
     public get collection(): Collection {
         return this._collection;
+    }
+
+    public get ready(): boolean {
+        return this._ready;
     }
 
 }
