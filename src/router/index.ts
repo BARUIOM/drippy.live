@@ -7,7 +7,6 @@ import Spotify from '@/views/auth/Spotify.vue'
 
 import Search from '@/views/home/search/Search.vue'
 import Library from '@/views/home/collection/Library.vue'
-import Tracks from '@/views/home/collection/Tracks.vue'
 
 import Artist from '@/views/artist/Artist.vue'
 import Album from '@/views/albums/Album.vue'
@@ -45,11 +44,6 @@ const routes: Array<RouteConfig> = [
                 path: '/playlist/:id',
                 name: 'playlist',
                 component: Playlist
-            },
-            {
-                path: '/collection/tracks',
-                name: 'tracks',
-                component: Tracks
             }
         ]
     },
