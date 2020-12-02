@@ -1,8 +1,9 @@
 <template>
     <div v-if="$user.ready" class="p-2">
-        <div class="w-full">
-            <div class="p-2 text-xl font-bold">Artists</div>
-        </div>
+        <Artists
+            v-bind:artists="$user.collection.following"
+            @click="open('artist', arguments[0])"
+        />
         <Collection
             title="Playlists"
             v-bind:collection="$user.collection.playlists"
@@ -15,9 +16,10 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+import Artists from '@/components/home/Artists.vue'
 import Collection from '@/components/misc/Collection.vue'
 
-@Component({ components: { Collection } })
+@Component({ components: { Artists, Collection } })
 export default class Library extends Vue {
 
     public open(name: string, object: any): void {
