@@ -33,39 +33,32 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 
+import Utils from '@/modules/utils'
 import Cover from '@/components/Cover.vue'
 
 @Component({ components: { Cover } })
 export default class Artists extends Vue {
 
-    @Prop({ required: true })
-    private readonly artists!: any[];
-
-    @Prop({ default: 3 })
-    private readonly size!: number;
-
     @Prop({ default: 5000 })
     private readonly timeout!: number;
 
     private array: any[] = [];
+    private artists: any[][] = [];
 
+    private size: number = 1;
     private callback: number = 0;
     private position: number = 0;
 
-    mounted() {
-        this.advance();
-    }
-
     private advance(): void {
-        this.array = this.artists.slice(this.position, this.position + this.size);
+        clearTimeout(this.callback);
+        this.array = this.artists[this.position].flat();
         this.callback = setTimeout(() => this.next(), this.timeout);
     }
 
     private next(): void {
-        clearTimeout(this.callback);
-        this.position += this.size;
+        this.position++;
 
         if (this.position >= this.artists.length) {
             this.position = 0;
@@ -75,11 +68,53 @@ export default class Artists extends Vue {
     }
 
     private previous(): void {
-        clearTimeout(this.callback);
-        this.position -= this.size;
+        this.position--;
 
         if (this.position < 0) {
-            this.position = this.artists.length - (this.size - 1);
+            this.position = this.artists.length - 1;
+        }
+
+        this.advance();
+    }
+
+    @Watch('breakpoints', { immediate: true, deep: true })
+    private resize(): void {
+        const item = (() => {
+            if (this.artists.length) {
+                return this.artists[this.position][0];
+            }
+        })();
+
+        this.size = 1;
+        this.artists = [];
+
+        if (Utils.$breakpoints.$sm) {
+            this.size = 2;
+        }
+
+        if (Utils.$breakpoints.$lg) {
+            this.size = 3;
+        }
+
+        const length = this.$user.collection.following.length;
+        const collection = this.$user.collection.following;
+
+        for (let i = 1; i <= length; i++) {
+            if (i % this.size === 0) {
+                this.artists.push(collection.splice(0, this.size));
+                continue;
+            }
+
+            if (collection.length && collection.length <= this.size) {
+                this.artists.push(collection.splice(0));
+            }
+        }
+
+        if (item !== undefined) {
+            const array = this.artists.find(e => e.includes(item));
+            if (array !== undefined) {
+                this.position = this.artists.indexOf(array);
+            }
         }
 
         this.advance();

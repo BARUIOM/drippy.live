@@ -1,9 +1,6 @@
 <template>
     <div v-if="$user.ready" class="p-2">
-        <Artists
-            v-bind:artists="$user.collection.following"
-            @click="open('artist', arguments[0])"
-        />
+        <Artists @click="open('artist', arguments[0])" />
         <Collection
             title="Playlists"
             v-bind:collection="$user.collection.playlists"
