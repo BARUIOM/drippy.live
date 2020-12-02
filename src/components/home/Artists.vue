@@ -1,8 +1,12 @@
 <template>
     <div v-if="artists && artists.length" class="w-full">
         <div class="p-2 text-xl font-bold">Artists</div>
-        <div class="relative flex flex-wrap">
-            <div class="indicator left-0" @click="previous">
+        <div class="display relative flex flex-wrap">
+            <div
+                v-if="collection.length > size"
+                class="indicator left-0"
+                @click="previous"
+            >
                 <span class="mdi mdi-chevron-left mdi-24px"></span>
             </div>
             <template v-for="(artist, i) in artists[position]">
@@ -24,7 +28,11 @@
                     </div>
                 </div>
             </template>
-            <div class="indicator right-0" @click="next">
+            <div
+                v-if="collection.length > size"
+                class="indicator right-0"
+                @click="next"
+            >
                 <span class="mdi mdi-chevron-right mdi-24px"></span>
             </div>
         </div>
@@ -107,7 +115,7 @@ export default class Artists extends Vue {
                 continue;
             }
 
-            if (collection.length && collection.length <= this.size) {
+            if (collection.length && collection.length < this.size) {
                 this.artists.push(collection.splice(0));
             }
         }
@@ -141,14 +149,22 @@ div.card {
     }
 }
 
-div.indicator {
-    z-index: 10;
-    width: 4rem;
-    height: 100%;
-    display: flex;
-    cursor: pointer;
-    position: absolute;
-    align-items: center;
-    justify-content: center;
+div.display.relative {
+    div.indicator {
+        z-index: 10;
+        width: 4rem;
+        height: 100%;
+        display: flex;
+        cursor: pointer;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+div.display.relative:not(:hover) {
+    div.indicator {
+        display: none;
+    }
 }
 </style>
