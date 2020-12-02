@@ -10,7 +10,7 @@
             </Button>
         </div>
         <div
-            v-if="Utils.$breakpoints.$md"
+            v-if="breakpoints.$md"
             class="hidden md:flex w-6/12 h-full items-center"
         >
             <div class="pt-6 px-4 text-xs">

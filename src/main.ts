@@ -3,9 +3,9 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from '@/router'
 
-import Utils from '@/modules/utils'
 import player from '@/modules/web-player'
 import drippy, { Manager } from '@/modules/drippy-api'
+import Utils, { breakpoints } from '@/modules/utils'
 
 import '@/plugins/validation-rules'
 import '@/styles/drippy.scss'
@@ -19,7 +19,7 @@ const vm = new Vue({
 });
 
 Vue.mixin({
-    data: () => ({ Utils }),
+    data: () => ({ Utils, breakpoints }),
     computed: {
         $user: {
             get: () => vm.$data.$user,

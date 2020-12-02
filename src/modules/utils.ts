@@ -40,7 +40,7 @@ export class SessionStorage {
 
 }
 
-const breakpoints = {
+export const breakpoints = {
     '$sm': false,
     '$md': false,
     '$lg': false,
