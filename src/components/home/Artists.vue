@@ -5,7 +5,7 @@
             <div class="indicator left-0" @click="previous">
                 <span class="mdi mdi-chevron-left mdi-24px"></span>
             </div>
-            <template v-for="(artist, i) in array">
+            <template v-for="(artist, i) in artists[position]">
                 <div :key="i" class="p-2 w-full sm:w-1/2 lg:w-1/3">
                     <div
                         @click="$emit('click', artist)"
@@ -44,8 +44,8 @@ export default class Artists extends Vue {
     @Prop({ default: 5000 })
     private readonly timeout!: number;
 
-    private array: any[] = [];
     private artists: any[][] = [];
+    private collection: any[] = [];
 
     private size: number = 1;
     private callback: number = 0;
@@ -53,7 +53,6 @@ export default class Artists extends Vue {
 
     private advance(): void {
         clearTimeout(this.callback);
-        this.array = this.artists[this.position].flat();
         this.callback = setTimeout(() => this.next(), this.timeout);
     }
 
@@ -79,6 +78,10 @@ export default class Artists extends Vue {
 
     @Watch('breakpoints', { immediate: true, deep: true })
     private resize(): void {
+        if (!this.collection.length) {
+            this.collection = Utils.shuffle(this.$user.collection.following);
+        }
+
         const item = (() => {
             if (this.artists.length) {
                 return this.artists[this.position][0];
@@ -96,10 +99,9 @@ export default class Artists extends Vue {
             this.size = 3;
         }
 
-        const length = this.$user.collection.following.length;
-        const collection = this.$user.collection.following;
+        const collection = [...this.collection];
 
-        for (let i = 1; i <= length; i++) {
+        for (let i = 1; i <= this.collection.length; i++) {
             if (i % this.size === 0) {
                 this.artists.push(collection.splice(0, this.size));
                 continue;

@@ -83,6 +83,11 @@ export default class Utils {
         return Array.from(map.values());
     }
 
+    public static shuffle(array: any[]): any[] {
+        return array.map(a => ({ sort: Math.random(), value: a }))
+            .sort((a, b) => a.sort - b.sort).map(a => a.value);
+    }
+
     public static get $breakpoints() {
         return breakpoints;
     }
