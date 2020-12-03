@@ -2,8 +2,24 @@
     <div
         class="flex flex-col h-screen text-black dark:text-white bg-main-light dark:bg-main-dark"
     >
-        <header class="z-10 bg-accent-light dark:bg-accent-dark"></header>
-        <main class="mb-auto overflow-x-hidden overflow-y-auto">
+        <header
+            v-bind:class="{ collapsed: !scrolling }"
+            class="flex items-center z-10 bg-accent-light dark:bg-accent-dark p-1"
+        >
+            <div class="w-full m-1">
+                <input
+                    type="text"
+                    class="rounded-full px-4 w-full h-10 bg-main-light dark:bg-main-dark focus:outline-none"
+                />
+            </div>
+            <Button class="m-1" size="2rem" @click="$router.push('/')">
+                <span class="mdi mdi-home mdi-24px" />
+            </Button>
+        </header>
+        <main
+            @scroll="scroll"
+            class="mb-auto overflow-x-hidden overflow-y-auto"
+        >
             <router-view />
         </main>
         <footer
@@ -19,16 +35,27 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+import Button from '@/components/Button.vue'
 import Player from '@/components/player/Player.vue'
 
-@Component({ components: { Player } })
+@Component({ components: { Player, Button } })
 export default class Home extends Vue {
+
+    private offset: number = 0;
+    private scrolling: boolean = true;
 
     private mounted(): void {
         this.$player.on('playback-started', () =>
             this.$forceUpdate()
         );
     }
+
+    private scroll(event: UIEvent) {
+        const current = (event.target as HTMLElement).scrollTop
+        this.scrolling = this.offset > current;
+        this.offset = current;
+    }
+
 }
 </script>
 
@@ -45,10 +72,23 @@ $shadow-2: 0 0 10px
     );
 
 header {
+    width: 100vw;
+    position: absolute;
+    will-change: transform;
     box-shadow: $shadow-1, $shadow-2;
+    transition: transform 0.3s ease-in-out;
+}
+
+header.collapsed {
+    transform: translate(0, -56px);
+}
+
+main {
+    padding-top: 56px;
 }
 
 footer {
+    will-change: transform;
     box-shadow: $shadow-1, $shadow-2;
 }
 </style>
