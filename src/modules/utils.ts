@@ -88,6 +88,19 @@ export default class Utils {
             .sort((a, b) => a.sort - b.sort).map(a => a.value);
     }
 
+    public static get(images: { url?: string }[], size: 'small' | 'medium' | 'large'): string | undefined {
+        if (images.length) {
+            switch (size) {
+                case 'small':
+                    return images[2].url;
+                case 'medium':
+                    return images[1].url;
+                case 'large':
+                    return images[0].url;
+            }
+        }
+    }
+
     public static get $breakpoints() {
         return breakpoints;
     }

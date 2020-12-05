@@ -6,7 +6,7 @@
                 <div :key="i" class="p-2 w-1/2 sm:w-1/4 lg:w-1/6 xl:w-1/8">
                     <ContentCard
                         :title="item.name"
-                        :cover="item.images[0].url"
+                        :cover="Utils.get(item.images, 'large')"
                         @click="$emit('click', item)"
                     />
                 </div>

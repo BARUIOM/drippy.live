@@ -1,9 +1,15 @@
 <template>
     <div
+        v-if="url"
         class="cover"
         v-bind:class="{ responsive }"
         :style="`background-image: url(${url}); width: ${size}; height: ${size}`"
     />
+    <div v-else class="relative shadow">
+        <div class="absolute flex justify-center items-center">
+            <span class="mdi mdi-image"></span>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -33,5 +39,18 @@ div.cover {
 
 div.responsive {
     padding-bottom: 100%;
+}
+
+div.relative {
+    padding-bottom: 100%;
+
+    div.absolute {
+        width: 100%;
+        height: 100%;
+
+        > span.mdi {
+            font-size: 10vh;
+        }
+    }
 }
 </style>
