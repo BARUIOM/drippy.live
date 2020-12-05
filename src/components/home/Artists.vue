@@ -16,9 +16,9 @@
                         class="card relative transition-shadow duration-300 shadow hover:shadow-lg cursor-pointer rounded"
                     >
                         <Cover
-                            class="cover shadow rounded"
+                            class="shadow rounded"
+                            style="padding-bottom: 16rem"
                             :url="artist.images[0].url"
-                            :responsive="true"
                         />
                         <div
                             class="absolute label h-10 rounded-b text-white font-bold p-2"
@@ -134,19 +134,11 @@ export default class Artists extends Vue {
 </script>
 
 <style lang="scss" scoped>
-div.card {
-    > div.label {
-        bottom: 0;
-        width: 100%;
-        text-align: center;
-        background-color: rgba($color: #000000, $alpha: 0.6);
-    }
-
-    > div.cover {
-        padding-bottom: 16rem;
-        -webkit-transition: background-image 0.4s ease-in-out;
-        transition: background-image 0.4s ease-in-out;
-    }
+div.card > div.label {
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: rgba($color: #000000, $alpha: 0.6);
 }
 
 div.display.relative {

@@ -4,8 +4,8 @@
             <div class="w-full sm:w-2/6 md:w-2/8 xl:w-1/6">
                 <Cover class="shadow-xl" :url="thumbnail" :responsive="true" />
             </div>
-            <div class="w-full p-4 sm:w-4/6 md:w-6/8 xl:w-5/6">
-                <div class="headline font-bold truncate" v-text="headline" />
+            <div class="w-full p-2 sm:p-4 sm:w-4/6 md:w-6/8 xl:w-5/6">
+                <div class="headline font-bold truncate text-center sm:text-left" v-text="headline" />
                 <slot name="subheader" />
             </div>
         </div>
