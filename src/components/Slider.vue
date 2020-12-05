@@ -36,10 +36,6 @@ export default class Slider extends Vue {
     @Prop({ default: 100 })
     private max!: number;
 
-    private get _value(): number {
-        return this.value;
-    }
-
     private input(event: Event): void {
         this.$emit('input', (event.target as HTMLInputElement).value);
     }

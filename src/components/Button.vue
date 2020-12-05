@@ -2,7 +2,7 @@
     <button
         @click="$emit('click')"
         class="select-none leading-none rounded focus:outline-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
-        :style="`width: ${width || size}; height: ${height || size};`"
+        :style="`min-width: ${width || size}; min-height: ${height || size};`"
     >
         <div>
             <slot />
