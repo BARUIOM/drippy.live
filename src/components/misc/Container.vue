@@ -37,6 +37,6 @@ export default class Container extends Vue {
 
 <style lang="scss" scoped>
 div.headline {
-    font-size: 4vw;
+    font-size: 6vw;
 }
 </style>

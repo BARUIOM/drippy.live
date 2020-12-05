@@ -1,63 +1,41 @@
 <template>
     <div>
-        <q-form class="q-pa-sm" @submit.prevent="search">
-            <q-input
-                v-model="query"
-                clear-icon="mdi-close"
-                placeholder="Search for artists, tracks or playlists"
-                rounded
-                standout
-                clearable
-                dense
-            >
-                <template v-slot:prepend>
-                    <q-icon name="mdi-magnify" />
-                </template>
-            </q-input>
-        </q-form>
-        <div class="q-gutter-y-md">
-            <Results title="Tracks" v-if="results.tracks.length">
-                <TrackList v-bind:track_list="results.tracks" />
-            </Results>
-            <Results title="Artists" v-if="results.artists.length">
-                <Contents
-                    type="artist"
-                    v-bind:contents="results.artists"
-                    @click="open('artist', arguments[0])"
-                />
-            </Results>
-            <Results title="Playlists" v-if="results.playlists.length">
-                <Contents
-                    type="collection"
-                    v-bind:contents="results.playlists"
-                    @click="open('playlist', arguments[0])"
-                />
-            </Results>
-            <Results title="Albums" v-if="results.albums.length">
-                <Contents
-                    type="collection"
-                    v-bind:contents="results.albums"
-                    @click="open('album', arguments[0])"
-                />
-            </Results>
+        <div>
+            <div class="p-4 text-xl font-bold">Tracks</div>
+            <TrackList v-bind:track_list="results.tracks" />
+        </div>
+        <div class="p-2">
+            <Collection
+                title="Artists"
+                v-bind:collection="results.artists"
+                @click="open('artist', arguments[0])"
+            />
+            <Collection
+                title="Albums"
+                v-bind:collection="results.albums"
+                @click="open('album', arguments[0])"
+            />
+            <Collection
+                title="Playlists"
+                v-bind:collection="results.playlists"
+                @click="open('playlist', arguments[0])"
+            />
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 
 import TrackList from '@/components/misc/TrackList.vue'
-import Contents from '@/components/misc/Contents.vue'
+import Collection from '@/components/misc/Collection.vue'
 
-import Results from './Results.vue'
 import { SearchResults } from '@/modules/drippy-api'
 
-@Component({ components: { Results, TrackList, Contents } })
+@Component({ components: { TrackList, Collection } })
 export default class Search extends Vue {
 
-    private query: string = '';
     private results: SearchResults = {
         tracks: [],
         artists: [],
@@ -65,21 +43,23 @@ export default class Search extends Vue {
         albums: []
     };
 
-    mounted() {
-        if (this.$q.sessionStorage.has('search_results')) {
-            const results = this.$q.sessionStorage.getItem('search_results');
-            this.results = Object.freeze(results) as SearchResults;
+    private mounted() {
+        if (!this.$route.query.query) {
+            return this.$router.push('/');
         }
     }
 
-    search() {
-        this.$drippy.search(this.query).then(result => {
-            this.results = Object.freeze(result);
-        });
+    private open(name: string, object: any): void {
+        this.$router.push({ name, params: { id: object.id } });
     }
 
-    open(name: string, id: string) {
-        this.$router.push({ name, params: { id } });
+    @Watch('$route', { immediate: true, deep: true })
+    private change(): void {
+        const query = this.$route.query.query as string;
+
+        this.$drippy.search(query).then(result => {
+            this.results = Object.freeze(result);
+        });
     }
 
 }

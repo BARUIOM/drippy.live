@@ -4,14 +4,13 @@
     >
         <header
             v-bind:class="{ collapsed: !scrolling }"
-            class="flex items-center z-10 bg-accent-light dark:bg-accent-dark p-1"
+            class="flex items-center justify-between z-10 bg-accent-light dark:bg-accent-dark p-1"
         >
-            <div class="w-full m-1">
-                <input
-                    type="text"
-                    class="rounded-full px-4 w-full h-10 bg-main-light dark:bg-main-dark focus:outline-none"
-                />
-            </div>
+            <form class="w-full m-1" @submit.prevent="search">
+                <TextField v-model="query" class="w-full" :rounded="true">
+                    <span class="mdi mdi-magnify mdi-24px"></span>
+                </TextField>
+            </form>
             <Button class="m-1" size="2rem" @click="$router.push('/')">
                 <span class="mdi mdi-home mdi-24px" />
             </Button>
@@ -36,11 +35,13 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
 import Button from '@/components/Button.vue'
+import TextField from '@/components/TextField.vue'
 import Player from '@/components/player/Player.vue'
 
-@Component({ components: { Player, Button } })
+@Component({ components: { Button, TextField, Player } })
 export default class Home extends Vue {
 
+    private query: string = '';
     private offset: number = 0;
     private scrolling: boolean = true;
 
@@ -54,6 +55,13 @@ export default class Home extends Vue {
         const current = (event.target as HTMLElement).scrollTop
         this.scrolling = this.offset > current;
         this.offset = current;
+    }
+
+    private search() {
+        const query = { query: this.query };
+        this.$router.push({ name: 'search', query }).catch(() =>
+            this.$router.replace({ query })
+        );
     }
 
 }

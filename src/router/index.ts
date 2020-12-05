@@ -26,6 +26,12 @@ const routes: Array<RouteConfig> = [
                 component: Library
             },
             {
+                props: true,
+                path: '/search',
+                name: 'search',
+                component: Search
+            },
+            {
                 path: '/artist/:id',
                 name: 'artist',
                 component: Artist
