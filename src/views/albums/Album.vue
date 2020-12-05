@@ -6,7 +6,7 @@
         </template>
         <template v-slot:subheader>
             <HyperLink
-                class="font-bold text-xl"
+                class="font-bold text-xl text-center sm:text-left"
                 :elements="Utils.map(artists, 'artist')"
             />
         </template>
