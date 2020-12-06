@@ -4,7 +4,7 @@
     >
         <header
             v-bind:class="{ collapsed: !scrolling }"
-            class="flex items-center justify-between z-10 bg-accent-light dark:bg-accent-dark p-1"
+            class="flex items-center justify-between z-20 bg-accent-light dark:bg-accent-dark p-1"
         >
             <form class="w-full m-1" @submit.prevent="search">
                 <TextField v-model="query" class="w-full" :rounded="true">
@@ -23,7 +23,7 @@
         </main>
         <footer
             v-if="$player.state"
-            class="z-10 bg-accent-light dark:bg-accent-dark"
+            class="z-20 bg-accent-light dark:bg-accent-dark"
         >
             <Player />
         </footer>

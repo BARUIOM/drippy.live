@@ -95,13 +95,13 @@
                     />
                 </Button>
             </div>
-            <div class="w-2/12 md:hidden px-2">
-                <ToggleButton class="z-10 float-right" />
+            <div class="z-10 w-2/12 md:hidden px-2">
+                <ToggleButton class="float-right" />
             </div>
         </div>
         <div
             v-bind:class="{ 'mobile-visible': mobile && !breakpoints.$md }"
-            class="mobile select-none flex flex-col justify-between z-10 w-screen h-screen bg-main-light dark:bg-main-dark"
+            class="mobile select-none flex flex-col justify-between w-screen h-screen bg-main-light dark:bg-main-dark"
         >
             <div class="absolute w-full z-20 p-2">
                 <Button width="100%" height="2rem" @click="mobile = false">
@@ -217,6 +217,7 @@ export default class Player extends Vue {
 
 <style lang="scss" scoped>
 div.mobile {
+    z-index: 100;
     position: absolute;
     will-change: transform;
     transition: transform 0.2s ease-in-out;
