@@ -1,5 +1,5 @@
 <template>
-    <Button @click="toggle" class="m-2" size="2.5rem">
+    <Button @click="toggle" size="2.5rem">
         <span class="mdi mdi-36px" v-bind:class="state[$player.state]" />
     </Button>
 </template>

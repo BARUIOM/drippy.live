@@ -39,7 +39,7 @@
                 <Cover
                     class="shadow"
                     size="48px"
-                    :url="item.album.images[2].url"
+                    :url="Utils.get(item.album.images, 'small')"
                 />
             </div>
         </div>

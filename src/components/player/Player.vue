@@ -1,92 +1,169 @@
 <template>
-    <div class="flex flex-wrap w-full h-full select-none items-center">
-        <div class="hidden md:flex md:w-2/12 items-center p-2">
-            <Button @click="previous" class="m-2" size="2rem">
-                <span class="mdi mdi-skip-previous mdi-24px" />
-            </Button>
-            <ToggleButton />
-            <Button @click="next" class="m-2" size="2rem">
-                <span class="mdi mdi-skip-next mdi-24px" />
-            </Button>
-        </div>
+    <div>
         <div
-            v-if="breakpoints.$md"
-            class="hidden md:flex w-6/12 h-full items-center"
-        >
-            <div class="pt-6 px-4 text-xs">
-                <span
-                    class="text-opacity-60 text-black dark:text-white"
-                    v-text="Utils.format($player.position * 1000)"
-                />
+            @click="mobile = true"
+            class="absolute w-full h-full z-10 md:hidden"
+        ></div>
+        <div class="flex flex-wrap w-full h-full select-none items-center">
+            <div class="hidden md:flex md:w-2/12 items-center p-2">
+                <Button @click="previous" class="m-2" size="2rem">
+                    <span class="mdi mdi-skip-previous mdi-24px" />
+                </Button>
+                <ToggleButton class="m-2" />
+                <Button @click="next" class="m-2" size="2rem">
+                    <span class="mdi mdi-skip-next mdi-24px" />
+                </Button>
             </div>
-            <div class="w-full">
-                <div class="flex justify-between">
+            <div
+                v-if="breakpoints.$md"
+                class="hidden md:flex w-6/12 h-full items-center"
+            >
+                <div class="pt-6 px-4 text-xs">
+                    <span
+                        class="text-opacity-60 text-black dark:text-white"
+                        v-text="Utils.format($player.position * 1000)"
+                    />
+                </div>
+                <div class="w-full">
+                    <div class="flex justify-between">
+                        <div
+                            class="truncate w-full"
+                            v-text="$player.current.name"
+                        />
+                        <HyperLink
+                            class="w-2/4 text-right"
+                            :elements="
+                                Utils.map($player.current.artists, 'artist')
+                            "
+                        />
+                    </div>
+
+                    <Slider
+                        v-model="$player.position"
+                        v-bind:max="$player.current.duration_ms / 1000"
+                    />
+                </div>
+                <div class="pt-6 px-4 text-xs">
+                    <span
+                        class="text-opacity-60 text-black dark:text-white"
+                        v-text="Utils.format($player.current.duration_ms)"
+                    />
+                </div>
+            </div>
+            <div class="flex w-10/12 md:w-1/12 items-center">
+                <div class="p-2">
+                    <Cover
+                        size="56px"
+                        class="shadow"
+                        :url="Utils.get($player.current.album.images, 'small')"
+                    />
+                </div>
+                <div class="w-full md:hidden p-2">
                     <div
-                        class="truncate w-full"
+                        class="truncate font-bold"
                         v-text="$player.current.name"
                     />
                     <HyperLink
-                        class="w-2/4 text-right"
                         :elements="Utils.map($player.current.artists, 'artist')"
                     />
                 </div>
-
-                <Slider
-                    v-model="$player.position"
-                    v-bind:max="$player.current.duration_ms / 1000"
-                />
+                <div class="hidden md:flex flex-col p-1">
+                    <Button class="m-1" size="1.5rem">
+                        <span class="mdi mdi-thumb-up" />
+                    </Button>
+                    <Button class="m-1" size="1.5rem">
+                        <span class="mdi mdi-playlist-plus" />
+                    </Button>
+                </div>
             </div>
-            <div class="pt-6 px-4 text-xs">
-                <span
-                    class="text-opacity-60 text-black dark:text-white"
-                    v-text="Utils.format($player.current.duration_ms)"
-                />
+            <div class="hidden md:flex md:w-3/12 justify-end p-2">
+                <Button class="m-2" size="2rem">
+                    <span
+                        class="mdi mdi-picture-in-picture-bottom-right mdi-24px"
+                    />
+                </Button>
+                <Button class="m-2" size="2rem">
+                    <span class="mdi mdi-repeat mdi-24px" />
+                </Button>
+                <Button class="m-2" size="2rem">
+                    <span class="mdi mdi-shuffle mdi-24px" />
+                </Button>
+                <Button class="m-2" size="2rem">
+                    <span
+                        class="mdi mdi-24px"
+                        v-bind:class="volume[$player.Volume]"
+                    />
+                </Button>
+            </div>
+            <div class="w-2/12 md:hidden px-2">
+                <ToggleButton class="z-10 float-right" />
             </div>
         </div>
-        <div class="flex w-10/12 md:w-1/12 items-center">
-            <div class="p-2">
-                <Cover
-                    size="56px"
-                    class="shadow"
-                    :url="$player.current.album.images[2].url"
-                />
+        <div
+            v-bind:class="{ 'mobile-visible': mobile && !breakpoints.$md }"
+            class="mobile select-none flex flex-col justify-between z-10 w-screen h-screen bg-main-light dark:bg-main-dark"
+        >
+            <div class="absolute w-full z-20 p-2">
+                <Button width="100%" height="2rem" @click="mobile = false">
+                    <span class="mdi mdi-chevron-down mdi-24px" />
+                </Button>
             </div>
-            <div class="w-full md:hidden p-2">
+            <div class="relative">
+                <Cover
+                    :url="Utils.get($player.current.album.images, 'large')"
+                />
+                <div class="fade" />
+            </div>
+            <div class="text-center p-2">
                 <div class="truncate font-bold" v-text="$player.current.name" />
                 <HyperLink
                     :elements="Utils.map($player.current.artists, 'artist')"
                 />
-            </div>
-            <div class="hidden md:flex flex-col p-1">
-                <Button class="m-1" size="1.5rem">
-                    <span class="mdi mdi-thumb-up" />
-                </Button>
-                <Button class="m-1" size="1.5rem">
-                    <span class="mdi mdi-plus" />
-                </Button>
-            </div>
-        </div>
-        <div class="hidden md:flex md:w-3/12 justify-end p-2">
-            <Button class="m-2" size="2rem">
-                <span
-                    class="mdi mdi-picture-in-picture-bottom-right mdi-24px"
+                <HyperLink
+                    :elements="Utils.map([$player.current.album], 'album')"
                 />
-            </Button>
-            <Button class="m-2" size="2rem">
-                <span class="mdi mdi-repeat mdi-24px" />
-            </Button>
-            <Button class="m-2" size="2rem">
-                <span class="mdi mdi-shuffle mdi-24px" />
-            </Button>
-            <Button class="m-2" size="2rem">
-                <span
-                    class="mdi mdi-24px"
-                    v-bind:class="volume[$player.Volume]"
-                />
-            </Button>
-        </div>
-        <div class="w-2/12 md:hidden px-2">
-            <ToggleButton class="float-right" />
+            </div>
+            <div>
+                <div class="px-4">
+                    <div class="flex justify-between pb-2">
+                        <Button size="2rem">
+                            <span class="mdi mdi-thumb-up mdi-24px" />
+                        </Button>
+                        <Button size="2rem">
+                            <span class="mdi mdi-playlist-plus mdi-24px" />
+                        </Button>
+                    </div>
+                    <div class="flex justify-between">
+                        <span
+                            class="text-opacity-60 text-black dark:text-white"
+                            v-text="Utils.format($player.position * 1000)"
+                        />
+                        <span
+                            class="text-opacity-60 text-black dark:text-white"
+                            v-text="Utils.format($player.current.duration_ms)"
+                        />
+                    </div>
+                    <Slider
+                        v-model="$player.position"
+                        v-bind:max="$player.current.duration_ms / 1000"
+                    />
+                </div>
+                <div class="flex items-center justify-around p-2">
+                    <Button class="m-2" size="2rem">
+                        <span class="mdi mdi-repeat mdi-24px" />
+                    </Button>
+                    <Button @click="previous" size="2rem">
+                        <span class="mdi mdi-skip-previous mdi-24px" />
+                    </Button>
+                    <ToggleButton />
+                    <Button @click="next" size="2rem">
+                        <span class="mdi mdi-skip-next mdi-24px" />
+                    </Button>
+                    <Button class="m-2" size="2rem">
+                        <span class="mdi mdi-shuffle mdi-24px" />
+                    </Button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -117,17 +194,19 @@ export default class Player extends Vue {
         [Volume.VolumeHigh]: 'mdi-volume-high'
     };
 
-    public mounted(): void {
+    private mobile: boolean = false;
+
+    private mounted(): void {
         this.$player.on('update-time', () =>
             this.$forceUpdate()
         );
     }
 
-    public previous(): void {
+    private previous(): void {
         this.$player.play(this.$player.previous());
     }
 
-    public next(): void {
+    private next(): void {
         this.$player.play(this.$player.next());
     }
 
@@ -135,4 +214,13 @@ export default class Player extends Vue {
 </script>
 
 <style lang="scss" scoped>
+div.mobile {
+    position: absolute;
+    will-change: transform;
+    transition: transform 0.2s ease-in-out;
+}
+
+div.mobile-visible {
+    transform: translate(0, -100vh);
+}
 </style>
