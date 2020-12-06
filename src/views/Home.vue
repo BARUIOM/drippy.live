@@ -67,7 +67,7 @@ export default class Home extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $shadow-1: 0 0 10px 2px
     rgba(
         $color: #000000,

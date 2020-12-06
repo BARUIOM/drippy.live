@@ -4,3 +4,14 @@
 
 $mdi-font-path: "~@mdi/font/fonts/";
 @import "~@mdi/font/scss/materialdesignicons";
+
+@import "./variables.scss";
+
+div.fade {
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-image: linear-gradient(to bottom, transparent, $dark);
+}
