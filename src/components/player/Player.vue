@@ -117,9 +117,11 @@
             <div class="text-center p-2">
                 <div class="truncate font-bold" v-text="$player.current.name" />
                 <HyperLink
+                    @click="mobile = false"
                     :elements="Utils.map($player.current.artists, 'artist')"
                 />
                 <HyperLink
+                    @click="mobile = false"
                     :elements="Utils.map([$player.current.album], 'album')"
                 />
             </div>

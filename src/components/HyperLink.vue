@@ -29,10 +29,15 @@ export default class Hyperlink extends Vue {
     private separator!: string;
 
     public open(event: Event, element: Element) {
-        this.$router.push({
-            name: element.route,
-            params: { id: element.param }
-        });
+        this.$emit('click', event);
+
+        const { id } = this.$route.params;
+        if (this.$route.name !== element.route || id !== element.param) {
+            this.$router.push({
+                name: element.route,
+                params: { id: element.param }
+            });
+        }
     }
 
 }
