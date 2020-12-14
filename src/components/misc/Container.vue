@@ -1,13 +1,11 @@
 <template>
-    <div class="w-full">
+    <div class="-mt-14 sm:m-0 w-full">
         <div class="flex flex-wrap sm:p-8 z-20">
             <div class="relative w-full sm:w-2/6 md:w-2/8 xl:w-1/6">
                 <Cover
                     :url="thumbnail"
                     v-bind:class="{ 'shadow-xl': breakpoints.$sm }"
-                    :responsiveness="responsiveness"
                 />
-                <div class="fade" v-bind:class="{ hidden: breakpoints.$sm }" />
             </div>
             <div class="w-full p-2 sm:p-4 sm:w-4/6 md:w-6/8 xl:w-5/6">
                 <div
@@ -39,15 +37,13 @@ export default class Container extends Vue {
     @Prop({ required: true })
     private thumbnail!: string;
 
-    private responsiveness: number = 100;
-
     @Watch('breakpoints', { immediate: true, deep: true })
     private resize() {
         if (Utils.$breakpoints.$sm) {
-            return this.responsiveness = 100;
+            return this.$root.$emit('header', 'default');
         }
 
-        this.responsiveness = 50;
+        this.$root.$emit('header', 'transparent');
     }
 
 }

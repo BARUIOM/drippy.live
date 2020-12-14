@@ -19,7 +19,11 @@ import Collection from '@/components/misc/Collection.vue'
 @Component({ components: { Artists, Collection } })
 export default class Library extends Vue {
 
-    public open(name: string, object: any): void {
+    private mounted(): void {
+        this.$root.$emit('header', 'default');
+    }
+
+    private open(name: string, object: any): void {
         this.$router.push({ name, params: { id: object.id } });
     }
 
