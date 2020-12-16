@@ -60,6 +60,10 @@ window.dispatchEvent(new Event('resize'));
 
 export default class Utils {
 
+    public static range(value: number, min: number = 0, max: number = 0): number {
+        return Math.min(Math.max(value, min), max);
+    }
+
     public static format(ms: number): string {
         return new Date(Math.floor(ms))
             .toLocaleTimeString()
