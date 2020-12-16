@@ -9,7 +9,7 @@
             @touchmove.stop="move"
             class="absolute w-full h-full z-10 md:hidden"
         ></div>
-        <Player v-on:visible="mobile(arguments[0])" />
+        <Player v-on:visible="dialog(arguments[0])" />
     </footer>
 </template>
 
