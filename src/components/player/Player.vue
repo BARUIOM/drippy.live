@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="flex flex-wrap w-full h-full select-none items-center">
-            <div class="hidden md:flex md:w-2/12 items-center p-2">
+        <div class="flex w-full h-full select-none items-center">
+            <div class="hidden md:flex items-center p-2">
                 <Button @click="previous" class="m-2" size="2rem">
                     <span class="mdi mdi-skip-previous mdi-24px" />
                 </Button>
@@ -10,51 +10,44 @@
                     <span class="mdi mdi-skip-next mdi-24px" />
                 </Button>
             </div>
-            <div
-                v-if="breakpoints.$md"
-                class="hidden md:flex w-6/12 h-full items-center"
-            >
-                <div class="pt-6 px-4 text-xs">
-                    <span
-                        class="text-opacity-60 text-black dark:text-white"
-                        v-text="Utils.format($player.position * 1000)"
-                    />
-                </div>
-                <div class="w-full">
+            <div class="hidden md:block flex-1 min-w-0 px-4">
+                <div class="m-auto w-4/5">
                     <div class="flex justify-between">
-                        <div
-                            class="truncate w-full"
-                            v-text="$player.current.name"
-                        />
+                        <div class="truncate" v-text="$player.current.name" />
                         <HyperLink
-                            class="w-2/4 text-right"
+                            class="text-right"
                             :elements="
                                 Utils.map($player.current.artists, 'artist')
                             "
                         />
                     </div>
 
-                    <Slider
-                        v-model="$player.position"
-                        v-bind:max="$player.current.duration_ms / 1000"
-                    />
-                </div>
-                <div class="pt-6 px-4 text-xs">
-                    <span
-                        class="text-opacity-60 text-black dark:text-white"
-                        v-text="Utils.format($player.current.duration_ms)"
-                    />
+                    <div class="flex items-center relative text-xs">
+                        <div
+                            class="absolute right-full text-opacity-60 text-black dark:text-white px-2"
+                            v-text="Utils.format($player.position * 1000)"
+                        />
+                        <Slider
+                            class="w-full"
+                            v-model="$player.position"
+                            v-bind:max="$player.current.duration_ms / 1000"
+                        />
+                        <div
+                            class="absolute left-full text-opacity-60 text-black dark:text-white px-2"
+                            v-text="Utils.format($player.current.duration_ms)"
+                        />
+                    </div>
                 </div>
             </div>
-            <div class="flex w-10/12 md:w-1/12 items-center">
-                <div class="p-2">
-                    <Cover
-                        size="48px"
-                        class="shadow"
-                        :url="Utils.get($player.current.album.images, 'small')"
-                    />
-                </div>
-                <div class="w-full md:hidden p-2">
+            <div class="p-2 md:p-3">
+                <Cover
+                    size="48px"
+                    class="shadow"
+                    :url="Utils.get($player.current.album.images, 'small')"
+                />
+            </div>
+            <div class="flex-1 md:hidden min-w-0 p-2">
+                <div class="w-full">
                     <div
                         class="truncate font-bold"
                         v-text="$player.current.name"
@@ -63,16 +56,16 @@
                         :elements="Utils.map($player.current.artists, 'artist')"
                     />
                 </div>
-                <div class="hidden md:flex flex-col p-1">
-                    <Button class="m-1" size="1.5rem">
-                        <span class="mdi mdi-thumb-up" />
-                    </Button>
-                    <Button class="m-1" size="1.5rem">
-                        <span class="mdi mdi-playlist-plus" />
-                    </Button>
-                </div>
             </div>
-            <div class="hidden md:flex md:w-3/12 justify-end p-2">
+            <div class="hidden md:flex flex-col">
+                <Button class="m-1" size="1.5rem">
+                    <span class="mdi mdi-thumb-up" />
+                </Button>
+                <Button class="m-1" size="1.5rem">
+                    <span class="mdi mdi-plus" />
+                </Button>
+            </div>
+            <div class="hidden md:flex justify-end p-2">
                 <Button class="m-2" size="2rem">
                     <span
                         class="mdi mdi-picture-in-picture-bottom-right mdi-24px"
@@ -91,7 +84,7 @@
                     />
                 </Button>
             </div>
-            <div class="z-10 w-2/12 md:hidden px-2">
+            <div class="md:hidden px-2 z-10">
                 <ToggleButton class="float-right" />
             </div>
         </div>
