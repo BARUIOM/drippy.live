@@ -2,7 +2,7 @@
     <footer
         v-bind:class="{ animate }"
         class="z-20 bg-accent-light dark:bg-accent-dark"
-        :style="`transform: translate(0, -${Math.max(position - 64, 0)}px);`"
+        :style="`transform: translate(0, calc(-${position}vh + ${offset}px));`"
     >
         <div
             @touchend.stop="end"
@@ -14,8 +14,10 @@
 </template>
 
 <script lang="ts">
+const HEADER_SIZE = 64;
+
 import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Component, Watch } from 'vue-property-decorator'
 
 import Player from './Player.vue'
 import Utils from '@/modules/utils'
@@ -23,7 +25,9 @@ import Utils from '@/modules/utils'
 @Component({ components: { Player } })
 export default class PlayerBar extends Vue {
 
+    private offset: number = 0;
     private position: number = 0;
+
     private mobile: boolean = false;
     private animate: boolean = true;
 
@@ -31,17 +35,19 @@ export default class PlayerBar extends Vue {
         this.animate = true;
 
         if (!this.mobile) {
-            const amount = window.innerHeight * 0.2;
-            this.dialog(this.position === 0 || this.position > amount);
+            this.dialog(this.position === 0 || this.position > 10);
         } else this.dialog(false);
     }
 
     private move(event: TouchEvent) {
+        this.offset = 0;
         this.animate = false;
 
         const touch = event.touches[0];
         const position = window.innerHeight - touch.clientY;
-        this.position = Utils.range(position, 0, window.innerHeight);
+
+        this.position = Utils.range((position / window.innerHeight) * 100,
+            0, 100 - ((HEADER_SIZE / window.innerHeight) * 100));
     }
 
     public dialog(visible: boolean) {
@@ -49,11 +55,20 @@ export default class PlayerBar extends Vue {
             this.mobile = visible;
 
             if (this.mobile) {
-                return this.position = window.innerHeight;
+                this.offset = HEADER_SIZE;
+                return this.position = 100;
             }
         }
 
+        this.offset = 0;
         return this.position = 0;
+    }
+
+    @Watch('breakpoints', { immediate: true, deep: true })
+    private resize(): void {
+        if (Utils.$breakpoints.$md) {
+            this.offset = this.position = 0;
+        }
     }
 
 }
