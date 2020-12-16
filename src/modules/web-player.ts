@@ -28,6 +28,13 @@ class Thumbnail extends Image {
 
 }
 
+export enum Reason {
+
+    PlaybackEnded = 'playback-ended',
+    UserAction = 'user-action'
+
+}
+
 export enum State {
 
     Idle, Paused, Playing
@@ -63,6 +70,7 @@ export class Player extends EventEmitter {
     private _mode: Mode = Mode.RepeatNone;
     private _shuffle: ShuffleMode = ShuffleMode.ShuffleOff;
     private _volume: Volume = Volume.VolumeHigh;
+    private _reason: Reason = Reason.UserAction;
 
     private constructor() {
         super();
@@ -83,7 +91,7 @@ export class Player extends EventEmitter {
         audio.addEventListener('loadeddata', () => {
             audio.play().then(async () => {
                 const track = Player.Instance.playlist[Player.Instance.index];
-                Player.Instance.emit('playback-started', track, Player.Instance.index);
+                Player.Instance.emit('playback-started', Player.Instance._reason);
 
                 if (navigator.mediaSession && context) {
                     const duration = Math.floor(track['duration_ms'] / 1000);
@@ -163,8 +171,10 @@ export class Player extends EventEmitter {
         });
     }
 
-    public play(index: number): void {
+    public play(index: number, reason: Reason = Reason.PlaybackEnded): void {
         if (this.playlist[index] !== undefined) {
+            this._reason = reason;
+
             audio.pause();
             drippy.getAudio(this.playlist[index]['id']).then(src => {
                 this._index = index;
@@ -318,7 +328,7 @@ export declare interface Player extends EventEmitter {
 
     on(type: 'update-state', listener: () => void): this;
     on(type: 'update-time', listener: (time: number) => void): this;
-    on(type: 'playback-started', listener: (track: any, index: number) => void): this;
+    on(type: 'playback-started', listener: (reason: Reason) => void): this;
 
 }
 
