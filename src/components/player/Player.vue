@@ -98,32 +98,24 @@
         <div
             class="mobile select-none flex flex-col justify-between bg-main-light dark:bg-main-dark"
         >
-            <div class="relative">
+            <div class="relative h-full">
                 <Cover
+                    size="100%"
                     :url="Utils.get($player.current.album.images, 'large')"
                 />
                 <div class="fade" />
             </div>
-            <div class="text-center p-2">
-                <div class="truncate font-bold" v-text="$player.current.name" />
-                <HyperLink
-                    @click="$emit('visible', false)"
-                    :elements="Utils.map($player.current.artists, 'artist')"
-                />
-                <HyperLink
-                    @click="$emit('visible', false)"
-                    :elements="Utils.map([$player.current.album], 'album')"
-                />
-            </div>
             <div>
-                <div class="px-4">
-                    <div class="flex justify-between">
+                <div class="relative mx-2 z-10">
+                    <div
+                        class="absolute w-full bottom-full flex justify-between"
+                    >
                         <span
-                            class="text-opacity-60 text-black dark:text-white"
+                            class="text-sm text-opacity-60 text-black dark:text-white"
                             v-text="Utils.format($player.position * 1000)"
                         />
                         <span
-                            class="text-opacity-60 text-black dark:text-white"
+                            class="text-sm text-opacity-60 text-black dark:text-white"
                             v-text="Utils.format($player.current.duration_ms)"
                         />
                     </div>
