@@ -19,6 +19,8 @@ import { Component, Prop } from 'vue-property-decorator'
 
 import TrackListItem from '@/components/misc/TrackListItem.vue'
 
+import { Reason } from '@/modules/web-player'
+
 @Component({ components: { TrackListItem } })
 export default class TrackList extends Vue {
 
@@ -34,7 +36,7 @@ export default class TrackList extends Vue {
     private play(index: number): void {
         if (this.$player.playlist != this.track_list)
             this.$player.playlist = this.track_list;
-        this.$player.play(index);
+        this.$player.play(index, Reason.UserAction);
     }
 
     private filter(array: any[]): any[] {

@@ -1,6 +1,6 @@
 <template>
     <footer
-        v-bind:class="{ touchend }"
+        v-bind:class="{ animate }"
         class="z-20 bg-accent-light dark:bg-accent-dark"
         :style="`transform: translate(0, -${Math.max(position - 64, 0)}px);`"
     >
@@ -25,10 +25,10 @@ export default class PlayerBar extends Vue {
 
     private position: number = 0;
     private mobile: boolean = false;
-    private touchend: boolean = false;
+    private animate: boolean = true;
 
     private end(event: TouchEvent) {
-        this.touchend = true;
+        this.animate = true;
 
         if (!this.mobile) {
             const amount = window.innerHeight * 0.2;
@@ -37,18 +37,20 @@ export default class PlayerBar extends Vue {
     }
 
     private move(event: TouchEvent) {
-        this.touchend = false;
+        this.animate = false;
 
         const touch = event.touches[0];
         const position = window.innerHeight - touch.clientY;
         this.position = Utils.range(position, 0, window.innerHeight);
     }
 
-    private dialog(visible: boolean) {
-        this.mobile = visible;
+    public dialog(visible: boolean) {
+        if (!Utils.$breakpoints.$md) {
+            this.mobile = visible;
 
-        if (this.mobile) {
-            return this.position = window.innerHeight;
+            if (this.mobile) {
+                return this.position = window.innerHeight;
+            }
         }
 
         return this.position = 0;
@@ -63,7 +65,7 @@ footer {
     will-change: transform;
 }
 
-footer.touchend {
+footer.animate {
     transition: transform 0.2s ease-in-out;
 }
 </style>
