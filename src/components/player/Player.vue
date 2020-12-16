@@ -1,9 +1,5 @@
 <template>
     <div>
-        <div
-            @click="mobile = true"
-            class="absolute w-full h-full z-10 md:hidden"
-        ></div>
         <div class="flex flex-wrap w-full h-full select-none items-center">
             <div class="hidden md:flex md:w-2/12 items-center p-2">
                 <Button @click="previous" class="m-2" size="2rem">
@@ -53,7 +49,7 @@
             <div class="flex w-10/12 md:w-1/12 items-center">
                 <div class="p-2">
                     <Cover
-                        size="56px"
+                        size="48px"
                         class="shadow"
                         :url="Utils.get($player.current.album.images, 'small')"
                     />
@@ -100,14 +96,8 @@
             </div>
         </div>
         <div
-            v-bind:class="{ 'mobile-visible': mobile && !breakpoints.$md }"
-            class="mobile select-none flex flex-col justify-between w-screen h-screen bg-main-light dark:bg-main-dark"
+            class="mobile select-none flex flex-col justify-between bg-main-light dark:bg-main-dark"
         >
-            <div class="absolute w-full z-20 p-2">
-                <Button width="100%" height="2rem" @click="mobile = false">
-                    <span class="mdi mdi-chevron-down mdi-24px" />
-                </Button>
-            </div>
             <div class="relative">
                 <Cover
                     :url="Utils.get($player.current.album.images, 'large')"
@@ -117,24 +107,16 @@
             <div class="text-center p-2">
                 <div class="truncate font-bold" v-text="$player.current.name" />
                 <HyperLink
-                    @click="mobile = false"
+                    @click="$emit('visible', false)"
                     :elements="Utils.map($player.current.artists, 'artist')"
                 />
                 <HyperLink
-                    @click="mobile = false"
+                    @click="$emit('visible', false)"
                     :elements="Utils.map([$player.current.album], 'album')"
                 />
             </div>
             <div>
                 <div class="px-4">
-                    <div class="flex justify-between pb-2">
-                        <Button size="2rem">
-                            <span class="mdi mdi-thumb-up mdi-24px" />
-                        </Button>
-                        <Button size="2rem">
-                            <span class="mdi mdi-playlist-plus mdi-24px" />
-                        </Button>
-                    </div>
                     <div class="flex justify-between">
                         <span
                             class="text-opacity-60 text-black dark:text-white"
@@ -196,8 +178,6 @@ export default class Player extends Vue {
         [Volume.VolumeHigh]: 'mdi-volume-high'
     };
 
-    private mobile: boolean = false;
-
     private mounted(): void {
         this.$player.on('update-time', () =>
             this.$forceUpdate()
@@ -217,13 +197,9 @@ export default class Player extends Vue {
 
 <style lang="scss" scoped>
 div.mobile {
+    width: 100%;
     z-index: 100;
     position: absolute;
-    will-change: transform;
-    transition: transform 0.2s ease-in-out;
-}
-
-div.mobile-visible {
-    transform: translate(0, -100vh);
+    height: calc(100vh - 64px);
 }
 </style>

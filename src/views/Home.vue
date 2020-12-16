@@ -25,12 +25,7 @@
         >
             <router-view />
         </main>
-        <footer
-            v-if="$player.state"
-            class="z-20 bg-accent-light dark:bg-accent-dark"
-        >
-            <Player />
-        </footer>
+        <PlayerBar v-if="$player.state" />
     </div>
 </template>
 
@@ -40,9 +35,9 @@ import { Component } from 'vue-property-decorator'
 
 import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
-import Player from '@/components/player/Player.vue'
+import PlayerBar from '@/components/player/PlayerBar.vue'
 
-@Component({ components: { Button, TextField, Player } })
+@Component({ components: { Button, TextField, PlayerBar } })
 export default class Home extends Vue {
 
     private query: string = '';
@@ -89,22 +84,10 @@ export default class Home extends Vue {
 </script>
 
 <style lang="scss" scoped>
-$shadow-1: 0 0 10px 2px
-    rgba(
-        $color: #000000,
-        $alpha: 0.2,
-    );
-$shadow-2: 0 0 10px
-    rgba(
-        $color: #000000,
-        $alpha: 0.24,
-    );
-
 header {
     width: 100vw;
     position: absolute;
     will-change: transform;
-    box-shadow: $shadow-1, $shadow-2;
     transition: transform 300ms ease-in-out, background-color 300ms linear;
 }
 
@@ -115,10 +98,5 @@ header.transparent {
 
 header.collapsed {
     transform: translate(0, -56px);
-}
-
-footer {
-    will-change: transform;
-    box-shadow: $shadow-1, $shadow-2;
 }
 </style>

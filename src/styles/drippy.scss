@@ -15,3 +15,7 @@ div.fade {
     position: absolute;
     background-image: linear-gradient(to bottom, transparent, $dark);
 }
+
+header, footer {
+    box-shadow: $shadow-1, $shadow-2;
+}
