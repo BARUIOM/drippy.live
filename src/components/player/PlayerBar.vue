@@ -22,6 +22,8 @@ import { Component, Watch } from 'vue-property-decorator'
 import Player from './Player.vue'
 import Utils from '@/modules/utils'
 
+import { Reason } from '@/modules/web-player'
+
 @Component({ components: { Player } })
 export default class PlayerBar extends Vue {
 
@@ -30,6 +32,15 @@ export default class PlayerBar extends Vue {
 
     private mobile: boolean = false;
     private animate: boolean = true;
+
+    private mounted() {
+        setTimeout(() => this.dialog(true), 100);
+        this.$player.on('playback-started', reason => {
+            if (reason === Reason.UserAction) {
+                this.dialog(true);
+            }
+        });
+    }
 
     private end(event: TouchEvent) {
         this.animate = true;
@@ -50,7 +61,7 @@ export default class PlayerBar extends Vue {
             0, 100 - ((HEADER_SIZE / window.innerHeight) * 100));
     }
 
-    public dialog(visible: boolean) {
+    private dialog(visible: boolean) {
         if (!Utils.$breakpoints.$md) {
             this.mobile = visible;
 

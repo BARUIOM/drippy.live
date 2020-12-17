@@ -37,8 +37,6 @@ import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
 import PlayerBar from '@/components/player/PlayerBar.vue'
 
-import { Reason } from '@/modules/web-player'
-
 @Component({ components: { Button, TextField, PlayerBar } })
 export default class Home extends Vue {
 
@@ -56,15 +54,9 @@ export default class Home extends Vue {
     }
 
     private mounted(): void {
-        this.$player.on('playback-started', reason => {
-            this.$forceUpdate();
-            this.$nextTick(() => {
-                if (reason === Reason.UserAction) {
-                    (this.$refs['bar'] as PlayerBar)
-                        .dialog(true);
-                }
-            });
-        });
+        this.$player.on('playback-started', () =>
+            this.$forceUpdate()
+        );
     }
 
     private scroll(event: UIEvent) {
