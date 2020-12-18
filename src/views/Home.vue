@@ -8,14 +8,13 @@
         >
             <Button
                 class="m-1"
-                size="2rem"
                 @click="$router.push('/')"
                 v-if="$route.name !== 'library'"
             >
                 <span class="mdi mdi-home mdi-24px" />
             </Button>
             <div class="w-full"></div>
-            <Button class="m-1" size="2rem">
+            <Button class="m-1">
                 <span class="mdi mdi-magnify mdi-24px" />
             </Button>
         </header>

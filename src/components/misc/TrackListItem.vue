@@ -24,7 +24,7 @@
                 <HyperLink :elements="Utils.map([item.album], 'album')" />
             </div>
             <div class="menu-section mx-4">
-                <Button size="2rem">
+                <Button>
                     <span class="mdi mdi-dots-horizontal mdi-24px" />
                 </Button>
             </div>

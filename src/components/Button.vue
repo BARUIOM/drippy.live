@@ -2,9 +2,8 @@
     <button
         @click="$emit('click')"
         class="select-none leading-none rounded focus:outline-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
-        :style="`min-width: ${width || size}; min-height: ${height || size};`"
     >
-        <div>
+        <div class="flex items-center justify-center p-1">
             <slot />
         </div>
     </button>
@@ -16,15 +15,6 @@ import { Component, Prop } from 'vue-property-decorator';
 
 @Component
 export default class Button extends Vue {
-
-    @Prop()
-    private readonly width!: string;
-
-    @Prop()
-    private readonly height!: string;
-
-    @Prop({ default: 'initial' })
-    private readonly size!: string;
 
 }
 </script>

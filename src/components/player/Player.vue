@@ -2,11 +2,11 @@
     <div>
         <div class="flex w-full h-full select-none items-center">
             <div class="hidden md:flex items-center p-2">
-                <Button @click="previous" class="m-2" size="2rem">
+                <Button @click="previous" class="mx-2">
                     <span class="mdi mdi-skip-previous mdi-24px" />
                 </Button>
-                <ToggleButton class="m-2" />
-                <Button @click="next" class="m-2" size="2rem">
+                <ToggleButton class="mx-2" />
+                <Button @click="next" class="mx-2">
                     <span class="mdi mdi-skip-next mdi-24px" />
                 </Button>
             </div>
@@ -58,26 +58,26 @@
                 </div>
             </div>
             <div class="hidden md:flex flex-col">
-                <Button class="m-1" size="1.5rem">
+                <Button class="m-1">
                     <span class="mdi mdi-thumb-up" />
                 </Button>
-                <Button class="m-1" size="1.5rem">
+                <Button class="m-1">
                     <span class="mdi mdi-plus" />
                 </Button>
             </div>
             <div class="hidden md:flex justify-end p-2">
-                <Button class="m-2" size="2rem">
+                <Button class="m-2">
                     <span
                         class="mdi mdi-picture-in-picture-bottom-right mdi-24px"
                     />
                 </Button>
-                <Button class="m-2" size="2rem">
+                <Button class="m-2">
                     <span class="mdi mdi-repeat mdi-24px" />
                 </Button>
-                <Button class="m-2" size="2rem">
+                <Button class="m-2">
                     <span class="mdi mdi-shuffle mdi-24px" />
                 </Button>
-                <Button class="m-2" size="2rem">
+                <Button class="m-2">
                     <span
                         class="mdi mdi-24px"
                         v-bind:class="volume[$player.Volume]"
@@ -118,17 +118,17 @@
                     />
                 </div>
                 <div class="flex items-center justify-around p-2">
-                    <Button class="m-2" size="2rem">
+                    <Button class="m-2">
                         <span class="mdi mdi-repeat mdi-24px" />
                     </Button>
-                    <Button @click="previous" size="2rem">
+                    <Button @click="previous">
                         <span class="mdi mdi-skip-previous mdi-24px" />
                     </Button>
                     <ToggleButton />
-                    <Button @click="next" size="2rem">
+                    <Button @click="next">
                         <span class="mdi mdi-skip-next mdi-24px" />
                     </Button>
-                    <Button class="m-2" size="2rem">
+                    <Button class="m-2">
                         <span class="mdi mdi-shuffle mdi-24px" />
                     </Button>
                 </div>
