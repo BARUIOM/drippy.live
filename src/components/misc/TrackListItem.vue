@@ -23,7 +23,7 @@
             <div v-if="!album" class="hidden md:block flex-1 min-w-0">
                 <HyperLink :elements="Utils.map([item.album], 'album')" />
             </div>
-            <div class="menu-section mx-4">
+            <div class="menu-section w-8 mx-4">
                 <Button>
                     <span class="mdi mdi-dots-horizontal mdi-24px" />
                 </Button>

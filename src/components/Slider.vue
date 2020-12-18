@@ -9,14 +9,14 @@
         />
         <div class="relative">
             <div
-                :style="`width: ${(value / max) * 100}%`"
+                :style="`width: ${(Math.min(value, max) / max) * 100}%`"
                 class="track absolute z-10 top-0 bottom-0 rounded-md bg-primary"
             ></div>
             <div
                 class="absolute w-full top-0 bottom-0 rounded-md bg-black dark:bg-white bg-opacity-40"
             ></div>
             <div
-                :style="`left: ${(value / max) * 100}%`"
+                :style="`left: ${(Math.min(value, max) / max) * 100}%`"
                 class="thumb shadow absolute z-10 top-0 left-0 bg-black dark:bg-white rounded-full"
             ></div>
         </div>
@@ -58,9 +58,11 @@ div.slider {
         height: 4px;
 
         div.thumb {
+            top: 50%;
             width: 12px;
             height: 12px;
-            margin: -4px 0 0 -4px;
+            margin-top: -6px;
+            transform: translateX(-6px);
         }
     }
 }
