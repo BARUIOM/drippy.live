@@ -1,17 +1,17 @@
 <template>
     <div
+        class="h-10 bg-opacity-10 bg-black dark:bg-white"
         v-bind:class="{ 'rounded-full': rounded, rounded: !rounded }"
-        class="flex items-center justify-between h-10 bg-opacity-10 bg-black dark:bg-white"
     >
-        <div class="px-4">
-            <slot />
-        </div>
         <input
+            ref="input"
             type="text"
-            @input.stop="input"
+            @blur.stop="onblur"
+            @focus.stop="onfocus"
+            @input.stop="oninput"
             v-bind:value="value"
             placeholder="Search for artists, tracks or playlists"
-            class="bg-transparent focus:outline-none"
+            class="w-full h-full px-4 bg-transparent focus:outline-none"
         />
     </div>
 </template>
@@ -29,18 +29,22 @@ export default class TextField extends Vue {
     @Prop({ default: false })
     private readonly rounded!: boolean;
 
-    private input(event: Event): void {
+    private oninput(event: Event): void {
         this.$emit('input', (event.target as HTMLInputElement).value);
+    }
+
+    private onfocus(event: Event): void {
+        this.$emit('focus', event);
+    }
+
+    private onblur(event: Event): void {
+        this.$emit('blur', event);
+    }
+
+    public focus(): void {
+        const element = this.$refs['input'] as HTMLElement;
+        return element.focus();
     }
 
 }
 </script>
-
-<style lang="scss" scoped>
-div > input {
-    width: 100%;
-    height: 100%;
-    line-height: 40px;
-    padding: 1px 16px 4px 0;
-}
-</style>
