@@ -44,6 +44,8 @@ export default class Search extends Vue {
     };
 
     private mounted() {
+        this.$root.$emit('header', 'default');
+
         if (!this.$route.query.query) {
             return this.$router.push('/');
         }

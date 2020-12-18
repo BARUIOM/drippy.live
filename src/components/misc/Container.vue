@@ -1,6 +1,6 @@
 <template>
     <div class="-mt-14 sm:m-0 w-full">
-        <div class="flex flex-wrap sm:p-8 z-20">
+        <div class="flex flex-wrap sm:p-8">
             <div class="relative w-full sm:w-2/6 md:w-2/8 xl:w-1/6">
                 <Cover
                     :url="thumbnail"
