@@ -1,7 +1,11 @@
 <template>
     <div
-        class="flex flex-col h-screen text-black dark:text-white bg-main-light dark:bg-main-dark"
+        class="relative flex flex-col h-screen text-black dark:text-white bg-main-light dark:bg-main-dark"
     >
+        <div
+            v-bind:class="{ 'bg-black': searchmode, hidden: !searchmode }"
+            class="absolute w-full h-full transition-colors duration-300 bg-opacity-80 bg-transparent z-10"
+        ></div>
         <header
             v-bind:class="{ collapsed: !scrolling, [header]: header }"
             class="flex items-center justify-between z-20 bg-accent-light dark:bg-accent-dark p-2"
@@ -13,8 +17,24 @@
             >
                 <span class="mdi mdi-home mdi-24px" />
             </Button>
-            <div class="w-full"></div>
-            <Button class="m-1">
+            <div
+                class="resizable"
+                v-bind:class="{ 'w-0': searchmode, 'w-full': !searchmode }"
+            />
+            <form
+                class="resizable mx-1"
+                v-bind:class="{ 'w-0': !searchmode, 'w-full': searchmode }"
+                @submit.prevent="search"
+            >
+                <TextField
+                    ref="search"
+                    v-model="query"
+                    :rounded="true"
+                    @focus="searchmode = true"
+                    @blur="searchmode = false"
+                />
+            </form>
+            <Button @click="$refs['search'].focus()" class="m-1">
                 <span class="mdi mdi-magnify mdi-24px" />
             </Button>
         </header>
@@ -46,6 +66,8 @@ export default class Home extends Vue {
     private _header!: string;
     private header: string = 'default';
 
+    private searchmode: boolean = false;
+
     private created(): void {
         this.$root.$on('header', (header: string) =>
             this.header = this._header = header
@@ -73,10 +95,14 @@ export default class Home extends Vue {
     }
 
     private search() {
-        const query = { query: this.query };
-        this.$router.push({ name: 'search', query }).catch(() =>
-            this.$router.replace({ query })
-        );
+        if (this.query && this.query.length) {
+            this.searchmode = false;
+
+            const query = { query: this.query };
+            this.$router.push({ name: 'search', query }).catch(() =>
+                this.$router.replace({ query })
+            );
+        }
     }
 
 }
@@ -97,5 +123,10 @@ header.transparent {
 
 header.collapsed {
     transform: translate(0, -56px);
+}
+
+.resizable {
+    will-change: width;
+    transition: width 600ms ease-in-out;
 }
 </style>
