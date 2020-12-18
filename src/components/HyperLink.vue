@@ -1,15 +1,13 @@
 <template>
     <div class="text-opacity-40 text-black dark:text-white truncate">
-        <template v-for="(element, i) in elements">
-            <div class="inline-block" :key="i">
-                <span v-if="i > 0" class="mx-2" v-text="separator" />
-                <span
-                    class="cursor-pointer hover:underline hover:text-black dark:hover:text-white"
-                    v-text="element.text"
-                    @click.stop="open(arguments[0], element)"
-                />
-            </div>
-        </template>
+        <span v-for="(element, i) in elements" :key="i">
+            <span v-if="i > 0" class="mx-2" v-text="separator" />
+            <span
+                class="cursor-pointer hover:underline hover:text-black dark:hover:text-white"
+                v-text="element.text"
+                @click.stop="open(arguments[0], element)"
+            />
+        </span>
     </div>
 </template>
 
