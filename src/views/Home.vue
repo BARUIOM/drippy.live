@@ -46,6 +46,7 @@
             <router-view />
         </main>
         <PlayerBar ref="bar" v-if="$player.state" />
+        <Playlists />
         <CreatePlaylist />
     </div>
 </template>
@@ -57,9 +58,11 @@ import { Component } from 'vue-property-decorator'
 import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
 import PlayerBar from '@/components/player/PlayerBar.vue'
+
+import Playlists from '@/components/dialog/Playlists.vue'
 import CreatePlaylist from '@/components/dialog/CreatePlaylist.vue'
 
-@Component({ components: { Button, TextField, PlayerBar, CreatePlaylist } })
+@Component({ components: { Button, TextField, PlayerBar, Playlists, CreatePlaylist } })
 export default class Home extends Vue {
 
     private query: string = '';
@@ -130,6 +133,6 @@ header.collapsed {
 
 .resizable {
     will-change: width;
-    transition: width 600ms ease-in-out;
+    transition: width 400ms ease-in-out;
 }
 </style>

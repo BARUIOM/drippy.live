@@ -1,34 +1,39 @@
 <template>
-    <div>
-        <q-dialog v-model="visible" persistent maximized>
-            <q-scroll-area class="fit">
-                <div class="row flex-center">
-                    <div class="q-pa-md col-12 q-gutter-y-lg">
-                        <div class="row justify-center">
-                            <q-btn @click="visible = false" size="lg" icon="mdi-close" round flat />
-                        </div>
-                        <div class="row justify-center">
-                            <span class="text-h3 text-weight-bold">Add to playlist</span>
-                        </div>
-                        <div class="row justify-center">
-                            <q-btn
-                                @click="$root.$emit('create')"
-                                color="primary"
-                                rounded
-                            >Create playlist</q-btn>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <Collection
-                            v-bind:collection="external($user.collection.playlists)"
-                            @click="add"
-                        />
-                    </div>
+    <div
+        v-bind:class="{ visible }"
+        class="dialog bg-black bg-opacity-90 select-none text-white"
+    >
+        <div
+            class="flex flex-col w-full h-full items-center justify-center p-2"
+        >
+            <Button @click="visible = false" class="rounded-full">
+                <span class="mdi mdi-close mdi-48px"> </span>
+            </Button>
+            <div class="text-4xl font-bold p-2">Add to playlist</div>
+            <Button
+                @click="$root.$emit('new-playlist')"
+                class="bg-primary rounded-full px-8 h-9 my-2"
+            >
+                Create Playlist
+            </Button>
+            <div class="flex flex-wrap w-full overflow-y-auto">
+                <div
+                    @click="add(playlist)"
+                    class="w-1/2 sm:w-1/3 md:w-1/4 xl:w-1/6 p-2 cursor-pointer"
+                    v-for="(playlist, i) in playlists()"
+                    :key="i"
+                >
+                    <Cover
+                        class="bg-black"
+                        :url="Utils.get(playlist.images, 'large')"
+                    />
+                    <div
+                        class="text-md text-center font-bold p-2"
+                        v-text="playlist.name"
+                    ></div>
                 </div>
-            </q-scroll-area>
-        </q-dialog>
-
-        <CreatePlaylist ref="manager" />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -36,36 +41,34 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
-import Collection from '@/components/misc/Collection.vue'
-import CreatePlaylist from '@/components/dialog/CreatePlaylist.vue'
+import Cover from '@/components/Cover.vue'
+import Button from '@/components//Button.vue'
 
-@Component({ components: { Collection, CreatePlaylist } })
-export default class PlaylistDialog extends Vue {
+@Component({ components: { Cover, Button } })
+export default class Playlists extends Vue {
 
     private tracks!: any[];
     private visible: boolean = false;
 
-    public mounted(): void {
-        this.$root.$on('create', () => (this.$refs['manager'] as CreatePlaylist).show());
-        (this.$refs['manager'] as CreatePlaylist).$on('close', () => this.$forceUpdate());
-
-        this.$root.$on('add', (tracks: any) => {
+    private mounted(): void {
+        this.$root.$on('add', (tracks: any[]) => {
             this.visible = true;
             this.tracks = tracks;
         });
     }
 
-    public add(playlist: any): void {
+    private add(playlist: any): void {
         this.$drippy.addTracksToPlaylist(playlist['id'], this.tracks).then(() => {
             const message = `Track${this.tracks.length > 1 ? 's' : ''} added to playlist '${playlist['name']}'`;
-            this.$q.notify({ type: 'positive', message, position: 'top' });
+            // TODO toast
         }).finally(() => this.visible = false);
     }
 
-    public external(playlists: any[]): any[] {
-        return playlists.filter(e =>
-            e['owner'].id === this.$user.profile.id
-        );
+    private playlists(): readonly any[] {
+        const playlists = this.$user.collection.playlists
+            .filter(e => e['owner'].id === this.$user.profile.id);
+
+        return Object.freeze(playlists);
     }
 
 }

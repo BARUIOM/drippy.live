@@ -61,7 +61,10 @@
                 <Button class="m-1">
                     <span class="mdi mdi-thumb-up" />
                 </Button>
-                <Button class="m-1">
+                <Button
+                    class="m-1"
+                    @click="$root.$emit('add', [$player.current])"
+                >
                     <span class="mdi mdi-plus" />
                 </Button>
             </div>

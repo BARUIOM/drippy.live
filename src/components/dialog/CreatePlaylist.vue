@@ -16,13 +16,13 @@
                     <div class="flex justify-around p-2">
                         <Button
                             @click="close"
-                            class="border rounded-full px-8 py-1.5"
+                            class="border rounded-full px-8 h-9"
                         >
                             Cancel
                         </Button>
                         <Button
                             type="submit"
-                            class="bg-primary rounded-full px-8 py-1.5"
+                            class="bg-primary rounded-full px-8 h-9"
                             :disabled="invalid"
                         >
                             Create
