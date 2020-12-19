@@ -73,7 +73,7 @@ export default class Utils {
 
     public static map(array: any[], route: string): readonly Element[] {
         const elements = array.map(e => ({
-            text: e.name,
+            text: e.name || e.display_name,
             param: e.id,
             route
         } as Element));

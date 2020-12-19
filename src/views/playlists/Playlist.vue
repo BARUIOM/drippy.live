@@ -1,8 +1,7 @@
 <template>
     <Container
         v-bind:headline="playlist.name"
-        v-bind:thumbnail="playlist.images[0].url"
-        :fit="true"
+        v-bind:thumbnail="Utils.get(playlist.images, 'large')"
     >
         <template v-slot:actions>
             <q-btn
@@ -33,12 +32,20 @@
             </q-btn>
         </template>
         <template v-slot:subheader>
-            <div class="text-h6 text-grey" v-text="playlist.owner.display_name" />
+            <HyperLink
+                class="font-bold text-xl text-center sm:text-left"
+                :elements="Utils.map([playlist.owner], 'user')"
+            />
         </template>
         <TrackList v-bind:track_list="playlist.tracks">
-            <template v-if="$user.profile.id === playlist.owner.id" v-slot:menu="{ index, item }">
+            <template
+                v-if="$user.profile.id === playlist.owner.id"
+                v-slot:menu="{ index, item }"
+            >
                 <q-item @click="removeTrack(index, item)" clickable>
-                    <q-item-section>Remove track from this playlist</q-item-section>
+                    <q-item-section
+                        >Remove track from this playlist</q-item-section
+                    >
                 </q-item>
             </template>
         </TrackList>
@@ -50,31 +57,30 @@ import Vue from 'vue'
 import { Route } from 'vue-router'
 import { Component, Watch } from 'vue-property-decorator'
 
+import HyperLink from '@/components/HyperLink.vue'
 import Container from '@/components/misc/Container.vue'
 import TrackList from '@/components/misc/TrackList.vue'
 
-@Component({ components: { Container, TrackList } })
+@Component({ components: { HyperLink, Container, TrackList } })
 export default class Playlist extends Vue {
 
     private playlist: any = {
         owner: {},
         tracks: [],
-        images: [
-            this.$drippy.thumbnails['collection']
-        ]
+        images: []
     };
 
     private following: boolean = false;
 
     private async follow(): Promise<void> {
         await this.$drippy.followPlaylist(this.playlist, this.$user);
-        this.$q.notify({ type: 'positive', message: `Playlist '${this.playlist.name}' added to your collection!`, position: 'top' });
+        //this.$q.notify({ type: 'positive', message: `Playlist '${this.playlist.name}' added to your collection!`, position: 'top' });
         this.following = true;
     }
 
     private async unfollow(): Promise<void> {
         await this.$drippy.unfollowPlaylist(this.playlist.id, this.$user);
-        this.$q.notify({ type: 'positive', message: `Playlist '${this.playlist.name}' removed from your collection!`, position: 'top' });
+        //this.$q.notify({ type: 'positive', message: `Playlist '${this.playlist.name}' removed from your collection!`, position: 'top' });
         this.following = false;
     }
 
@@ -90,16 +96,13 @@ export default class Playlist extends Vue {
 
     private copy(): void {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            this.$q.notify({ type: 'positive', message: 'Playlist link copied to clipboard!', position: 'top' });
+            //this.$q.notify({ type: 'positive', message: 'Playlist link copied to clipboard!', position: 'top' });
         });
     }
 
     @Watch('$route', { immediate: true, deep: true })
     private async change(route: Route): Promise<void> {
         const playlist = await this.$drippy.getPlaylist(route.params['id']);
-        if (!playlist.images.length) {
-            playlist.images[0] = this.$drippy.thumbnails['collection'];
-        }
 
         playlist.tracks = [...playlist.tracks.items.map((e: any) => e.track)];
         this.playlist = playlist;
@@ -107,13 +110,6 @@ export default class Playlist extends Vue {
         this.following = this.$user.collection._playlists
             .contains(this.playlist.id);
     }
-
-}
-
-interface Author {
-
-    id?: string;
-    name?: string;
 
 }
 </script>
