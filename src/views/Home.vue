@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relative flex flex-col h-screen text-black dark:text-white bg-main-light dark:bg-main-dark"
+        class="relative flex flex-col h-screen"
     >
         <div
             v-bind:class="{ 'bg-black': searchmode, hidden: !searchmode }"

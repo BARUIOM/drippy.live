@@ -1,3 +1,5 @@
 <template>
-    <router-view class="dark overflow-hidden" />
+    <router-view
+        class="text-black dark:text-white bg-main-light dark:bg-main-dark overflow-hidden"
+    />
 </template>
