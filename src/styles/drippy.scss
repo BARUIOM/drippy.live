@@ -16,6 +16,30 @@ div.fade {
     background-image: linear-gradient(to bottom, transparent, $dark);
 }
 
-header, footer {
+header,
+footer {
     box-shadow: $shadow-1, $shadow-2;
+}
+
+div.dialog {
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    position: absolute;
+    visibility: hidden;
+    backdrop-filter: blur(8px);
+
+    > div {
+        transform: scale(0);
+        will-change: transform;
+        transition: transform 200ms ease-in-out;
+    }
+}
+
+div.dialog.visible {
+    visibility: visible;
+
+    > div {
+        transform: scale(1);
+    }
 }

@@ -1,7 +1,7 @@
 <template>
     <div
         v-bind:class="{ visible }"
-        class="dialog absolute w-full h-full bg-black bg-opacity-90 select-none text-white"
+        class="dialog bg-black bg-opacity-90 select-none text-white"
     >
         <div class="flex w-full h-full items-center justify-center p-2">
             <ValidationObserver
@@ -16,13 +16,13 @@
                     <div class="flex justify-around p-2">
                         <Button
                             @click="close"
-                            class="border rounded-full px-8 py-1"
+                            class="border rounded-full px-8 py-1.5"
                         >
                             Cancel
                         </Button>
                         <Button
                             type="submit"
-                            class="bg-primary rounded-full px-8 py-1"
+                            class="bg-primary rounded-full px-8 py-1.5"
                             :disabled="invalid"
                         >
                             Create
@@ -69,25 +69,3 @@ export default class CreatePlaylist extends Vue {
 
 }
 </script>
-
-<style lang="scss" scoped>
-div.dialog {
-    z-index: 100;
-    visibility: hidden;
-    backdrop-filter: blur(8px);
-
-    > div {
-        transform: scale(0);
-        will-change: transform;
-        transition: transform 200ms ease-in-out;
-    }
-}
-
-div.dialog.visible {
-    visibility: visible;
-
-    > div {
-        transform: scale(1);
-    }
-}
-</style>
