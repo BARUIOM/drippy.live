@@ -3,16 +3,18 @@
         class="h-10 bg-opacity-10 bg-black dark:bg-white"
         v-bind:class="{ 'rounded-full': rounded, rounded: !rounded }"
     >
-        <input
-            ref="input"
-            type="text"
-            @blur.stop="onblur"
-            @focus.stop="onfocus"
-            @input.stop="oninput"
-            v-bind:value="value"
-            placeholder="Search for artists, tracks or playlists"
-            class="w-full h-full px-4 bg-transparent focus:outline-none"
-        />
+        <ValidationProvider :rules="rules">
+            <input
+                ref="input"
+                type="text"
+                @blur.stop="onblur"
+                @focus.stop="onfocus"
+                @input.stop="oninput"
+                v-bind:value="value"
+                :placeholder="label"
+                class="w-full h-full px-4 bg-transparent focus:outline-none"
+            />
+        </ValidationProvider>
     </div>
 </template>
 
@@ -28,6 +30,12 @@ export default class TextField extends Vue {
 
     @Prop({ default: false })
     private readonly rounded!: boolean;
+
+    @Prop({ required: true })
+    private readonly label!: string;
+
+    @Prop({ default: 'required' })
+    private readonly rules!: string;
 
     private oninput(event: Event): void {
         this.$emit('input', (event.target as HTMLInputElement).value);

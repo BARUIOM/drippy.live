@@ -32,6 +32,7 @@
                     :rounded="true"
                     @focus="searchmode = true"
                     @blur="searchmode = false"
+                    label="Search for artists, tracks or playlists"
                 />
             </form>
             <Button @click="$refs['search'].focus()" class="m-1">
