@@ -6,7 +6,7 @@
         <ValidationProvider :rules="rules">
             <input
                 ref="input"
-                type="text"
+                :type="type"
                 @blur.stop="onblur"
                 @focus.stop="onfocus"
                 @input.stop="oninput"
@@ -27,6 +27,9 @@ export default class TextField extends Vue {
 
     @Prop({ default: '' })
     private value!: string;
+
+    @Prop({ default: 'text' })
+    private readonly type!: string;
 
     @Prop({ default: false })
     private readonly rounded!: boolean;
