@@ -1,6 +1,9 @@
 <template>
     <div v-if="collection && collection.length" class="w-full">
-        <div v-if="title" class="p-2 text-xl font-bold" v-text="title" />
+        <div class="flex justify-between p-2">
+            <div v-if="title" class="text-xl font-bold" v-text="title" />
+            <slot />
+        </div>
         <div class="flex flex-wrap">
             <template v-for="(item, i) in collection">
                 <div :key="i" class="p-2 w-1/2 sm:w-1/4 lg:w-1/6 xl:w-1/8">
