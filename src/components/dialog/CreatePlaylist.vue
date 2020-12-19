@@ -1,56 +1,93 @@
 <template>
-    <q-dialog v-model="visible" persistent maximized>
-        <div class="row flex-center">
-            <div class="col-12 q-gutter-y-md">
-                <div class="row justify-center">
-                    <span class="text-h5">Create a new playlist</span>
-                </div>
-                <q-form ref="form" class="q-gutter-y-md" @reset="reset" @submit.prevent="submit">
-                    <div class="row justify-center">
-                        <div class="col-xs-10 col-md-6">
-                            <q-input v-model="name" :placeholder="placeholder" standout dense />
-                        </div>
+    <div
+        v-bind:class="{ visible }"
+        class="dialog absolute w-full h-full bg-black bg-opacity-90 select-none text-white"
+    >
+        <div class="flex w-full h-full items-center justify-center p-2">
+            <ValidationObserver
+                class="mx-auto w-full md:w-1/2 text-center"
+                v-slot="{ invalid }"
+            >
+                <form @submit.prevent="submit">
+                    <div class="text-xl sm:text-4xl font-bold p-4">
+                        Create a new playlist
                     </div>
-                    <div class="row q-gutter-x-lg justify-center">
-                        <q-btn @click="visible = false" outline rounded>Cancel</q-btn>
-                        <q-btn type="submit" color="primary" rounded>Create</q-btn>
+                    <TextField v-model="name" label="Untitled Playlist" />
+                    <div class="flex justify-around p-2">
+                        <Button
+                            @click="close"
+                            class="border rounded-full px-8 py-1"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            class="bg-primary rounded-full px-8 py-1"
+                            :disabled="invalid"
+                        >
+                            Create
+                        </Button>
                     </div>
-                </q-form>
-            </div>
+                </form>
+            </ValidationObserver>
         </div>
-    </q-dialog>
+    </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { QForm } from 'quasar'
 import { Component } from 'vue-property-decorator'
 
-@Component
+import Button from '@/components/Button.vue'
+import TextField from '@/components/TextField.vue'
+
+@Component({ components: { Button, TextField } })
 export default class CreatePlaylist extends Vue {
+
+    private name: string = '';
 
     private visible: boolean = false;
 
-    private name: string = '';
-    private readonly placeholder: string = 'Untitled Playlist';
+    private mounted(): void {
+        this.$root.$on('new-playlist', () =>
+            this.visible = true
+        );
+    }
 
-    public show(): void {
-        this.visible = true;
+    private close(): void {
+        this.$emit('close');
+        this.visible = false;
+        this.name = String();
     }
 
     private submit(): void {
-        this.$drippy.createPlaylist(this.name.trim() || this.placeholder, this.$user).then(playlist => {
-            this.$q.notify({ type: 'positive', message: `Playlist '${playlist['name']}' created!`, position: 'top' });
-            (this.$refs['form'] as QForm).reset();
-        }).finally(() => {
-            this.visible = false;
-            this.$emit('close');
-        });
-    }
-
-    private reset(): void {
-        this.name = String();
+        this.$drippy.createPlaylist(this.name.trim(), this.$user)
+            .then(playlist => {
+                // TODO toast
+            }).finally(() => this.close());
     }
 
 }
 </script>
+
+<style lang="scss" scoped>
+div.dialog {
+    z-index: 100;
+    visibility: hidden;
+    backdrop-filter: blur(8px);
+
+    > div {
+        transform: scale(0);
+        will-change: transform;
+        transition: transform 200ms ease-in-out;
+    }
+}
+
+div.dialog.visible {
+    visibility: visible;
+
+    > div {
+        transform: scale(1);
+    }
+}
+</style>

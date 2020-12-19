@@ -6,7 +6,7 @@
             v-bind:collection="$user.collection.playlists"
             @click="open('playlist', arguments[0])"
         >
-            <Button>
+            <Button @click="$root.$emit('new-playlist')">
                 <span class="mdi mdi-plus mdi-24px" />
             </Button>
         </Collection>

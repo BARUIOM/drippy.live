@@ -46,6 +46,7 @@
             <router-view />
         </main>
         <PlayerBar ref="bar" v-if="$player.state" />
+        <CreatePlaylist />
     </div>
 </template>
 
@@ -56,8 +57,9 @@ import { Component } from 'vue-property-decorator'
 import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
 import PlayerBar from '@/components/player/PlayerBar.vue'
+import CreatePlaylist from '@/components/dialog/CreatePlaylist.vue'
 
-@Component({ components: { Button, TextField, PlayerBar } })
+@Component({ components: { Button, TextField, PlayerBar, CreatePlaylist } })
 export default class Home extends Vue {
 
     private query: string = '';
