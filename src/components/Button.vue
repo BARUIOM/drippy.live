@@ -4,7 +4,9 @@
         @click="$emit('click')"
         class="select-none leading-none rounded focus:outline-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
     >
-        <div class="flex items-center justify-center uppercase font-bold p-1">
+        <div
+            class="flex items-center justify-center uppercase font-semibold p-1"
+        >
             <slot />
         </div>
     </button>
