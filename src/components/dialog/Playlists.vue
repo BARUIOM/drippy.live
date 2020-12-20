@@ -1,7 +1,7 @@
 <template>
     <div
         v-bind:class="{ visible }"
-        class="dialog bg-black bg-opacity-90 text-white"
+        class="dialog bg-black bg-opacity-90 text-white backdrop-filter"
     >
         <div
             class="flex flex-col w-full h-full items-center justify-center p-2"

@@ -26,13 +26,16 @@ footer {
     box-shadow: $shadow-1, $shadow-2;
 }
 
+.backdrop-filter {
+    backdrop-filter: blur(8px);
+}
+
 div.dialog {
     width: 100%;
     height: 100%;
     z-index: 100;
     position: absolute;
     visibility: hidden;
-    backdrop-filter: blur(8px);
 
     > div {
         transform: scale(0);
