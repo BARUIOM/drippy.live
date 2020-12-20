@@ -1,8 +1,8 @@
 <template>
     <div
-        class="text-black dark:text-white bg-main-light dark:bg-main-dark select-none overflow-hidden"
+        class="w-screen h-screen text-black dark:text-white bg-main-light dark:bg-main-dark select-none overflow-hidden"
     >
-        <router-view />
+        <router-view class="w-full h-full" />
         <transition name="overlay">
             <div
                 v-if="overlay"
