@@ -60,7 +60,7 @@ export default class Login extends Vue {
 
     mounted() {
         if (LocalStorage.has('spotify_code')) {
-            //this.$q.loading.show();
+            this.$root.$emit('overlay', true);
 
             const { code } = LocalStorage.get('spotify_code');
             this.$drippy.spotifyCheck(code).then(async data => {
@@ -71,14 +71,14 @@ export default class Login extends Vue {
                     this.$router.push('/');
                 }
             }).finally(() => {
-                //this.$q.loading.hide();
+                this.$root.$emit('overlay', false);
                 LocalStorage.remove('spotify_code');
             });
         }
     }
 
     submit() {
-        //this.$q.loading.show();
+        this.$root.$emit('overlay', true);
         this.$drippy.login({ email: this.email, password: this.password })
             .then(async () => {
                 this.$user = await Manager.getUser();
@@ -86,11 +86,11 @@ export default class Login extends Vue {
             }).catch(error => {
                 //if (error.response && error.response.status == 400)
                 //this.$q.notify({ type: 'negative', message: error.response.data['message'] });
-            })//.finally(() => this.$q.loading.hide());
+            }).finally(() => this.$root.$emit('overlay', false));
     }
 
     open() {
-        //this.$q.loading.show();
+        this.$root.$emit('overlay', true);
         window.open(this.$drippy.url + '/spotify', '_self');
     }
 
