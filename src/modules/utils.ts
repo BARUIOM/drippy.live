@@ -48,7 +48,7 @@ export class SessionStorage {
 
 }
 
-export const breakpoints = {
+const breakpoints = {
     '$sm': false,
     '$md': false,
     '$lg': false,
@@ -66,7 +66,7 @@ window.addEventListener('resize', (event: UIEvent) => {
 
 window.dispatchEvent(new Event('resize'));
 
-export default class Utils {
+export class Utils {
 
     public static range(value: number, min: number = 0, max: number = 0): number {
         return Math.min(Math.max(value, min), max);

@@ -1,6 +1,6 @@
 import Axios from 'axios'
 
-import Utils, { LocalStorage, SessionStorage } from './utils';
+import { Utils, LocalStorage, SessionStorage } from './utils';
 import SpotifyClient from './spotify-api'
 import User, { Profile } from './drippy-user'
 

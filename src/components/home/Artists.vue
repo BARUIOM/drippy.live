@@ -43,7 +43,7 @@
 import Vue from 'vue'
 import { Component, Prop, Watch } from 'vue-property-decorator'
 
-import Utils from '@/modules/utils'
+import { Utils } from '@/modules/utils'
 import Cover from '@/components/Cover.vue'
 
 @Component({ components: { Cover } })

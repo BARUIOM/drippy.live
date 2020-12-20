@@ -20,7 +20,7 @@ import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 
 import Player from './Player.vue'
-import Utils from '@/modules/utils'
+import { Utils } from '@/modules/utils'
 
 import { Reason } from '@/modules/web-player'
 

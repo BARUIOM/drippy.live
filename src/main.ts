@@ -5,7 +5,7 @@ import router from '@/router'
 
 import player from '@/modules/web-player'
 import drippy, { Manager } from '@/modules/drippy-api'
-import Utils, { breakpoints } from '@/modules/utils'
+import { Utils } from '@/modules/utils'
 
 import '@/plugins/validation-rules'
 import '@/styles/drippy.scss'
@@ -19,7 +19,7 @@ const vm = new Vue({
 });
 
 Vue.mixin({
-    data: () => ({ Utils, breakpoints }),
+    data: () => ({ Utils, breakpoints: Utils.$breakpoints }),
     computed: {
         $user: {
             get: () => vm.$data.$user,

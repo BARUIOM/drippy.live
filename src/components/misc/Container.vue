@@ -26,7 +26,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 
 import Cover from '@/components/Cover.vue'
 
-import Utils from '@/modules/utils'
+import { Utils } from '@/modules/utils'
 
 @Component({ components: { Cover } })
 export default class Container extends Vue {
