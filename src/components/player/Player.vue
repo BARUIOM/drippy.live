@@ -97,9 +97,9 @@
             <div class="relative h-full">
                 <Cover
                     size="100%"
+                    :fade="true"
                     :url="Utils.get($player.current.album.images, 'large')"
                 />
-                <div class="fade" />
             </div>
             <div>
                 <div class="relative mx-2 z-10">
