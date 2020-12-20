@@ -4,12 +4,15 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+import { LocalStorage } from '@/modules/utils'
+
 @Component
 export default class Spotify extends Vue {
 
     mounted() {
-        if (this.$route.query['code']) {
-            this.$q.localStorage.set('spotify_code', this.$route.query['code']);
+        const code = this.$route.query['code'];
+        if (code !== undefined) {
+            LocalStorage.set('spotify_code', { code });
             this.$router.push({ name: 'login' });
         }
     }

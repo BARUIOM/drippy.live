@@ -1,32 +1,42 @@
 <template>
-    <div class="q-pa-md window-height">
-        <div class="row justify-center items-center fit">
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-                <q-card class="my-card">
-                    <q-card-section>
-                        <div class="text-h6 text-center">Log in to your account</div>
-                    </q-card-section>
+    <div class="flex items-center justify-center p-2 w-full h-screen">
+        <div
+            class="rounded w-full sm:w-1/2 md:w-1/3 xl:w-1/4 bg-accent-light dark:bg-accent-dark p-1"
+        >
+            <div class="font-bold text-xl text-center p-4">
+                Log in to your account
+            </div>
+            <form @submit.prevent="submit">
+                <TextField v-model="email" class="m-1" label="E-mail" />
+                <TextField
+                    v-model="password"
+                    class="m-1"
+                    label="Password"
+                    type="password"
+                />
 
-                    <q-form @submit.prevent="submit">
-                        <q-card-section>
-                            <q-input v-model="email" class="q-pb-sm" type="email" label="Email" />
-                            <q-input v-model="password" type="password" label="Password" />
-                        </q-card-section>
+                <div class="p-1">
+                    <Button type="submit" class="shadow w-full my-1 p-1">
+                        <span>Sign in</span>
+                    </Button>
+                    <Button class="shadow w-full my-1 p-1">
+                        <span>Create account</span>
+                    </Button>
+                </div>
+            </form>
 
-                        <q-card-actions vertical>
-                            <q-btn color="grey-10" type="submit">Sign in</q-btn>
-                            <q-btn color="grey-10" disable>Create an account</q-btn>
-                        </q-card-actions>
-                    </q-form>
-
-                    <q-separator />
-
-                    <q-card-actions vertical>
-                        <q-btn style="background: #1DB954" @click="open">
-                            <q-icon name="img:/spotify.svg" left />Sign in with Spotify
-                        </q-btn>
-                    </q-card-actions>
-                </q-card>
+            <div class="rounded border border-white border-opacity-10"></div>
+            <div class="p-1">
+                <Button
+                    @click="open"
+                    style="background: #1db954"
+                    class="relative shadow w-full p-1"
+                >
+                    <span
+                        class="absolute left-0 mx-2 mdi mdi-spotify mdi-24px"
+                    ></span>
+                    <span>Sign in with Spotify</span>
+                </Button>
             </div>
         </div>
     </div>
@@ -35,47 +45,52 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Manager } from '@/modules/drippy-api';
 
-@Component
+import Button from '@/components/Button.vue'
+import TextField from '@/components/TextField.vue'
+
+import { Manager } from '@/modules/drippy-api'
+import { LocalStorage } from '@/modules/utils'
+
+@Component({ components: { Button, TextField } })
 export default class Login extends Vue {
 
     private email: string = "";
     private password: string = "";
 
     mounted() {
-        if (this.$q.localStorage.has('spotify_code')) {
-            this.$q.loading.show();
+        if (LocalStorage.has('spotify_code')) {
+            //this.$q.loading.show();
 
-            const code = this.$q.localStorage.getItem('spotify_code') as string;
+            const { code } = LocalStorage.get('spotify_code');
             this.$drippy.spotifyCheck(code).then(async data => {
                 if (data !== undefined) {
                     await this.$drippy.login({ token: data['token'] });
                     this.$user = await Manager.getUser();
-                    this.$q.notify({ type: 'positive', message: data['message'], position: 'top' });
+                    //this.$q.notify({ type: 'positive', message: data['message'], position: 'top' });
                     this.$router.push('/');
                 }
             }).finally(() => {
-                this.$q.loading.hide();
-                this.$q.localStorage.remove('spotify_code');
+                //this.$q.loading.hide();
+                LocalStorage.remove('spotify_code');
             });
         }
     }
 
     submit() {
-        this.$q.loading.show();
+        //this.$q.loading.show();
         this.$drippy.login({ email: this.email, password: this.password })
             .then(async () => {
                 this.$user = await Manager.getUser();
                 this.$router.push('/');
             }).catch(error => {
-                if (error.response && error.response.status == 400)
-                    this.$q.notify({ type: 'negative', message: error.response.data['message'] });
-            }).finally(() => this.$q.loading.hide());
+                //if (error.response && error.response.status == 400)
+                //this.$q.notify({ type: 'negative', message: error.response.data['message'] });
+            })//.finally(() => this.$q.loading.hide());
     }
 
     open() {
-        this.$q.loading.show();
+        //this.$q.loading.show();
         window.open(this.$drippy.url + '/spotify', '_self');
     }
 
