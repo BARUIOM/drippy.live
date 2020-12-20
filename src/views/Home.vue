@@ -78,12 +78,6 @@ export default class Home extends Vue {
         );
     }
 
-    private mounted(): void {
-        this.$player.on('playback-started', () =>
-            this.$forceUpdate()
-        );
-    }
-
     private scroll(event: UIEvent) {
         const current = (event.target as HTMLElement).scrollTop
         this.scrolling = this.offset > current;

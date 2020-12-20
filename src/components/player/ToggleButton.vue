@@ -20,20 +20,8 @@ export default class ToggleButton extends Vue {
         [State.Paused]: 'mdi-play'
     };
 
-    private mounted(): void {
-        this.$player.on('update-state', this.update);
-    }
-
-    private destroyed(): void {
-        this.$player.off('update-state', this.update);
-    }
-
     private toggle(): void {
         this.$player.toggle();
-    }
-
-    private update(): void {
-        this.$forceUpdate();
     }
 
 }
