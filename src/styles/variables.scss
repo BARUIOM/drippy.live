@@ -13,3 +13,9 @@ $shadow-2: 0 0 10px
         $color: #000000,
         $alpha: 0.24,
     );
+
+:export {
+    dark: $dark;
+    light: $light;
+    primary: $primary;
+}
