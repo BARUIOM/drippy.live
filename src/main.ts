@@ -5,7 +5,7 @@ import router from '@/router'
 
 import player from '@/modules/web-player'
 import drippy, { Manager } from '@/modules/drippy-api'
-import { Utils } from '@/modules/utils'
+import { Message, Utils } from '@/modules/utils'
 
 import '@/plugins/validation-rules'
 import '@/styles/drippy.scss'
@@ -17,6 +17,11 @@ Vue.mixin({
     computed: {
         $drippy: { get: () => drippy },
         $player: { get: () => player }
+    },
+    methods: {
+        notify(message: Message) {
+            this.$root.$emit('toast', message);
+        }
     }
 });
 

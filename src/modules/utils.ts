@@ -8,6 +8,19 @@ export interface Element {
 
 }
 
+export enum MessageType {
+
+    Success = 'success', Error = 'error', Alert = 'alert'
+
+}
+
+export interface Message {
+
+    readonly type: MessageType;
+    readonly text: string;
+
+}
+
 export class LocalStorage {
 
     public static has(key: string): boolean {

@@ -13,6 +13,23 @@
                 </div>
             </div>
         </transition>
+        <div
+            class="toaster fixed top-0 left-1/2 z-100 p-1 w-full md:w-1/3 xl:w-1/4"
+        >
+            <transition-group name="overlay">
+                <div
+                    class="w-full rounded shadow p-2 my-1"
+                    v-for="message in messages"
+                    v-bind:class="{ [`bg-${colors[message.type]}`]: true }"
+                    :key="message.text"
+                >
+                    <div
+                        class="font-bold text-center"
+                        v-text="message.text"
+                    ></div>
+                </div>
+            </transition-group>
+        </div>
     </div>
 </template>
 
@@ -21,13 +38,25 @@ import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 
 import Spinner from '@/components/Spinner.vue'
+import { Message, MessageType } from '@/modules/utils'
 
 @Component({ components: { Spinner } })
 export default class App extends Vue {
 
     private overlay = false;
+    private messages: Message[] = [];
+
+    private readonly colors = {
+        [MessageType.Success]: 'green-500',
+        [MessageType.Error]: 'red-500',
+        [MessageType.Alert]: 'yellow-500'
+    };
 
     private created(): void {
+        this.$root.$on('toast', (message: Message) => {
+            this.messages.push(message);
+            setTimeout(() => this.messages.splice(0, 1), 3000);
+        });
         this.$root.$on('overlay', (overlay: boolean) => this.overlay = overlay);
     }
 
@@ -43,5 +72,11 @@ export default class App extends Vue {
 .overlay-enter,
 .overlay-leave-to {
     opacity: 0;
+}
+</style>
+
+<style lang="scss" scoped>
+div.toaster {
+    transform: translateX(-50%);
 }
 </style>
