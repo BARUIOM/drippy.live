@@ -22,6 +22,10 @@ export class LocalStorage {
         localStorage.setItem(key, JSON.stringify(value));
     }
 
+    public static remove(key: string): void {
+        localStorage.removeItem(key);
+    }
+
 }
 
 export class SessionStorage {
@@ -36,6 +40,10 @@ export class SessionStorage {
 
     public static set(key: string, value: any): void {
         sessionStorage.setItem(key, JSON.stringify(value));
+    }
+
+    public static remove(key: string): void {
+        sessionStorage.removeItem(key);
     }
 
 }
