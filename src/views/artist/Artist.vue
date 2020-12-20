@@ -1,9 +1,7 @@
 <template>
     <Container
         v-bind:headline="artist.name"
-        v-bind:thumbnail="
-            (artist.images[0] || $drippy.thumbnails['artist']).url
-        "
+        v-bind:thumbnail="Utils.get(artist.images, 'large')"
     >
         <div class="p-2">
             <Collection

@@ -6,14 +6,6 @@ import User, { Profile } from './drippy-user'
 
 const api_url = '' || 'https://api.drippy.live';
 const axios = Axios.create({ baseURL: api_url });
-const thumbnails = {
-    artist: {
-        url: require('@/assets/person_white.png')
-    },
-    collection: {
-        url: require('@/assets/library_music.png')
-    }
-};
 
 axios.interceptors.request.use(config => {
     if (LocalStorage.has('session')) {
@@ -190,10 +182,6 @@ export class Drippy {
 
     public get url() {
         return api_url;
-    }
-
-    public get thumbnails() {
-        return thumbnails;
     }
 
 }
