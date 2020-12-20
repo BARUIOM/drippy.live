@@ -1,7 +1,7 @@
 <template>
     <div
         v-bind:class="{ visible }"
-        class="dialog bg-black bg-opacity-90 select-none text-white"
+        class="dialog bg-black bg-opacity-90 text-white"
     >
         <div class="flex w-full h-full items-center justify-center p-2">
             <ValidationObserver

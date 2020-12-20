@@ -4,7 +4,7 @@
         @contextmenu.prevent="menu = true"
         class="item cursor-pointer w-full h-16 hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
     >
-        <div class="flex items-center h-full select-none p-2">
+        <div class="flex items-center h-full p-2">
             <div class="flex items-center justify-center w-8 h-full mx-2">
                 <span class="mdi mdi-play mdi-24px" />
                 <span v-text="index + 1" />

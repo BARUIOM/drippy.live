@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex w-full h-full select-none items-center">
+        <div class="flex w-full h-full items-center">
             <div class="hidden md:flex items-center p-2">
                 <Button @click="previous" class="mx-2">
                     <span class="mdi mdi-skip-previous mdi-24px" />
@@ -92,7 +92,7 @@
             </div>
         </div>
         <div
-            class="mobile select-none flex flex-col justify-between bg-main-light dark:bg-main-dark"
+            class="mobile flex flex-col justify-between bg-main-light dark:bg-main-dark"
         >
             <div class="relative h-full">
                 <Cover
