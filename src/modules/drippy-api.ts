@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Axios from 'axios'
 
 import { Utils, LocalStorage, SessionStorage } from './utils';
@@ -259,4 +260,4 @@ export declare interface SpotifyAuthResponse extends MessageResponse {
 }
 
 const drippy = new Drippy();
-export default drippy;
+export default Vue.observable(drippy);

@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 import { EventEmitter } from 'events';
 import drippy from '@/modules/drippy-api'
 
@@ -332,4 +334,4 @@ export declare interface Player extends EventEmitter {
 
 }
 
-export default Player.Instance;
+export default Vue.observable(Player.Instance);

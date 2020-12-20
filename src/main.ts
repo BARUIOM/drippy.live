@@ -11,32 +11,29 @@ import '@/plugins/validation-rules'
 import '@/styles/drippy.scss'
 
 Vue.config.productionTip = false;
-Vue.prototype.$drippy = drippy;
-Vue.prototype.$player = player;
-
-const vm = new Vue({
-    data: { $user: {} }
-});
 
 Vue.mixin({
     data: () => ({ Utils, breakpoints: Utils.$breakpoints }),
     computed: {
-        $user: {
-            get: () => vm.$data.$user,
-            set: (user) => vm.$data.$user = user
-        }
+        $drippy: { get: () => drippy },
+        $player: { get: () => player }
     }
 });
 
-//Loading.show();
 drippy.validate().then(async () => {
-    vm.$data.$user = await Manager.getUser();
+    const user = Vue.observable(await Manager.getUser());
+
+    Vue.mixin({
+        computed: {
+            $user: { get: () => user }
+        }
+    });
 }).catch((error) => {
     if (error.response || error.message === 'User not authenticated') {
         if (!window.location.pathname.startsWith('/auth'))
             router.push({ name: 'login' })
     }
-}).finally(() => {
-    new Vue({ router, render: h => h(App) }).$mount('#app');
-    //Loading.hide();
-});
+}).finally(() =>
+    new Vue({ router, render: h => h(App) })
+        .$mount('#app')
+);
