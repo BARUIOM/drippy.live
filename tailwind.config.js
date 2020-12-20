@@ -6,6 +6,9 @@ module.exports = {
     purge: [],
     darkMode: 'media',
     theme: {
+        fontFamily: {
+            sans: ['Roboto']
+        },
         extend: {
             colors: {
                 main: {
