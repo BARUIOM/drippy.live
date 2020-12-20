@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 
 import Button from '@/components/Button.vue'
 import Artists from '@/components/home/Artists.vue'
@@ -42,6 +42,11 @@ export default class Library extends Vue {
 
     private open(name: string, object: any): void {
         this.$router.push({ name, params: { id: object.id } });
+    }
+
+    @Watch('$user.ready', { immediate: true })
+    private ready(): void {
+        this.$root.$emit('overlay', !this.$user.ready);
     }
 
 }
