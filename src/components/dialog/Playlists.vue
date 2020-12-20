@@ -1,12 +1,9 @@
 <template>
-    <div
-        v-bind:class="{ visible }"
-        class="dialog bg-black bg-opacity-90 text-white backdrop-filter"
-    >
+    <Dialog ref="dialog" v-slot="{ close }">
         <div
             class="flex flex-col w-full h-full items-center justify-center p-2"
         >
-            <Button @click="visible = false" class="rounded-full">
+            <Button @click="close" class="rounded-full">
                 <span class="mdi mdi-close mdi-48px"> </span>
             </Button>
             <div class="text-4xl font-bold p-2">Add to playlist</div>
@@ -34,34 +31,37 @@
                 </div>
             </div>
         </div>
-    </div>
+    </Dialog>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+import Dialog from './Dialog.vue'
+
 import Cover from '@/components/Cover.vue'
 import Button from '@/components//Button.vue'
 
-@Component({ components: { Cover, Button } })
+@Component({ components: { Dialog, Cover, Button } })
 export default class Playlists extends Vue {
 
     private tracks!: any[];
-    private visible: boolean = false;
 
     private mounted(): void {
+        const dialog = this.$refs['dialog'] as Dialog;
         this.$root.$on('add', (tracks: any[]) => {
-            this.visible = true;
+            dialog.show();
             this.tracks = tracks;
         });
+        dialog.$on('close', () => this.tracks = []);
     }
 
     private add(playlist: any): void {
         this.$drippy.addTracksToPlaylist(playlist['id'], this.tracks).then(() => {
             const message = `Track${this.tracks.length > 1 ? 's' : ''} added to playlist '${playlist['name']}'`;
             // TODO toast
-        }).finally(() => this.visible = false);
+        }).finally(() => (this.$refs['dialog'] as Dialog).close());
     }
 
     private playlists(): readonly any[] {
