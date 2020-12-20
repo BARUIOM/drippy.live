@@ -49,7 +49,6 @@ import { Component } from 'vue-property-decorator'
 import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
 
-import { Manager } from '@/modules/drippy-api'
 import { LocalStorage, MessageType } from '@/modules/utils'
 
 @Component({ components: { Button, TextField } })
@@ -66,7 +65,7 @@ export default class Login extends Vue {
             this.$drippy.spotifyCheck(code).then(async data => {
                 if (data !== undefined) {
                     await this.$drippy.login({ token: data['token'] });
-                    this.$user = await Manager.getUser();
+                    await this.$user.initialize();
 
                     this.notify({
                         type: MessageType.Success,
@@ -85,7 +84,7 @@ export default class Login extends Vue {
         this.$root.$emit('overlay', true);
         this.$drippy.login({ email: this.email, password: this.password })
             .then(async () => {
-                this.$user = await Manager.getUser();
+                await this.$user.initialize();
                 this.$router.push('/');
             }).catch(error => {
                 if (error.response && error.response.status == 400) {

@@ -3,7 +3,7 @@ import Axios from 'axios'
 
 import { Utils, LocalStorage, SessionStorage } from './utils';
 import SpotifyClient from './spotify-api'
-import User, { Profile } from './drippy-user'
+import User from './drippy-user'
 
 const api_url = '' || 'https://api.drippy.live';
 const axios = Axios.create({ baseURL: api_url });
@@ -35,6 +35,8 @@ const spotify = new SpotifyClient(async () => {
     const data = (await axios.get('/token')).data;
     return data['token'];
 });
+
+export const user = Vue.observable(new User(spotify));
 
 export class Drippy {
 
@@ -87,8 +89,7 @@ export class Drippy {
     }
 
     public async createPlaylist(name: string, user: User) {
-        const playlist = await spotify.createPlaylist(name,
-            Manager.user.profile.id);
+        const playlist = await spotify.createPlaylist(name, user.profile.id);
         user.collection._playlists.unshift(playlist);
         return playlist;
     }
@@ -193,36 +194,6 @@ export declare interface SearchResults {
     readonly artists: any[];
     readonly playlists: any[];
     readonly albums: any[];
-
-}
-
-export class Manager {
-
-    private static _user: User;
-
-    public static async getUser(): Promise<User> {
-        await spotify.initialize();
-        const profile = await (async (): Promise<Profile> => {
-            if (!LocalStorage.has('profile')) {
-                const user = await spotify.getUser();
-                const profile = {
-                    id: user.id,
-                    name: user.display_name,
-                    photo: ((user.images[0] || { url: null }) as any)['url']
-                };
-
-                LocalStorage.set('profile', profile);
-            }
-
-            return LocalStorage.get('profile') as Profile;
-        })();
-
-        return Manager._user = new User(spotify, profile);
-    }
-
-    public static get user() {
-        return Manager._user;
-    }
 
 }
 

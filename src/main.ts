@@ -4,7 +4,7 @@ import App from '@/App.vue'
 import router from '@/router'
 
 import player from '@/modules/web-player'
-import drippy, { Manager } from '@/modules/drippy-api'
+import drippy, { user } from '@/modules/drippy-api'
 import { Message, Utils } from '@/modules/utils'
 
 import '@/plugins/validation-rules'
@@ -15,6 +15,7 @@ Vue.config.productionTip = false;
 Vue.mixin({
     data: () => ({ Utils, breakpoints: Utils.$breakpoints }),
     computed: {
+        $user: { get: () => user },
         $drippy: { get: () => drippy },
         $player: { get: () => player }
     },
@@ -25,20 +26,13 @@ Vue.mixin({
     }
 });
 
-drippy.validate().then(async () => {
-    const user = Vue.observable(await Manager.getUser());
-
-    Vue.mixin({
-        computed: {
-            $user: { get: () => user }
+drippy.validate().then(() => user.initialize())
+    .catch((error) => {
+        if (error.response || error.message === 'User not authenticated') {
+            if (!window.location.pathname.startsWith('/auth'))
+                router.push({ name: 'login' })
         }
-    });
-}).catch((error) => {
-    if (error.response || error.message === 'User not authenticated') {
-        if (!window.location.pathname.startsWith('/auth'))
-            router.push({ name: 'login' })
-    }
-}).finally(() =>
-    new Vue({ router, render: h => h(App) })
-        .$mount('#app')
-);
+    }).finally(() =>
+        new Vue({ router, render: h => h(App) })
+            .$mount('#app')
+    );

@@ -1,15 +1,39 @@
+import { LocalStorage } from '@/modules/utils'
+import SpotifyClient from '@/modules/spotify-api'
+
 import Container from '@/models/container'
-import SpotifyClient from './spotify-api';
 
 export default class User {
 
     private _ready: boolean = false;
 
-    private readonly _profile: Profile;
-    private readonly _collection: Collection = new Collection();
+    private readonly client: SpotifyClient;
 
-    public constructor(client: SpotifyClient, profile: Profile) {
-        this._profile = profile;
+    private _profile!: Profile;
+    private _collection: Collection = new Collection();
+
+    public constructor(client: SpotifyClient) {
+        this.client = client;
+    }
+
+    public async initialize(): Promise<void> {
+        const client = this.client;
+        await client.initialize();
+
+        (async (): Promise<Profile> => {
+            if (!LocalStorage.has('profile')) {
+                const user = await client.getUser();
+                const profile = {
+                    id: user.id,
+                    name: user.display_name,
+                    photo: ((user.images[0] || { url: null }) as any)['url']
+                };
+
+                LocalStorage.set('profile', profile);
+            }
+
+            return LocalStorage.get('profile') as Profile;
+        })().then(profile => this._profile = profile);
 
         Promise.all([
             (async function list(offset: number = 0) {
