@@ -39,6 +39,7 @@ import Dialog from './Dialog.vue'
 
 import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
+import { MessageType } from '@/modules/utils'
 
 @Component({ components: { Dialog, Button, TextField } })
 export default class CreatePlaylist extends Vue {
@@ -54,7 +55,10 @@ export default class CreatePlaylist extends Vue {
     private submit(): void {
         this.$drippy.createPlaylist(this.name.trim(), this.$user)
             .then(playlist => {
-                // TODO toast
+                this.notify({
+                    type: MessageType.Success,
+                    text: `Playlist '${playlist['name']}' created!`
+                });
             }).finally(() =>
                 (this.$refs['dialog'] as Dialog).close()
             );

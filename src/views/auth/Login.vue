@@ -50,7 +50,7 @@ import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
 
 import { Manager } from '@/modules/drippy-api'
-import { LocalStorage } from '@/modules/utils'
+import { LocalStorage, MessageType } from '@/modules/utils'
 
 @Component({ components: { Button, TextField } })
 export default class Login extends Vue {
@@ -67,7 +67,11 @@ export default class Login extends Vue {
                 if (data !== undefined) {
                     await this.$drippy.login({ token: data['token'] });
                     this.$user = await Manager.getUser();
-                    //this.$q.notify({ type: 'positive', message: data['message'], position: 'top' });
+
+                    this.notify({
+                        type: MessageType.Success,
+                        text: data['message'] as string
+                    });
                     this.$router.push('/');
                 }
             }).finally(() => {
@@ -84,8 +88,12 @@ export default class Login extends Vue {
                 this.$user = await Manager.getUser();
                 this.$router.push('/');
             }).catch(error => {
-                //if (error.response && error.response.status == 400)
-                //this.$q.notify({ type: 'negative', message: error.response.data['message'] });
+                if (error.response && error.response.status == 400) {
+                    this.notify({
+                        type: MessageType.Error,
+                        text: error.response.data['message'] as string
+                    });
+                }
             }).finally(() => this.$root.$emit('overlay', false));
     }
 

@@ -42,6 +42,7 @@ import Dialog from './Dialog.vue'
 
 import Cover from '@/components/Cover.vue'
 import Button from '@/components//Button.vue'
+import { MessageType } from '@/modules/utils'
 
 @Component({ components: { Dialog, Cover, Button } })
 export default class Playlists extends Vue {
@@ -59,8 +60,10 @@ export default class Playlists extends Vue {
 
     private add(playlist: any): void {
         this.$drippy.addTracksToPlaylist(playlist['id'], this.tracks).then(() => {
-            const message = `Track${this.tracks.length > 1 ? 's' : ''} added to playlist '${playlist['name']}'`;
-            // TODO toast
+            this.notify({
+                type: MessageType.Success,
+                text: `Added ${this.tracks.length} track${this.tracks.length > 1 ? 's' : ''} to playlist '${playlist['name']}'`
+            });
         }).finally(() => (this.$refs['dialog'] as Dialog).close());
     }
 
