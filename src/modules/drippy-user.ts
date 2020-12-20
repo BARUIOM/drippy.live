@@ -43,7 +43,9 @@ export default class User {
             (async function list(offset: number = 0) {
                 const items = new Array();
                 const response = await client.getSavedAlbums(offset);
-                (response['items'] as Array<any>).forEach(e => items.push(e));
+                (response['items'] as Array<any>).forEach(e =>
+                    items.push(e['album'])
+                );
 
                 if (response['next']) {
                     (await list(offset + items.length))
