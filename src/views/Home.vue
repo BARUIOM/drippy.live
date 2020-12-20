@@ -1,7 +1,5 @@
 <template>
-    <div
-        class="relative flex flex-col"
-    >
+    <div class="relative flex flex-col">
         <div
             v-bind:class="{ 'bg-black': searchmode, hidden: !searchmode }"
             class="absolute w-full h-full transition-colors duration-300 bg-opacity-80 bg-transparent z-10"
@@ -53,7 +51,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 
 import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
@@ -109,6 +107,12 @@ export default class Home extends Vue {
                 this.$router.replace({ query })
             );
         }
+    }
+
+
+    @Watch('$user.ready', { immediate: true })
+    private ready(): void {
+        this.$root.$emit('overlay', !this.$user.ready);
     }
 
 }

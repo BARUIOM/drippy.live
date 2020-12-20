@@ -44,10 +44,5 @@ export default class Library extends Vue {
         this.$router.push({ name, params: { id: object.id } });
     }
 
-    @Watch('$user.ready', { immediate: true })
-    private ready(): void {
-        this.$root.$emit('overlay', !this.$user.ready);
-    }
-
 }
 </script>
