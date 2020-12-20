@@ -35,6 +35,9 @@ module.exports = {
                 md: `0 2px 4px -1px ${elevation_umbra}, 0 4px 5px ${elevation_penumbra}, 0 1px 10px ${elevation_ambient}`,
                 lg: `0 3px 5px -1px ${elevation_umbra}, 0 6px 10px ${elevation_penumbra}, 0 1px 18px ${elevation_ambient}`,
                 xl: `0 5px 5px -3px ${elevation_umbra}, 0 8px 10px 1px ${elevation_penumbra}, 0 3px 14px 2px ${elevation_ambient}`
+            },
+            zIndex: {
+                '100': 100
             }
         }
     },

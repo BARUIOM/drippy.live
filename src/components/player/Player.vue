@@ -92,7 +92,7 @@
             </div>
         </div>
         <div
-            class="mobile flex flex-col justify-between bg-main-light dark:bg-main-dark"
+            class="mobile flex flex-col justify-between bg-main-light dark:bg-main-dark z-100"
         >
             <div class="relative h-full">
                 <Cover
@@ -186,7 +186,6 @@ export default class Player extends Vue {
 <style lang="scss" scoped>
 div.mobile {
     width: 100%;
-    z-index: 100;
     position: absolute;
     height: calc(100vh - 64px);
 }

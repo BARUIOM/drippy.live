@@ -4,7 +4,7 @@
         <div class="display relative flex flex-wrap">
             <div
                 v-if="collection.length > size"
-                class="indicator left-0"
+                class="indicator left-0 z-10"
                 @click="previous"
             >
                 <span class="mdi mdi-chevron-left mdi-24px"></span>
@@ -30,7 +30,7 @@
             </template>
             <div
                 v-if="collection.length > size"
-                class="indicator right-0"
+                class="indicator right-0 z-10"
                 @click="next"
             >
                 <span class="mdi mdi-chevron-right mdi-24px"></span>
@@ -143,7 +143,6 @@ div.card > div.label {
 
 div.display.relative {
     div.indicator {
-        z-index: 10;
         width: 4rem;
         height: 100%;
         display: flex;
