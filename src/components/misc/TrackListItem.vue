@@ -1,7 +1,7 @@
 <template>
     <div
         @click="$emit('click')"
-        @contextmenu.prevent="menu = true"
+        @contextmenu.prevent="$refs['menu'].toggle()"
         class="item cursor-pointer w-full h-16 hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
     >
         <div class="flex items-center h-full p-2">
@@ -23,10 +23,19 @@
             <div v-if="!album" class="hidden md:block flex-1 min-w-0">
                 <HyperLink :elements="Utils.map([item.album], 'album')" />
             </div>
-            <div class="menu-section w-8 mx-4">
-                <Button>
+            <div class="menu-section relative w-8 mx-4">
+                <Button class="h-8" @click.stop="$refs['menu'].toggle()">
                     <span class="mdi mdi-dots-horizontal mdi-24px" />
                 </Button>
+                <Menu ref="menu" class="absolute right-0 rounded z-10">
+                    <slot></slot>
+                    <MenuItem @click.stop="$root.$emit('add', [item])">
+                        <span>Add track to playlist</span>
+                    </MenuItem>
+                    <MenuItem @click.stop="copy">
+                        <span>Copy track link</span>
+                    </MenuItem>
+                </Menu>
             </div>
             <div class="hidden md:block mx-4">
                 <span
@@ -46,10 +55,13 @@ import Cover from '@/components/Cover.vue'
 import Button from '@/components/Button.vue'
 import HyperLink from '@/components/HyperLink.vue'
 
-@Component({ components: { Cover, Button, HyperLink } })
-export default class TrackListItem extends Vue {
+import Menu from '@/components/menu/Menu.vue'
+import MenuItem from '@/components/menu/MenuItem.vue'
 
-    private menu: boolean = false;
+import { MessageType } from '@/modules/utils'
+
+@Component({ components: { Cover, Button, HyperLink, Menu, MenuItem } })
+export default class TrackListItem extends Vue {
 
     @Prop({ required: true })
     private readonly index!: number;
@@ -62,7 +74,10 @@ export default class TrackListItem extends Vue {
 
     public copy(): void {
         navigator.clipboard.writeText(`${window.location.origin}/track/${this.item['id']}`).then(() => {
-            //this.$q.notify({ type: 'positive', message: 'Track link copied to clipboard!', position: 'top' });
+            this.notify({
+                type: MessageType.Success,
+                text: 'Track link copied to clipboard!'
+            });
         });
     }
 

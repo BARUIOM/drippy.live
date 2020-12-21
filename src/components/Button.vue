@@ -1,7 +1,7 @@
 <template>
     <button
         :type="type"
-        @click="$emit('click')"
+        @click="$emit('click', arguments[0])"
         class="leading-none rounded focus:outline-none hover:bg-opacity-10 hover:bg-black dark:hover:bg-white"
     >
         <div

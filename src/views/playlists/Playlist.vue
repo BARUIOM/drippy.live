@@ -39,14 +39,12 @@
         </template>
         <TrackList v-bind:track_list="playlist.tracks">
             <template
-                v-if="$user.profile.id === playlist.owner.id"
                 v-slot:menu="{ index, item }"
+                v-if="$user.profile.id === playlist.owner.id"
             >
-                <q-item @click="removeTrack(index, item)" clickable>
-                    <q-item-section
-                        >Remove track from this playlist</q-item-section
-                    >
-                </q-item>
+                <MenuItem @click="removeTrack(index, item)">
+                    <span>Remove track from this playlist</span>
+                </MenuItem>
             </template>
         </TrackList>
     </Container>
@@ -61,7 +59,9 @@ import HyperLink from '@/components/HyperLink.vue'
 import Container from '@/components/misc/Container.vue'
 import TrackList from '@/components/misc/TrackList.vue'
 
-@Component({ components: { HyperLink, Container, TrackList } })
+import MenuItem from '@/components/menu/MenuItem.vue'
+
+@Component({ components: { HyperLink, Container, TrackList, MenuItem } })
 export default class Playlist extends Vue {
 
     private playlist: any = {

@@ -8,6 +8,7 @@
                 :album="album"
                 @click="play(index + start)"
             >
+                <slot name="menu" v-bind:index="index" v-bind:item="item" />
             </TrackListItem>
         </template>
     </div>

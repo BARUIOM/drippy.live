@@ -39,7 +39,7 @@
         </header>
         <main
             @scroll="scroll"
-            class="pt-14 mb-auto overflow-x-hidden overflow-y-auto"
+            class="pt-14 h-full overflow-x-hidden overflow-y-auto"
         >
             <router-view />
         </main>
