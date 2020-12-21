@@ -18,15 +18,12 @@
         >
             <transition-group name="overlay">
                 <div
-                    class="w-full rounded shadow p-2 my-1"
                     v-for="message in messages"
-                    v-bind:class="{ [`bg-${colors[message.type]}`]: true }"
-                    :key="message.text"
+                    :key="i + message.text"
+                    class="w-full rounded shadow p-2 my-1"
+                    :style="`background-color: ${colors[message.type]};`"
                 >
-                    <div
-                        class="font-bold text-center"
-                        v-text="message.text"
-                    ></div>
+                    <div class="font-bold text-center" v-text="message.text" />
                 </div>
             </transition-group>
         </div>
@@ -47,9 +44,9 @@ export default class App extends Vue {
     private messages: Message[] = [];
 
     private readonly colors = {
-        [MessageType.Success]: 'green-500',
-        [MessageType.Error]: 'red-500',
-        [MessageType.Alert]: 'yellow-500'
+        [MessageType.Success]: '#00c853',
+        [MessageType.Error]: '#d50000',
+        [MessageType.Alert]: '#ffab00'
     };
 
     private created(): void {
