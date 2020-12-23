@@ -1,8 +1,8 @@
 <template>
-    <div
-        class="w-screen h-screen text-black dark:text-white bg-main-light dark:bg-main-dark select-none overflow-hidden"
-    >
-        <router-view class="w-full h-full" />
+    <div class="w-screen h-screen select-none overflow-hidden">
+        <router-view
+            class="w-full h-full text-black dark:text-white bg-main-light dark:bg-main-dark"
+        />
         <transition name="overlay">
             <div
                 v-if="overlay"
@@ -23,7 +23,7 @@
                     class="w-full rounded shadow p-2 my-1"
                     :style="`background-color: ${colors[message.type]};`"
                 >
-                    <div class="font-bold text-center" v-text="message.text" />
+                    <div class="font-bold text-white text-center" v-text="message.text" />
                 </div>
             </transition-group>
         </div>
