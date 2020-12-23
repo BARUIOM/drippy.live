@@ -9,16 +9,18 @@
         />
         <div class="relative">
             <div
+                v-bind:class="{ 'rounded-md': rounded }"
                 :style="`width: ${(Math.min(value, max) / max) * 100}%`"
-                class="track absolute z-10 top-0 bottom-0 rounded-md bg-primary"
-            ></div>
+                class="track absolute z-10 top-0 bottom-0 bg-primary"
+            />
             <div
-                class="absolute w-full top-0 bottom-0 rounded-md bg-black dark:bg-white bg-opacity-40"
-            ></div>
+                v-bind:class="{ 'rounded-md': rounded }"
+                class="absolute w-full top-0 bottom-0 bg-black dark:bg-white bg-opacity-40"
+            />
             <div
                 :style="`left: ${(Math.min(value, max) / max) * 100}%`"
                 class="thumb shadow absolute z-10 top-0 left-0 bg-black dark:bg-white rounded-full"
-            ></div>
+            />
         </div>
     </div>
 </template>
@@ -35,6 +37,9 @@ export default class Slider extends Vue {
 
     @Prop({ default: 100 })
     private max!: number;
+
+    @Prop({ default: true })
+    private readonly rounded!: boolean;
 
     private input(event: Event): void {
         this.$emit('input', (event.target as HTMLInputElement).value);

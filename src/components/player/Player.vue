@@ -97,30 +97,27 @@
             <div class="relative h-full">
                 <Cover
                     size="100%"
-                    :fade="true"
                     :url="Utils.get($player.current.album.images, 'large')"
                 />
             </div>
             <div>
-                <div class="relative mx-2 z-10">
-                    <div
-                        class="absolute w-full bottom-full flex justify-between"
-                    >
-                        <span
-                            class="text-sm text-opacity-60 text-black dark:text-white"
-                            v-text="Utils.format($player.position * 1000)"
-                        />
-                        <span
-                            class="text-sm text-opacity-60 text-black dark:text-white"
-                            v-text="Utils.format($player.current.duration_ms)"
-                        />
-                    </div>
-                    <Slider
-                        v-model="$player.position"
-                        v-bind:max="$player.current.duration_ms / 1000"
+                <Slider
+                    :rounded="false"
+                    style="height: 4px"
+                    v-model="$player.position"
+                    v-bind:max="$player.current.duration_ms / 1000"
+                />
+                <div class="p-2 pb-0 flex justify-between">
+                    <span
+                        class="text-sm text-opacity-60 text-black dark:text-white"
+                        v-text="Utils.format($player.position * 1000)"
+                    />
+                    <span
+                        class="text-sm text-opacity-60 text-black dark:text-white"
+                        v-text="Utils.format($player.current.duration_ms)"
                     />
                 </div>
-                <div class="flex items-center justify-around p-2">
+                <div class="flex items-center justify-around p-2 pt-0">
                     <Button class="m-2">
                         <span class="mdi mdi-repeat mdi-24px" />
                     </Button>
