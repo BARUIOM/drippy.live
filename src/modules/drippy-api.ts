@@ -5,6 +5,8 @@ import SpotifyClient from './spotify-api'
 import User, { Profile } from './drippy-user'
 
 const api_url = '' || 'https://api.drippy.live';
+const stream_server = '' || 'https://stream.drippy.live';
+
 const axios = Axios.create({ baseURL: api_url });
 const thumbnails = {
     artist: {
@@ -188,9 +190,10 @@ export class Drippy {
     public async getAudio(id: string): Promise<string> {
         const response = await axios.get(`/stream/${id}`);
 
-        if ('session' in response.data) {
-            return `${api_url}/audio/${response.data['session']}`;
+        if ('token' in response.data) {
+            return `${stream_server}/${response.data['token']}`;
         }
+
         return response.data['uri'];
     }
 
