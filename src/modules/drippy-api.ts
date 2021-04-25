@@ -4,8 +4,8 @@ import { LocalStorage, SessionStorage } from 'quasar'
 import SpotifyClient from './spotify-api'
 import User, { Profile } from './drippy-user'
 
-const api_url = '' || 'https://api.drippy.live';
-const stream_server = '' || 'https://stream.drippy.live';
+const api_url = process.env['VUE_APP_API_ENDPOINT'];
+const stream_server = process.env['VUE_APP_STREAM_SERVER'];
 
 const axios = Axios.create({ baseURL: api_url });
 const thumbnails = {

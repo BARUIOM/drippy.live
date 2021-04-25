@@ -2,17 +2,22 @@ name: Hosting
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build
-      run: |
-        npm install && npm run build
-    - name: Launch
-      run: |
-        sudo npm install -g firebase-tools --unsafe-perm
-        firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          echo "VUE_APP_API_ENDPOINT=$API_ENDPOINT" >> .env
+          echo "VUE_APP_STREAM_SERVER=$STREAM_ENDPOINT" >> .env
+          npm install && npm run build
+        env:
+          API_ENDPOINT: https://api.baruio.com
+          STREAM_ENDPOINT: https://stream.baruio.com
+      - name: Launch
+        run: |
+          sudo npm install -g firebase-tools --unsafe-perm
+          firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
